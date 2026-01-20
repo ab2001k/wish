@@ -20,7 +20,7 @@
 
         body { 
             font-family: 'Poppins', sans-serif; 
-            overflow-x: hidden; 
+            overflow: hidden; /* Prevent body scroll, handle in app-container */
             background-color: #f3f4f6; 
             /* COPY PROTECTION */
             -webkit-user-select: none; 
@@ -86,7 +86,21 @@
             font-family: 'VT323', monospace;
         }
         canvas#matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-        .matrix-content { z-index: 10; text-align: center; animation: zoomIn 5s infinite alternate; }
+        .matrix-content { z-index: 10; text-align: center; width: 100%; }
+        
+        .hacked-title {
+             color: #0f0; font-size: 4rem; margin-bottom: 2rem; 
+             text-shadow: 0 0 10px #0f0; 
+             animation: zoomIn 5s infinite alternate;
+        }
+
+        /* Controls Container (Hidden initially) */
+        #matrix-controls {
+            opacity: 0; 
+            transition: opacity 1.5s ease-in;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        
         @keyframes zoomIn { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
         
         .matrix-btn {
@@ -101,7 +115,7 @@
             background: black; color: white; border: 2px solid white;
             padding: 10px 20px; font-size: 1.2rem; text-transform: uppercase;
             letter-spacing: 2px; box-shadow: 0 0 10px white;
-            cursor: pointer; margin-top: 15px; display: inline-block; min-width: 200px;
+            cursor: pointer; margin-top: 20px; display: inline-block; min-width: 200px;
             transition: all 0.3s;
         }
         .matrix-btn-back:hover { background: #222; }
@@ -110,12 +124,12 @@
 
         /* UI FIX for Android Screens */
         @media (max-height: 800px) {
-            #capture-area { padding-top: 2rem !important; padding-bottom: 1rem !important; } 
-            .photo-frame { width: 10rem !important; height: 10rem !important; } 
-            #disp-title { font-size: 2.25rem !important; margin-bottom: 0.25rem !important; }
-            #disp-name { font-size: 2rem !important; margin-bottom: 1rem !important; }
-            .glass-panel { padding: 1.25rem !important; }
-            #share-sheet { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+            #capture-area { padding-top: 1.5rem !important; padding-bottom: 0.5rem !important; } 
+            .photo-frame { width: 9rem !important; height: 9rem !important; } 
+            #disp-title { font-size: 2rem !important; margin-bottom: 0.25rem !important; }
+            #disp-name { font-size: 1.75rem !important; margin-bottom: 0.5rem !important; }
+            .glass-panel { padding: 1rem !important; }
+            #share-sheet { padding: 1rem !important; }
         }
     </style>
 </head>
@@ -134,11 +148,11 @@
         <div id="matrix-overlay" class="hidden-screen">
             <canvas id="matrix-canvas"></canvas>
             <div class="matrix-content">
-                <h1 class="text-[#0f0] text-6xl mb-1" style="text-shadow: 0 0 10px #0f0;">SYSTEM HACKED</h1>
+                <h1 class="hacked-title">SYSTEM HACKED</h1>
                 
-                <h2 id="jk-msg" class="text-white text-3xl mb-8 opacity-0 transition-opacity duration-1000">...Just Kidding! 😜</h2>
+                <div id="matrix-controls">
+                    <h2 class="text-white text-3xl mb-8">...Just Kidding! 😜</h2>
 
-                <div class="flex flex-col items-center">
                     <a href="https://wa.me/+918822967314?text=Hello%20Developer%2C%20I%20found%20the%20secret%20Matrix%20zone%20in%20WishMaker!%20%F0%9F%95%B6%EF%B8%8F" class="matrix-btn">
                         > TALK TO DEV_
                     </a>
@@ -387,23 +401,18 @@
 
         function activateMatrix() {
             const overlay = document.getElementById('matrix-overlay');
-            overlay.classList.remove('hidden-screen');
+            const controls = document.getElementById('matrix-controls');
             
-            // Prepare Just Kidding Animation
-            const jkMsg = document.getElementById('jk-msg');
-            jkMsg.style.opacity = '0'; // Ensure hidden initially
-
-            // Play dark sound (can be replaced with real Matrix audio)
-            // const audio = document.getElementById('audio-matrix');
-            // audio.play().catch(e => console.log("Audio play blocked"));
+            overlay.classList.remove('hidden-screen');
+            controls.style.opacity = '0'; // Ensure hidden initially
 
             // Start Canvas Matrix Rain
             startMatrixRain();
 
-            // Reveal "Just Kidding" after 2.5 seconds
+            // Reveal Buttons & Message after 4 seconds (Panic time)
             setTimeout(() => {
-                jkMsg.style.opacity = '1';
-            }, 2500);
+                controls.style.opacity = '1';
+            }, 4000);
         }
 
         function exitMatrix() {
