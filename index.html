@@ -22,10 +22,10 @@
             font-family: 'Poppins', sans-serif; 
             overflow-x: hidden; 
             background-color: #f3f4f6; 
-            /* 2. COPY PROTECTION */
-            -webkit-user-select: none; /* Safari */
-            -ms-user-select: none; /* IE 10 and IE 11 */
-            user-select: none; /* Standard syntax */
+            /* COPY PROTECTION */
+            -webkit-user-select: none; 
+            -ms-user-select: none; 
+            user-select: none; 
         }
         
         .handwritten { font-family: 'Pacifico', cursive; }
@@ -87,7 +87,7 @@
         }
         canvas#matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
         .matrix-content { z-index: 10; text-align: center; animation: zoomIn 5s infinite alternate; }
-        @keyframes zoomIn { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+        @keyframes zoomIn { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
         
         .matrix-btn {
             background: black; color: #0f0; border: 2px solid #0f0;
@@ -95,15 +95,23 @@
             letter-spacing: 3px; box-shadow: 0 0 15px #0f0;
             animation: blinkMatrix 1s infinite steps(2, start);
             cursor: pointer; text-decoration: none; display: inline-block;
-            margin-top: 20px;
+            margin-top: 20px; min-width: 250px;
         }
-        @keyframes blinkMatrix { 0%, 100% { opacity: 1; box-shadow: 0 0 15px #0f0; } 50% { opacity: 0.5; box-shadow: 0 0 5px #0f0; } }
+        .matrix-btn-back {
+            background: black; color: white; border: 2px solid white;
+            padding: 10px 20px; font-size: 1.2rem; text-transform: uppercase;
+            letter-spacing: 2px; box-shadow: 0 0 10px white;
+            cursor: pointer; margin-top: 15px; display: inline-block; min-width: 200px;
+            transition: all 0.3s;
+        }
+        .matrix-btn-back:hover { background: #222; }
 
-        /* 4. UI FIX for Android Screens */
-        /* Compress vertical space on smaller screens */
+        @keyframes blinkMatrix { 0%, 100% { opacity: 1; box-shadow: 0 0 15px #0f0; } 50% { opacity: 0.8; box-shadow: 0 0 5px #0f0; } }
+
+        /* UI FIX for Android Screens */
         @media (max-height: 800px) {
             #capture-area { padding-top: 2rem !important; padding-bottom: 1rem !important; } 
-            .photo-frame { width: 10rem !important; height: 10rem !important; } /* Smaller photo */
+            .photo-frame { width: 10rem !important; height: 10rem !important; } 
             #disp-title { font-size: 2.25rem !important; margin-bottom: 0.25rem !important; }
             #disp-name { font-size: 2rem !important; margin-bottom: 1rem !important; }
             .glass-panel { padding: 1.25rem !important; }
@@ -126,11 +134,19 @@
         <div id="matrix-overlay" class="hidden-screen">
             <canvas id="matrix-canvas"></canvas>
             <div class="matrix-content">
-                <h1 class="text-[#0f0] text-6xl mb-4" style="text-shadow: 0 0 10px #0f0;">SYSTEM HACKED</h1>
-                <a href="https://wa.me/+918822967314?text=Hello%20Developer%2C%20I%20found%20the%20secret%20Matrix%20zone%20in%20WishMaker!%20%F0%9F%95%B6%EF%B8%8F" class="matrix-btn">
-                    > TALK TO DEV_
-                </a>
-                <button onclick="exitMatrix()" class="block mt-10 text-xs text-green-800 hover:text-green-500 underline z-20 relative">Exit System</button>
+                <h1 class="text-[#0f0] text-6xl mb-1" style="text-shadow: 0 0 10px #0f0;">SYSTEM HACKED</h1>
+                
+                <h2 id="jk-msg" class="text-white text-3xl mb-8 opacity-0 transition-opacity duration-1000">...Just Kidding! 😜</h2>
+
+                <div class="flex flex-col items-center">
+                    <a href="https://wa.me/+918822967314?text=Hello%20Developer%2C%20I%20found%20the%20secret%20Matrix%20zone%20in%20WishMaker!%20%F0%9F%95%B6%EF%B8%8F" class="matrix-btn">
+                        > TALK TO DEV_
+                    </a>
+                    
+                    <button onclick="exitMatrix()" class="matrix-btn-back">
+                        < GO BACK
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -373,17 +389,25 @@
             const overlay = document.getElementById('matrix-overlay');
             overlay.classList.remove('hidden-screen');
             
+            // Prepare Just Kidding Animation
+            const jkMsg = document.getElementById('jk-msg');
+            jkMsg.style.opacity = '0'; // Ensure hidden initially
+
             // Play dark sound (can be replaced with real Matrix audio)
             // const audio = document.getElementById('audio-matrix');
             // audio.play().catch(e => console.log("Audio play blocked"));
 
             // Start Canvas Matrix Rain
             startMatrixRain();
+
+            // Reveal "Just Kidding" after 2.5 seconds
+            setTimeout(() => {
+                jkMsg.style.opacity = '1';
+            }, 2500);
         }
 
         function exitMatrix() {
              document.getElementById('matrix-overlay').classList.add('hidden-screen');
-             // Stop animation frame if desired, but not strictly necessary for simple app
         }
 
         function startMatrixRain() {
