@@ -16,8 +16,18 @@
     <style>
         /* Typography */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Pacifico&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap'); /* For Matrix Mode */
 
-        body { font-family: 'Poppins', sans-serif; overflow-x: hidden; background-color: #f3f4f6; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            overflow-x: hidden; 
+            background-color: #f3f4f6; 
+            /* 2. COPY PROTECTION */
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+        }
+        
         .handwritten { font-family: 'Pacifico', cursive; }
         .elegant-font { font-family: 'Playfair Display', serif; }
         
@@ -36,7 +46,7 @@
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Themes - Richer Gradients */
+        /* Themes */
         .theme-male { background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); }
         .theme-female { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%); }
         .theme-wedding { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); }
@@ -68,23 +78,66 @@
         /* Scrollbar Hide */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* MATRIX MODE STYLES */
+        #matrix-overlay {
+            position: fixed; inset: 0; background: black; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-family: 'VT323', monospace;
+        }
+        canvas#matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .matrix-content { z-index: 10; text-align: center; animation: zoomIn 5s infinite alternate; }
+        @keyframes zoomIn { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+        
+        .matrix-btn {
+            background: black; color: #0f0; border: 2px solid #0f0;
+            padding: 15px 30px; font-size: 1.5rem; text-transform: uppercase;
+            letter-spacing: 3px; box-shadow: 0 0 15px #0f0;
+            animation: blinkMatrix 1s infinite steps(2, start);
+            cursor: pointer; text-decoration: none; display: inline-block;
+            margin-top: 20px;
+        }
+        @keyframes blinkMatrix { 0%, 100% { opacity: 1; box-shadow: 0 0 15px #0f0; } 50% { opacity: 0.5; box-shadow: 0 0 5px #0f0; } }
+
+        /* 4. UI FIX for Android Screens */
+        /* Compress vertical space on smaller screens */
+        @media (max-height: 800px) {
+            #capture-area { padding-top: 2rem !important; padding-bottom: 1rem !important; } 
+            .photo-frame { width: 10rem !important; height: 10rem !important; } /* Smaller photo */
+            #disp-title { font-size: 2.25rem !important; margin-bottom: 0.25rem !important; }
+            #disp-name { font-size: 2rem !important; margin-bottom: 1rem !important; }
+            .glass-panel { padding: 1.25rem !important; }
+            #share-sheet { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-0 sm:p-4 bg-gray-100">
 
-    <div id="app-container" class="bg-white w-full sm:max-w-md h-screen sm:h-[850px] sm:rounded-3xl shadow-2xl overflow-hidden relative flex flex-col">
+    <div id="app-container" class="bg-white w-full sm:max-w-md h-[100dvh] sm:h-[850px] sm:rounded-3xl shadow-2xl overflow-hidden relative flex flex-col">
         
         <audio id="audio-bg" loop></audio>
+        <audio id="audio-matrix" loop src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"></audio>
 
         <div id="screen-loading" class="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center hidden-screen">
             <div class="loader mb-4"></div>
             <p class="text-indigo-600 font-bold tracking-widest text-xs uppercase">Creating Magic...</p>
         </div>
 
+        <div id="matrix-overlay" class="hidden-screen">
+            <canvas id="matrix-canvas"></canvas>
+            <div class="matrix-content">
+                <h1 class="text-[#0f0] text-6xl mb-4" style="text-shadow: 0 0 10px #0f0;">SYSTEM HACKED</h1>
+                <a href="https://wa.me/+918822967314?text=Hello%20Developer%2C%20I%20found%20the%20secret%20Matrix%20zone%20in%20WishMaker!%20%F0%9F%95%B6%EF%B8%8F" class="matrix-btn">
+                    > TALK TO DEV_
+                </a>
+                <button onclick="exitMatrix()" class="block mt-10 text-xs text-green-800 hover:text-green-500 underline z-20 relative">Exit System</button>
+            </div>
+        </div>
+
         <div id="screen-home" class="flex-1 flex flex-col p-6 fade-in relative overflow-y-auto bg-gray-50 scrollbar-hide">
             
-            <div class="text-center mb-8 mt-6">
-                <h1 class="text-5xl font-extrabold text-gray-800 tracking-tighter">Wish<span class="text-indigo-600">Maker</span></h1>
+            <div class="text-center mb-8 mt-6 select-none">
+                <h1 onclick="triggerEasterEgg()" class="text-5xl font-extrabold text-gray-800 tracking-tighter cursor-pointer select-none active:scale-95 transition">Wish<span class="text-indigo-600">Maker</span></h1>
                 <p class="text-xs text-gray-400 mt-2 uppercase tracking-[0.2em]">Celebrate Moments</p>
             </div>
 
@@ -226,11 +279,11 @@
                 </div>
             </div>
 
-            <div id="capture-area" class="flex-1 flex flex-col items-center justify-center p-8 text-center z-10 pt-20">
+            <div id="capture-area" class="flex-1 flex flex-col items-center justify-center p-4 pt-16 text-center z-10 overflow-y-auto no-scrollbar">
                 
-                <div class="relative mb-8 group">
+                <div class="relative mb-6 group">
                     <div class="absolute inset-0 bg-white/50 rounded-full blur-xl animate-pulse group-hover:blur-2xl transition"></div>
-                    <div class="relative w-48 h-48 rounded-full p-2 bg-white/30 backdrop-blur-sm border border-white/60 shadow-2xl animate-[float_6s_infinite]">
+                    <div class="photo-frame relative w-40 h-40 rounded-full p-2 bg-white/30 backdrop-blur-sm border border-white/60 shadow-2xl animate-[float_6s_infinite] mx-auto">
                         <img id="disp-img" src="" class="w-full h-full rounded-full object-cover border-4 border-white shadow-inner">
                     </div>
                     
@@ -242,13 +295,13 @@
                     </div>
                 </div>
 
-                <h1 id="disp-title" class="text-4xl sm:text-5xl font-bold text-white mb-2 drop-shadow-lg tracking-tight elegant-font"></h1>
-                <h2 id="disp-name" class="text-4xl text-white/90 mb-8 handwritten drop-shadow-md transform -rotate-2"></h2>
+                <h1 id="disp-title" class="text-4xl font-bold text-white mb-1 drop-shadow-lg tracking-tight elegant-font leading-tight"></h1>
+                <h2 id="disp-name" class="text-3xl text-white/90 mb-4 handwritten drop-shadow-md transform -rotate-2"></h2>
 
-                <div class="glass-panel p-8 rounded-3xl shadow-2xl w-full max-w-sm relative">
-                    <i class="fas fa-quote-left text-indigo-400/30 text-4xl absolute -top-4 -left-2"></i>
-                    <p id="disp-msg" class="text-gray-800 text-base sm:text-lg font-medium leading-relaxed font-serif italic"></p>
-                    <i class="fas fa-quote-right text-indigo-400/30 text-4xl absolute -bottom-4 -right-2"></i>
+                <div class="glass-panel p-6 rounded-3xl shadow-2xl w-full max-w-sm relative">
+                    <i class="fas fa-quote-left text-indigo-400/30 text-3xl absolute -top-4 -left-2"></i>
+                    <p id="disp-msg" class="text-gray-800 text-sm sm:text-base font-medium leading-relaxed font-serif italic"></p>
+                    <i class="fas fa-quote-right text-indigo-400/30 text-3xl absolute -bottom-4 -right-2"></i>
                     
                     <div id="watermark" class="hidden mt-4 pt-4 border-t border-gray-200 text-center">
                          <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Create at WishMaker</p>
@@ -256,27 +309,27 @@
                 </div>
             </div>
 
-            <div id="share-sheet" class="bg-white p-6 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] z-20 relative transform transition hover:translate-y-[-5px]">
-                <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
+            <div id="share-sheet" class="bg-white p-5 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] z-20 relative transform transition w-full mt-auto">
+                <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-4"></div>
                 
-                <div class="grid grid-cols-3 gap-3 mb-2">
-                    <button onclick="playClick(); shareWhatsapp()" class="flex flex-col items-center gap-2 group">
-                        <div class="w-12 h-12 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
-                            <i class="fab fa-whatsapp text-xl"></i>
+                <div class="grid grid-cols-3 gap-2 mb-2">
+                    <button onclick="playClick(); shareWhatsapp()" class="flex flex-col items-center gap-1 group">
+                        <div class="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
+                            <i class="fab fa-whatsapp text-lg"></i>
                         </div>
                         <span class="text-[10px] font-bold text-gray-500">WhatsApp</span>
                     </button>
                     
-                    <button onclick="playClick(); downloadImage()" class="flex flex-col items-center gap-2 group">
-                        <div class="w-12 h-12 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
-                            <i class="fab fa-instagram text-xl"></i>
+                    <button onclick="playClick(); downloadImage()" class="flex flex-col items-center gap-1 group">
+                        <div class="w-10 h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
+                            <i class="fab fa-instagram text-lg"></i>
                         </div>
                         <span class="text-[10px] font-bold text-gray-500">Save Img</span>
                     </button>
 
-                    <button onclick="playClick(); copyLink()" class="flex flex-col items-center gap-2 group">
-                        <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
-                            <i class="fas fa-link text-xl"></i>
+                    <button onclick="playClick(); copyLink()" class="flex flex-col items-center gap-1 group">
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
+                            <i class="fas fa-link text-lg"></i>
                         </div>
                         <span class="text-[10px] font-bold text-gray-500">Copy Link</span>
                     </button>
@@ -287,18 +340,93 @@
 
     <script>
         // ==========================================
-        // 1. SOUNDS & AUDIO (Base64 "Pop" Sound)
+        // 1. RELOAD CAUTION
         // ==========================================
-        const popAudio = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"); // Dummy, usually needs real file. 
-        // Better Approach: Visual + tiny beep using AudioContext if user triggers
-        function playClick() {
-            // Visual Feedback is handled by CSS .btn-click
-            // If you have a real sound file, play it here.
+        window.addEventListener('beforeunload', function (e) {
+            // Check if we are in creation mode (home screen visible)
+            if (!document.getElementById('screen-home').classList.contains('hidden-screen')) {
+                 e.preventDefault();
+                 e.returnValue = ''; // Chrome requires returnValue to be set
+            }
+        });
+
+        // ==========================================
+        // 2. MATRIX EASTER EGG LOGIC
+        // ==========================================
+        let titleTapCount = 0;
+        let tapTimer;
+
+        function triggerEasterEgg() {
+            titleTapCount++;
+            
+            // Reset count if too slow (2 seconds)
+            clearTimeout(tapTimer);
+            tapTimer = setTimeout(() => { titleTapCount = 0; }, 2000);
+
+            if (titleTapCount === 4) {
+                activateMatrix();
+                titleTapCount = 0;
+            }
+        }
+
+        function activateMatrix() {
+            const overlay = document.getElementById('matrix-overlay');
+            overlay.classList.remove('hidden-screen');
+            
+            // Play dark sound (can be replaced with real Matrix audio)
+            // const audio = document.getElementById('audio-matrix');
+            // audio.play().catch(e => console.log("Audio play blocked"));
+
+            // Start Canvas Matrix Rain
+            startMatrixRain();
+        }
+
+        function exitMatrix() {
+             document.getElementById('matrix-overlay').classList.add('hidden-screen');
+             // Stop animation frame if desired, but not strictly necessary for simple app
+        }
+
+        function startMatrixRain() {
+            const canvas = document.getElementById('matrix-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const katakana = '01';
+            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const nums = '0123456789';
+            const alphabet = katakana + latin + nums;
+
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+            const rainDrops = [];
+
+            for (let x = 0; x < columns; x++) { rainDrops[x] = 1; }
+
+            const draw = () => {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#0F0';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < rainDrops.length; i++) {
+                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                    ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        rainDrops[i] = 0;
+                    }
+                    rainDrops[i]++;
+                }
+            };
+            setInterval(draw, 30);
         }
 
         // ==========================================
-        // 2. CONFIGURATION & STATE
+        // 3. CORE LOGIC (Preserved)
         // ==========================================
+        const popAudio = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"); 
+        function playClick() { }
+
         const SUPABASE_URL = 'https://rhodybetonjerkcsdstj.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJob2R5YmV0b25qZXJrY3Nkc3RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4OTU5MDAsImV4cCI6MjA4NDQ3MTkwMH0.IEO-2spCVUxYFiQW-ARlA4RH57R_DQttQsWW0tGnUMI';
         const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -306,27 +434,19 @@
         let currentWishId = null;
         let wishData = { type: '', gender: 'male', image: null };
         
-        // ==========================================
-        // 3. INITIALIZATION
-        // ==========================================
         window.onload = async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
 
             if (id) {
-                // VIEWER MODE
                 document.getElementById('screen-home').classList.add('hidden-screen');
                 document.getElementById('screen-loading').classList.remove('hidden-screen');
                 await fetchAndLoadWish(id);
             } else {
-                // CREATOR MODE
                 loadHistory(); 
             }
         };
 
-        // ==========================================
-        // 4. CREATOR LOGIC
-        // ==========================================
         function selectType(type) {
             wishData.type = type;
             document.getElementById('creator-form').classList.remove('hidden-screen');
@@ -348,7 +468,6 @@
                 const img = new Image();
                 img.src = e.target.result;
                 img.onload = () => {
-                    // Resize for Supabase storage limit (Text field)
                     const canvas = document.createElement('canvas');
                     const MAX_WIDTH = 500; 
                     const scaleSize = MAX_WIDTH / img.width;
@@ -371,18 +490,15 @@
             
             if(!name) return alert("Please enter a name!");
 
-            // Theme Logic
             let themeClass = 'theme-male';
             if(wishData.type === 'wedding') themeClass = 'theme-wedding';
             else if(age && age < 13) themeClass = 'theme-kid';
             else if(wishData.gender === 'female') themeClass = 'theme-female';
 
-            // Generate Smart Wish
             const msg = generateSmartWish(wishData.type, relation, name, age, wishData.gender);
             
             document.getElementById('screen-loading').classList.remove('hidden-screen');
 
-            // Save DB
             const { data, error } = await client.from('wishes').insert([{ 
                 type: wishData.type, name: name, message: msg, image_data: wishData.image, 
                 gender: wishData.gender, age: age, theme: themeClass
@@ -400,9 +516,6 @@
             window.location.href = `?id=${newId}`;
         }
 
-        // ==========================================
-        // 5. VIEWER LOGIC
-        // ==========================================
         async function fetchAndLoadWish(id) {
             currentWishId = id;
             const { data, error } = await client.from('wishes').select('*').eq('id', id).single();
@@ -414,7 +527,6 @@
                 return;
             }
 
-            // Populate UI
             const defaultAvatar = data.gender === 'female' 
                 ? 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png' 
                 : 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
@@ -424,24 +536,20 @@
             document.getElementById('disp-name').innerText = data.name;
             document.getElementById('disp-msg').innerText = data.message;
             
-            // Apply Theme
             document.getElementById('screen-display').className = `flex-1 hidden-screen flex flex-col relative overflow-hidden transition-all duration-1000 ${data.theme}`;
 
-            // Age Badge / Candle
             if(data.age && data.type === 'birthday') {
                 const badge = document.getElementById('disp-age-badge');
                 document.getElementById('age-text').innerText = data.age;
                 badge.classList.remove('hidden');
             }
 
-            // Ownership Check
             let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
             if(history.some(item => item.id === id)) {
                 document.getElementById('btn-delete').classList.remove('hidden');
             }
 
-            // SMART AUDIO SELECTION
-            let audioSrc = 'wish.mp3'; // Fallback
+            let audioSrc = 'wish.mp3'; 
             if (data.type === 'wedding') audioSrc = 'wedding.mp3';
             else if (data.age && data.age < 13) audioSrc = 'birthday-children.mp3';
             else audioSrc = 'happy-birthday.mp3';
@@ -461,13 +569,9 @@
             fireConfetti();
         }
 
-        // ==========================================
-        // 6. SMART WISH GENERATOR (LOGIC PRESERVED)
-        // ==========================================
         function generateSmartWish(type, relation, name, age, gender) {
             const isMale = gender === 'male';
             
-            // --- WEDDING ---
             if (type === 'wedding') {
                 const wishes = [
                     `Happy Anniversary, ${name}! 🥂 May your love story continue to be as magical as the day it began. Here’s to another year of love and laughter!`,
@@ -478,7 +582,6 @@
                 return wishes[Math.floor(Math.random() * wishes.length)];
             }
 
-            // --- KIDS (< 13) ---
             if (age && age < 13) {
                 const kidWishes = [
                     `Happy Birthday ${name}! 🎈 You are our little superstar! Turning ${age} is a big deal. Have a day filled with cake, toys, and fun!`,
@@ -489,7 +592,6 @@
                 return kidWishes[Math.floor(Math.random() * kidWishes.length)];
             }
 
-            // --- ADULTS ---
             const templates = {
                 friend: [
                     `Happy Birthday ${name}! 🥂 Another year older, wiser, and even more fabulous. So lucky to have a friend like you. Let's party!`,
@@ -510,7 +612,7 @@
                     `Happy Birthday ${name}! 🤪 Growing up with you was crazy, but I wouldn't trade it. Have a great one!`,
                     `To the best ${isMale ? 'brother' : 'sister'}, ${name}! 🎂 Happy Birthday! Thanks for always having my back.`
                 ],
-                child: [ // Adult Child
+                child: [ 
                     `Happy Birthday ${name}! ❤️ Watching you grow into such an amazing person is my greatest joy. So proud of you.`,
                     `To my dearest ${name}, Happy Birthday! 🎂 You will always be my little ${isMale ? 'boy' : 'girl'}, no matter how old you get.`
                 ]
@@ -524,35 +626,28 @@
             return cat[Math.floor(Math.random() * cat.length)];
         }
 
-        // ==========================================
-        // 7. IMAGE SAVING & SHARING
-        // ==========================================
         function downloadImage() {
             const screen = document.getElementById('screen-display');
             const topControls = document.getElementById('top-controls');
             const shareSheet = document.getElementById('share-sheet');
             const watermark = document.getElementById('watermark');
 
-            // 1. Prepare for Capture
             topControls.style.display = 'none';
             shareSheet.style.display = 'none';
             watermark.style.display = 'block'; 
             
-            // 2. Capture with High Quality
             html2canvas(screen, { 
-                scale: 3, // High Res
+                scale: 3, 
                 useCORS: true, 
                 allowTaint: true,
                 backgroundColor: null,
                 width: screen.offsetWidth,
                 height: screen.offsetHeight
             }).then(canvas => {
-                // 3. Restore UI
                 topControls.style.display = 'flex';
                 shareSheet.style.display = 'block';
                 watermark.style.display = 'none';
 
-                // 4. Download
                 const link = document.createElement('a');
                 link.download = `Wish_${document.getElementById('disp-name').innerText}.png`;
                 link.href = canvas.toDataURL('image/png');
@@ -583,9 +678,6 @@
             });
         }
 
-        // ==========================================
-        // 8. HELPERS (History, Icons, Confetti)
-        // ==========================================
         function addToHistory(id, name, type) {
             let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
             history.unshift({ id, name, type, date: new Date().toLocaleDateString() });
