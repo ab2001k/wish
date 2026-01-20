@@ -33,7 +33,7 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* App Container centering */
+        /* App Container */
         #app-wrapper {
             width: 100%;
             height: 100%;
@@ -98,6 +98,15 @@
             z-index: 20;
         }
 
+        /* DECORATIVE EMOJIS (For Capture) */
+        .deco-emoji {
+            position: absolute;
+            font-size: 2rem;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            z-index: 5;
+            animation: float 4s ease-in-out infinite;
+        }
+
         /* Button Click Effect */
         .btn-click:active { transform: scale(0.95); }
 
@@ -120,7 +129,6 @@
              animation: zoomIn 5s infinite alternate;
         }
 
-        /* Controls Container (Hidden initially) */
         #matrix-controls {
             opacity: 0; 
             transition: opacity 1.5s ease-in;
@@ -176,17 +184,10 @@
                 <canvas id="matrix-canvas"></canvas>
                 <div class="matrix-content">
                     <h1 class="hacked-title">SYSTEM HACKED</h1>
-                    
                     <div id="matrix-controls">
                         <h2 class="text-white text-3xl mb-8">...Just Kidding! 😜</h2>
-
-                        <a href="https://wa.me/+918822967314?text=Hello%20Developer%2C%20I%20found%20the%20secret%20Matrix%20zone%20in%20WishMaker!%20%F0%9F%95%B6%EF%B8%8F" class="matrix-btn">
-                            > TALK TO DEV_
-                        </a>
-                        
-                        <button onclick="exitMatrix()" class="matrix-btn-back">
-                            < GO BACK
-                        </button>
+                        <a href="https://wa.me/+918822967314?text=Hello%20Developer%2C%20I%20found%20the%20secret%20Matrix%20zone%20in%20WishMaker!%20%F0%9F%95%B6%EF%B8%8F" class="matrix-btn">> TALK TO DEV_</a>
+                        <button onclick="exitMatrix()" class="matrix-btn-back">< GO BACK</button>
                     </div>
                 </div>
             </div>
@@ -223,8 +224,7 @@
                         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Your Creations</h3>
                         <span class="text-xs text-indigo-500 font-bold cursor-pointer hover:underline" onclick="clearHistory()">Clear All</span>
                     </div>
-                    <div id="history-list" class="space-y-3 pb-20">
-                        </div>
+                    <div id="history-list" class="space-y-3 pb-20"></div>
                 </div>
 
                 <div class="mt-auto pt-10 pb-4 text-center">
@@ -274,7 +274,7 @@
                                     <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Relation</label>
                                     <select id="inp-relation" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition appearance-none">
                                         <option value="friend">Friend / Bestie</option>
-                                        <option value="family">Parent / Elder</option>
+                                        <option value="partner_young">Boyfriend / Girlfriend</option> <option value="family">Parent / Elder</option>
                                         <option value="spouse">Spouse / Partner</option>
                                         <option value="child">Son / Daughter</option>
                                         <option value="sibling">Brother / Sister</option>
@@ -330,15 +330,17 @@
                         <button id="btn-delete" onclick="playClick(); deleteWish()" class="hidden bg-red-500/80 backdrop-blur p-2 w-8 h-8 rounded-full shadow-lg text-white">
                             <i class="fas fa-trash text-xs"></i>
                         </button>
-                        <button onclick="toggleAudio()" class="bg-white/30 backdrop-blur-md p-2 w-8 h-8 rounded-full text-gray-800 border border-white/40 shadow-sm">
+                        <button onclick="toggleAudio()" class="bg-white/30 backdrop-blur-md p-2 w-8 h-8 rounded-full text-gray-800 border border-white/40 shadow-sm transition">
                             <i id="icon-audio" class="fas fa-volume-up text-xs"></i>
                         </button>
                     </div>
                 </div>
 
-                <div id="capture-area" class="flex-1 flex flex-col items-center justify-center p-6 text-center z-10 overflow-y-auto no-scrollbar">
+                <div id="capture-area" class="flex-1 flex flex-col items-center justify-center p-6 text-center z-10 overflow-y-auto no-scrollbar relative">
                     
-                    <div class="relative mb-6 group">
+                    <div id="decorative-emojis" class="absolute inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+                    <div class="relative mb-6 group z-10">
                         <div class="absolute inset-0 bg-white/50 rounded-full blur-xl animate-pulse group-hover:blur-2xl transition"></div>
                         <div class="photo-frame relative w-48 h-48 rounded-full p-2 bg-white/30 backdrop-blur-sm border border-white/60 shadow-2xl animate-[float_6s_infinite] mx-auto">
                             <img id="disp-img" src="" class="w-full h-full rounded-full object-cover border-4 border-white shadow-inner">
@@ -349,10 +351,10 @@
                         </div>
                     </div>
 
-                    <h1 id="disp-title" class="text-4xl font-bold text-white mb-2 drop-shadow-lg tracking-tight elegant-font leading-tight"></h1>
-                    <h2 id="disp-name" class="text-3xl text-white/90 mb-6 handwritten drop-shadow-md transform -rotate-2"></h2>
+                    <h1 id="disp-title" class="relative z-10 text-4xl font-bold text-white mb-2 drop-shadow-lg tracking-tight elegant-font leading-tight"></h1>
+                    <h2 id="disp-name" class="relative z-10 text-3xl text-white/90 mb-6 handwritten drop-shadow-md transform -rotate-2"></h2>
 
-                    <div class="glass-panel p-8 rounded-3xl shadow-2xl w-full max-w-sm relative">
+                    <div class="glass-panel p-8 rounded-3xl shadow-2xl w-full max-w-sm relative z-10">
                         <i class="fas fa-quote-left text-indigo-400/30 text-3xl absolute -top-4 -left-2"></i>
                         <p id="disp-msg" class="text-gray-800 text-lg font-medium leading-relaxed font-serif italic"></p>
                         <i class="fas fa-quote-right text-indigo-400/30 text-3xl absolute -bottom-4 -right-2"></i>
@@ -395,9 +397,34 @@
 
     <script>
         // ==========================================
-        // 1. RELOAD CAUTION (No warning on home screen)
+        // 1. GEN Z CONFETTI ON ENTRY (FIX 3)
         // ==========================================
-        // No global beforeunload. Can add strictly for creator form if needed, but removed as per last instruction.
+        function fireGenZConfetti() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            var randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                
+                // Since particles fall down, start a bit higher than random
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        window.addEventListener('load', () => {
+             // Fire Gen Z confetti on load as requested
+             fireGenZConfetti();
+        });
 
         // ==========================================
         // 2. MATRIX EASTER EGG LOGIC
@@ -408,7 +435,6 @@
         function triggerEasterEgg() {
             titleTapCount++;
             
-            // Reset count if too slow (2 seconds)
             clearTimeout(tapTimer);
             tapTimer = setTimeout(() => { titleTapCount = 0; }, 2000);
 
@@ -423,12 +449,10 @@
             const controls = document.getElementById('matrix-controls');
             
             overlay.classList.remove('hidden-screen');
-            controls.style.opacity = '0'; // Ensure hidden initially
+            controls.style.opacity = '0'; 
 
-            // Start Canvas Matrix Rain
             startMatrixRain();
 
-            // Reveal Buttons & Message after 4 seconds (Panic time)
             setTimeout(() => {
                 controls.style.opacity = '1';
             }, 4000);
@@ -495,6 +519,7 @@
                 document.getElementById('screen-loading').classList.remove('hidden-screen');
                 await fetchAndLoadWish(id);
             } else {
+                fireGenZConfetti(); // Fire on home screen too
                 loadHistory(); 
             }
         };
@@ -590,7 +615,6 @@
             
             document.getElementById('screen-display').className = `flex-1 hidden-screen flex flex-col relative overflow-hidden transition-all duration-1000 ${data.theme}`;
 
-            // RESTORED: Age Badge Logic
             if(data.age && data.type === 'birthday') {
                 const badge = document.getElementById('disp-age-badge');
                 document.getElementById('age-text').innerText = data.age;
@@ -602,9 +626,7 @@
                 document.getElementById('btn-delete').classList.remove('hidden');
             }
 
-            // REFINED AUDIO LOGIC
-            let audioSrc = 'happy-birthday.mp3'; // Default for Adult Birthday
-
+            let audioSrc = 'happy-birthday.mp3'; 
             if (data.type === 'wedding') {
                 audioSrc = 'wedding.mp3';
             } else if (data.type === 'birthday' && data.age && parseInt(data.age) < 13) {
@@ -614,6 +636,7 @@
             document.getElementById('audio-bg').src = audioSrc;
             
             setupFloatingIcons(data.age, data.gender, data.type);
+            setupDecorativeEmojis(data.type, data.gender); // Add emojis for capture
 
             document.getElementById('screen-loading').classList.add('hidden-screen');
             document.getElementById('screen-reveal').classList.remove('hidden-screen');
@@ -626,38 +649,70 @@
             fireConfetti();
         }
 
+        // ==========================================
+        // 4. DECORATIVE EMOJIS (FIX 1)
+        // ==========================================
+        function setupDecorativeEmojis(type, gender) {
+            const container = document.getElementById('decorative-emojis');
+            container.innerHTML = '';
+            
+            let emojis = ['✨', '🎈', '🎉'];
+            if (type === 'birthday') {
+                emojis = gender === 'female' ? ['🦋', '🌸', '🧁', '✨'] : ['🔥', '🚀', '🎸', '⚡'];
+            } else {
+                emojis = ['🥂', '💍', '🕊️', '❤️'];
+            }
+
+            // Place 4 fixed emojis loosely
+            const positions = [
+                { top: '10%', left: '10%' },
+                { top: '15%', right: '10%' },
+                { bottom: '35%', left: '5%' }, // Adjusted so it doesn't cover text
+                { bottom: '40%', right: '5%' }
+            ];
+
+            positions.forEach((pos, index) => {
+                const el = document.createElement('div');
+                el.className = 'deco-emoji';
+                el.innerText = emojis[index % emojis.length];
+                Object.assign(el.style, pos);
+                el.style.animationDelay = `${index * 0.5}s`;
+                container.appendChild(el);
+            });
+        }
+
         function generateSmartWish(type, relation, name, age, gender) {
             const isMale = gender === 'male';
             
             if (type === 'wedding') {
                 const wishes = [
-                    `Happy Anniversary, ${name}! 🥂 May your love story continue to be as magical as the day it began. Here’s to another year of love and laughter!`,
-                    `Cheers to ${name}! ❤️ Wishing you both endless joy. May your bond grow stronger with every passing year. Happy Anniversary!`,
+                    `Happy Anniversary, ${name}! 🥂 May your love story continue to be as magical as the day it began.`,
+                    `Cheers to ${name}! ❤️ Wishing you both endless joy. May your bond grow stronger with every passing year.`,
                     `Happy Anniversary! 🕊️ Viewing the love you share is a beautiful thing. May you always find comfort in each other.`
                 ];
-                if(relation === 'spouse') return `Happy Anniversary, my love ${name}. ❤️ You are my rock, my soulmate, and my best friend. I love you more than words can say.`;
+                if(relation === 'spouse') return `Happy Anniversary, my love ${name}. ❤️ You are my rock, my soulmate, and my best friend.`;
                 return wishes[Math.floor(Math.random() * wishes.length)];
             }
 
             if (age && age < 13) {
                 const kidWishes = [
-                    `Happy Birthday ${name}! 🎈 You are our little superstar! Turning ${age} is a big deal. Have a day filled with cake, toys, and fun!`,
-                    `Hip Hip Hooray! 🎂 Happy Birthday ${name}! May your day be as sweet and colorful as a rainbow. Keep shining bright!`,
+                    `Happy Birthday ${name}! 🎈 You are our little superstar! Turning ${age} is a big deal. Have fun!`,
+                    `Hip Hip Hooray! 🎂 Happy Birthday ${name}! May your day be as sweet and colorful as a rainbow.`,
                     `Wow, ${name} is ${age} today! 🚀 Blast off into a year of fun and adventure. Happy Birthday little hero!`
                 ];
-                if(relation === 'child') return `Happy ${age}th Birthday to my precious ${isMale ? 'son' : 'daughter'}, ${name}. ❤️ You light up our world. We love you so much!`;
+                if(relation === 'child') return `Happy ${age}th Birthday to my precious ${isMale ? 'son' : 'daughter'}, ${name}. ❤️ You light up our world.`;
                 return kidWishes[Math.floor(Math.random() * kidWishes.length)];
             }
 
             const templates = {
                 friend: [
-                    `Happy Birthday ${name}! 🥂 Another year older, wiser, and even more fabulous. So lucky to have a friend like you. Let's party!`,
+                    `Happy Birthday ${name}! 🥂 Another year older, wiser, and even more fabulous. Let's party!`,
                     `Cheers to ${name}! 🍻 May this year bring you success, laughter, and zero stress. You deserve the best!`,
-                    `Happy Birthday! 🎂 To the person who knows too many of my secrets. Have a blast today, ${name}!`
+                    `Happy Birthday! 🎂 To the person who knows too many of my secrets. Have a blast today!`
                 ],
                 family: [
-                    `Happy Birthday ${name}! ❤️ Your kindness inspires everyone around you. Wishing you health and happiness today and always.`,
-                    `Dearest ${name}, wishing you a wonderful birthday. Thank you for always being there for the family. Enjoy your day!`,
+                    `Happy Birthday ${name}! ❤️ Your kindness inspires everyone around you. Wishing you health and happiness.`,
+                    `Dearest ${name}, wishing you a wonderful birthday. Thank you for always being there for the family.`,
                     `Happy Birthday! 🌹 May God bless you with peace and joy this coming year, ${name}.`
                 ],
                 spouse: [
@@ -665,16 +720,23 @@
                     `To my beautiful wife ${name}, Happy Birthday! 🌹 You are the heart of our home. I love you endlessly.`,
                     `Happy Birthday to my better half, ${name}. ❤️ Every day with you is a gift.`
                 ],
+                // FIX 2: GF/BF Option Logic
+                partner_young: [
+                    `Happy Birthday ${name}! ❤️ You are my favorite notification. Love you so much!`, 
+                    `To my amazing ${isMale ? 'Boyfriend' : 'Girlfriend'}, ${name}! 🦋 You make my heart go skksksks. Happy Birthday!`,
+                    `Happy Birthday ${name}! 🥺✨ You are literally the best thing that ever happened to me.`
+                ],
                 sibling: [
                     `Happy Birthday ${name}! 🤪 Growing up with you was crazy, but I wouldn't trade it. Have a great one!`,
                     `To the best ${isMale ? 'brother' : 'sister'}, ${name}! 🎂 Happy Birthday! Thanks for always having my back.`
                 ],
                 child: [ 
-                    `Happy Birthday ${name}! ❤️ Watching you grow into such an amazing person is my greatest joy. So proud of you.`,
-                    `To my dearest ${name}, Happy Birthday! 🎂 You will always be my little ${isMale ? 'boy' : 'girl'}, no matter how old you get.`
+                    `Happy Birthday ${name}! ❤️ Watching you grow into such an amazing person is my greatest joy.`,
+                    `To my dearest ${name}, Happy Birthday! 🎂 You will always be my little ${isMale ? 'boy' : 'girl'}.`
                 ]
             };
 
+            // Spouse Logic override
             if(relation === 'spouse') {
                 return isMale ? templates.spouse[0] : templates.spouse[1];
             }
@@ -683,9 +745,6 @@
             return cat[Math.floor(Math.random() * cat.length)];
         }
 
-        // ==========================================
-        // 4. IMAGE & SHARING (Capture Dynamic BG)
-        // ==========================================
         function downloadImage() {
             const screen = document.getElementById('screen-display');
             const topControls = document.getElementById('top-controls');
@@ -696,12 +755,11 @@
             shareSheet.style.display = 'none';
             watermark.style.display = 'block'; 
             
-            // Target specific ID for gradient capture
             html2canvas(screen, { 
                 scale: 3, 
                 useCORS: true, 
                 allowTaint: true,
-                backgroundColor: null, // Keep the gradient!
+                backgroundColor: null, 
                 width: screen.offsetWidth,
                 height: screen.offsetHeight
             }).then(canvas => {
@@ -739,9 +797,6 @@
             });
         }
 
-        // ==========================================
-        // 5. HISTORY & COPY LINK IN LIST
-        // ==========================================
         function addToHistory(id, name, type) {
             let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
             history.unshift({ id, name, type, date: new Date().toLocaleDateString() });
@@ -761,7 +816,6 @@
                 const div = document.createElement('div');
                 div.className = 'bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between shadow-sm hover:shadow-md transition';
                 
-                // Construct Full URL
                 const fullUrl = `${window.location.origin}${window.location.pathname}?id=${item.id}`;
 
                 div.innerHTML = `
@@ -814,9 +868,21 @@
             }
         }
         function fireConfetti() { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); }
+        
+        // FIX 3: Sound Button Logic
         function toggleAudio() {
             const audio = document.getElementById('audio-bg');
-            if(audio.paused) audio.play(); else audio.pause();
+            const icon = document.getElementById('icon-audio');
+            
+            if(audio.paused) {
+                audio.play();
+                icon.className = "fas fa-volume-up text-xs"; // Normal Icon
+                icon.parentElement.classList.remove("text-red-500", "border-red-500");
+            } else {
+                audio.pause();
+                icon.className = "fas fa-volume-mute text-xs"; // Mute Icon
+                icon.parentElement.classList.add("text-red-500", "border-red-500");
+            }
         }
     </script>
 </body>
