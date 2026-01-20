@@ -24,8 +24,8 @@
             width: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Prevent background scrolling */
-            background-color: #000; /* Dark bg behind app prevents white flashes */
+            overflow: hidden; 
+            background-color: #000; 
             font-family: 'Poppins', sans-serif;
             -webkit-user-select: none; 
             -ms-user-select: none; 
@@ -67,16 +67,16 @@
         .theme-wedding { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); }
         .theme-kid { background: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%); } 
 
-        /* Glassmorphism - ADJUSTED TRANSPARENCY */
+        /* Glassmorphism */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.65); /* More transparent */
+            background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }
 
-        /* SHINY AGE BADGE - FIXED CENTERING */
+        /* SHINY AGE BADGE */
         .shiny-badge {
             position: absolute;
             bottom: 0;
@@ -96,11 +96,11 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 2px 5px rgba(255,255,255,0.4);
             transform: rotate(10deg);
             z-index: 20;
-            line-height: 1; /* Fix vertical align */
-            padding-bottom: 2px; /* Slight visual adjustment */
+            line-height: 1;
+            padding-bottom: 2px;
         }
 
-        /* DECORATIVE EMOJIS (For Capture) */
+        /* DECORATIVE EMOJIS */
         .deco-emoji {
             position: absolute;
             font-size: 2rem;
@@ -277,7 +277,7 @@
                                 <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Relation</label>
                                 <select id="inp-relation" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition appearance-none">
                                     <option value="friend">Friend / Bestie</option>
-                                    <option value="partner_young">Boyfriend / Girlfriend</option> 
+                                    <option value="partner_young">Boyfriend / Girlfriend</option>
                                     <option value="family">Parent / Elder</option>
                                     <option value="spouse">Spouse / Partner</option>
                                     <option value="child">Son / Daughter</option>
@@ -517,6 +517,7 @@
                 document.getElementById('screen-loading').classList.remove('hidden-screen');
                 await fetchAndLoadWish(id);
             } else {
+                fireGenZConfetti(); // Fire on home screen too
                 loadHistory(); 
             }
         };
@@ -730,6 +731,7 @@
                 ]
             };
 
+            // Spouse Logic override
             if(relation === 'spouse') {
                 return isMale ? templates.spouse[0] : templates.spouse[1];
             }
