@@ -67,16 +67,16 @@
         .theme-wedding { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); }
         .theme-kid { background: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%); } 
 
-        /* Glassmorphism */
+        /* Glassmorphism - ADJUSTED TRANSPARENCY */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            background: rgba(255, 255, 255, 0.65); /* More transparent */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }
 
-        /* SHINY AGE BADGE */
+        /* SHINY AGE BADGE - FIXED CENTERING */
         .shiny-badge {
             position: absolute;
             bottom: 0;
@@ -96,6 +96,8 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 2px 5px rgba(255,255,255,0.4);
             transform: rotate(10deg);
             z-index: 20;
+            line-height: 1; /* Fix vertical align */
+            padding-bottom: 2px; /* Slight visual adjustment */
         }
 
         /* DECORATIVE EMOJIS (For Capture) */
@@ -230,75 +232,76 @@
                 <div class="mt-auto pt-10 pb-4 text-center">
                     <p class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">Made with ❤️ by Abhik</p>
                 </div>
+            </div>
 
-                <div id="creator-form" class="fixed inset-0 bg-gray-50 z-50 p-6 flex flex-col hidden-screen overflow-y-auto">
-                    <div class="flex items-center mb-8">
-                        <button onclick="playClick(); closeForm()" class="btn-click p-3 rounded-full bg-white text-gray-600 shadow-sm hover:bg-gray-100 transition"><i class="fas fa-arrow-left"></i></button>
-                        <h2 class="text-2xl font-bold ml-4 text-gray-800">Customize Wish</h2>
+            <div id="creator-form" class="fixed inset-0 bg-gray-50 z-50 p-6 flex flex-col hidden-screen overflow-y-auto">
+                <div class="flex items-center mb-8">
+                    <button onclick="playClick(); closeForm()" class="btn-click p-3 rounded-full bg-white text-gray-600 shadow-sm hover:bg-gray-100 transition"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="text-2xl font-bold ml-4 text-gray-800">Customize Wish</h2>
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 mb-6 space-y-6">
+                    
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Choose Theme</label>
+                        <div class="flex gap-4">
+                            <label class="flex-1 cursor-pointer group" onclick="playClick()">
+                                <input type="radio" name="gender" value="male" class="peer hidden" onchange="updateThemePreview('male')" checked>
+                                <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-600 transition group-hover:border-blue-200">
+                                    <span class="block text-xl mb-1">👨</span>
+                                    <span class="text-xs font-bold uppercase">Male</span>
+                                </div>
+                            </label>
+                            <label class="flex-1 cursor-pointer group" onclick="playClick()">
+                                <input type="radio" name="gender" value="female" class="peer hidden" onchange="updateThemePreview('female')">
+                                <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-pink-50 peer-checked:border-pink-500 peer-checked:text-pink-600 transition group-hover:border-pink-200">
+                                    <span class="block text-xl mb-1">👩</span>
+                                    <span class="text-xs font-bold uppercase">Female</span>
+                                </div>
+                            </label>
+                        </div>
                     </div>
 
-                    <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 mb-6 space-y-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Who is this for?</label>
+                            <input type="text" id="inp-name" placeholder="Name (e.g. Rahul)" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition">
+                        </div>
                         
-                        <div>
-                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Choose Theme</label>
-                            <div class="flex gap-4">
-                                <label class="flex-1 cursor-pointer group" onclick="playClick()">
-                                    <input type="radio" name="gender" value="male" class="peer hidden" onchange="updateThemePreview('male')" checked>
-                                    <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-600 transition group-hover:border-blue-200">
-                                        <span class="block text-xl mb-1">👨</span>
-                                        <span class="text-xs font-bold uppercase">Male</span>
-                                    </div>
-                                </label>
-                                <label class="flex-1 cursor-pointer group" onclick="playClick()">
-                                    <input type="radio" name="gender" value="female" class="peer hidden" onchange="updateThemePreview('female')">
-                                    <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-pink-50 peer-checked:border-pink-500 peer-checked:text-pink-600 transition group-hover:border-pink-200">
-                                        <span class="block text-xl mb-1">👩</span>
-                                        <span class="text-xs font-bold uppercase">Female</span>
-                                    </div>
-                                </label>
+                        <div class="flex gap-4">
+                            <div class="w-1/3">
+                                <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Age</label>
+                                <input type="number" id="inp-age" placeholder="25" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition">
                             </div>
-                        </div>
-
-                        <div class="space-y-4">
-                            <div>
-                                <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Who is this for?</label>
-                                <input type="text" id="inp-name" placeholder="Name (e.g. Rahul)" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition">
-                            </div>
-                            
-                            <div class="flex gap-4">
-                                <div class="w-1/3">
-                                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Age</label>
-                                    <input type="number" id="inp-age" placeholder="25" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition">
-                                </div>
-                                <div class="w-2/3">
-                                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Relation</label>
-                                    <select id="inp-relation" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition appearance-none">
-                                        <option value="friend">Friend / Bestie</option>
-                                        <option value="partner_young">Boyfriend / Girlfriend</option> <option value="family">Parent / Elder</option>
-                                        <option value="spouse">Spouse / Partner</option>
-                                        <option value="child">Son / Daughter</option>
-                                        <option value="sibling">Brother / Sister</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-2">Add a Photo</label>
-                            <div class="flex items-center gap-4 p-2 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
-                                <div class="w-14 h-14 rounded-xl bg-white shadow-sm overflow-hidden relative flex-shrink-0">
-                                    <img id="preview-thumb" class="w-full h-full object-cover hidden">
-                                    <i class="fas fa-image absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300"></i>
-                                </div>
-                                <label onclick="playClick()" class="flex-1 bg-white hover:bg-gray-100 text-gray-700 py-3 rounded-xl text-xs font-bold uppercase tracking-wide cursor-pointer text-center transition shadow-sm border border-gray-200">
-                                    Choose Image
-                                    <input type="file" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
-                                </label>
+                            <div class="w-2/3">
+                                <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Relation</label>
+                                <select id="inp-relation" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition appearance-none">
+                                    <option value="friend">Friend / Bestie</option>
+                                    <option value="partner_young">Boyfriend / Girlfriend</option> 
+                                    <option value="family">Parent / Elder</option>
+                                    <option value="spouse">Spouse / Partner</option>
+                                    <option value="child">Son / Daughter</option>
+                                    <option value="sibling">Brother / Sister</option>
+                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <button onclick="playClick(); saveAndGenerate()" class="btn-click w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-bold shadow-xl shadow-indigo-200 flex justify-center items-center gap-3 text-lg">
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-2">Add a Photo</label>
+                        <div class="flex items-center gap-4 p-2 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
+                            <div class="w-14 h-14 rounded-xl bg-white shadow-sm overflow-hidden relative flex-shrink-0">
+                                <img id="preview-thumb" class="w-full h-full object-cover hidden">
+                                <i class="fas fa-image absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300"></i>
+                            </div>
+                            <label onclick="playClick()" class="flex-1 bg-white hover:bg-gray-100 text-gray-700 py-3 rounded-xl text-xs font-bold uppercase tracking-wide cursor-pointer text-center transition shadow-sm border border-gray-200">
+                                Choose Image
+                                <input type="file" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
+                            </label>
+                        </div>
+                    </div>
+
+                    <button onclick="playClick(); saveAndGenerate()" class="btn-click w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-bold shadow-xl shadow-indigo-200 flex justify-center items-center gap-3 text-lg mt-6">
                         Create Magic <i class="fas fa-wand-magic-sparkles"></i>
                     </button>
                 </div>
@@ -327,7 +330,7 @@
                         <i class="fas fa-home mr-1"></i> Home
                     </button>
                     <div class="flex gap-2">
-                        <button id="btn-delete" onclick="playClick(); deleteWish()" class="hidden bg-red-500/80 backdrop-blur p-2 w-8 h-8 rounded-full shadow-lg text-white">
+                        <button id="btn-delete" onclick="playClick(); deleteWish()" class="hidden bg-red-500/80 backdrop-blur p-2 w-8 h-8 rounded-full shadow-lg text-white transition hover:scale-110">
                             <i class="fas fa-trash text-xs"></i>
                         </button>
                         <button onclick="toggleAudio()" class="bg-white/30 backdrop-blur-md p-2 w-8 h-8 rounded-full text-gray-800 border border-white/40 shadow-sm transition">
@@ -397,7 +400,7 @@
 
     <script>
         // ==========================================
-        // 1. GEN Z CONFETTI ON ENTRY (FIX 3)
+        // 1. GEN Z CONFETTI ON ENTRY
         // ==========================================
         function fireGenZConfetti() {
             var duration = 3 * 1000;
@@ -420,11 +423,6 @@
                 confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
             }, 250);
         }
-
-        window.addEventListener('load', () => {
-             // Fire Gen Z confetti on load as requested
-             fireGenZConfetti();
-        });
 
         // ==========================================
         // 2. MATRIX EASTER EGG LOGIC
@@ -519,18 +517,19 @@
                 document.getElementById('screen-loading').classList.remove('hidden-screen');
                 await fetchAndLoadWish(id);
             } else {
-                fireGenZConfetti(); // Fire on home screen too
                 loadHistory(); 
             }
         };
 
         function selectType(type) {
             wishData.type = type;
-            document.getElementById('creator-form').classList.remove('hidden-screen');
+            document.getElementById('screen-home').classList.add('hidden-screen'); // Hide Main Menu
+            document.getElementById('creator-form').classList.remove('hidden-screen'); // Show Form
         }
 
         function closeForm() {
-            document.getElementById('creator-form').classList.add('hidden-screen');
+            document.getElementById('creator-form').classList.add('hidden-screen'); // Hide Form
+            document.getElementById('screen-home').classList.remove('hidden-screen'); // Show Main Menu
         }
 
         function updateThemePreview(gender) {
@@ -636,7 +635,7 @@
             document.getElementById('audio-bg').src = audioSrc;
             
             setupFloatingIcons(data.age, data.gender, data.type);
-            setupDecorativeEmojis(data.type, data.gender); // Add emojis for capture
+            setupDecorativeEmojis(data.type, data.gender); 
 
             document.getElementById('screen-loading').classList.add('hidden-screen');
             document.getElementById('screen-reveal').classList.remove('hidden-screen');
@@ -646,12 +645,9 @@
             document.getElementById('screen-reveal').classList.add('hidden-screen');
             document.getElementById('screen-display').classList.remove('hidden-screen');
             document.getElementById('audio-bg').play().catch(e => console.log("Tap for audio"));
-            fireConfetti();
+            fireConfetti(); // Fire only here as requested
         }
 
-        // ==========================================
-        // 4. DECORATIVE EMOJIS (FIX 1)
-        // ==========================================
         function setupDecorativeEmojis(type, gender) {
             const container = document.getElementById('decorative-emojis');
             container.innerHTML = '';
@@ -663,11 +659,10 @@
                 emojis = ['🥂', '💍', '🕊️', '❤️'];
             }
 
-            // Place 4 fixed emojis loosely
             const positions = [
                 { top: '10%', left: '10%' },
                 { top: '15%', right: '10%' },
-                { bottom: '35%', left: '5%' }, // Adjusted so it doesn't cover text
+                { bottom: '35%', left: '5%' }, 
                 { bottom: '40%', right: '5%' }
             ];
 
@@ -720,7 +715,6 @@
                     `To my beautiful wife ${name}, Happy Birthday! 🌹 You are the heart of our home. I love you endlessly.`,
                     `Happy Birthday to my better half, ${name}. ❤️ Every day with you is a gift.`
                 ],
-                // FIX 2: GF/BF Option Logic
                 partner_young: [
                     `Happy Birthday ${name}! ❤️ You are my favorite notification. Love you so much!`, 
                     `To my amazing ${isMale ? 'Boyfriend' : 'Girlfriend'}, ${name}! 🦋 You make my heart go skksksks. Happy Birthday!`,
@@ -736,7 +730,6 @@
                 ]
             };
 
-            // Spouse Logic override
             if(relation === 'spouse') {
                 return isMale ? templates.spouse[0] : templates.spouse[1];
             }
@@ -869,7 +862,6 @@
         }
         function fireConfetti() { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); }
         
-        // FIX 3: Sound Button Logic
         function toggleAudio() {
             const audio = document.getElementById('audio-bg');
             const icon = document.getElementById('icon-audio');
