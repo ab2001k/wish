@@ -249,6 +249,26 @@
                             </div>
                     </div>
 
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Gender</label>
+                        <div class="flex gap-4">
+                            <label class="flex-1 cursor-pointer group" onclick="playClick()">
+                                <input type="radio" name="gender" value="male" class="peer hidden" onchange="updateThemePreview('male')" checked>
+                                <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-600 transition group-hover:border-blue-200">
+                                    <span class="block text-xl mb-1">👨</span>
+                                    <span class="text-xs font-bold uppercase">Male</span>
+                                </div>
+                            </label>
+                            <label class="flex-1 cursor-pointer group" onclick="playClick()">
+                                <input type="radio" name="gender" value="female" class="peer hidden" onchange="updateThemePreview('female')">
+                                <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-pink-50 peer-checked:border-pink-500 peer-checked:text-pink-600 transition group-hover:border-pink-200">
+                                    <span class="block text-xl mb-1">👩</span>
+                                    <span class="text-xs font-bold uppercase">Female</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="space-y-4">
                         <div>
                             <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Who is this for?</label>
@@ -596,7 +616,6 @@
                 document.getElementById('age-text').innerText = data.age;
                 badge.classList.remove('hidden');
             } else if (data.type === 'wedding' && data.age) {
-                // For Anniversary, show years in badge
                 const badge = document.getElementById('disp-age-badge');
                 document.getElementById('age-text').innerText = data.age;
                 badge.classList.remove('hidden');
