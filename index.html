@@ -61,11 +61,14 @@
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Themes */
-        .theme-male { background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%); }
-        .theme-female { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%); }
-        .theme-wedding { background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); }
-        .theme-kid { background: linear-gradient(135deg, #fddb92 0%, #d1fdff 100%); } 
+        /* --- BACKGROUND STYLES --- */
+        #bg-layer {
+            position: absolute; inset: 0; z-index: 0;
+            background-size: cover; background-position: center;
+            filter: blur(3px) brightness(0.85); /* Authentic Blur */
+            transform: scale(1.05);
+            transition: background-image 0.5s ease-in-out;
+        }
 
         /* Glassmorphism */
         .glass-panel {
@@ -78,35 +81,22 @@
 
         /* SHINY AGE BADGE */
         .shiny-badge {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 3.5rem;
-            height: 3.5rem;
+            position: absolute; bottom: 0; right: 0;
+            width: 3.5rem; height: 3.5rem;
             background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-family: 'Playfair Display', serif;
-            font-weight: 800;
-            font-size: 1.25rem;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-family: 'Playfair Display', serif; font-weight: 800; font-size: 1.25rem;
             border: 3px solid #fff;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2), inset 0 2px 5px rgba(255,255,255,0.4);
-            transform: rotate(10deg);
-            z-index: 20;
-            line-height: 1;
-            padding-bottom: 2px;
+            transform: rotate(10deg); z-index: 20;
+            line-height: 1; padding-bottom: 2px;
         }
 
         /* DECORATIVE EMOJIS */
         .deco-emoji {
-            position: absolute;
-            font-size: 2rem;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-            z-index: 5;
-            animation: float 4s ease-in-out infinite;
+            position: absolute; font-size: 2.5rem;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+            z-index: 5; animation: float 4s ease-in-out infinite;
         }
 
         /* Button Click Effect */
@@ -132,8 +122,7 @@
         }
 
         #matrix-controls {
-            opacity: 0; 
-            transition: opacity 1.5s ease-in;
+            opacity: 0; transition: opacity 1.5s ease-in;
             display: flex; flex-direction: column; align-items: center;
         }
         
@@ -157,6 +146,18 @@
         .matrix-btn-back:hover { background: #222; }
 
         @keyframes blinkMatrix { 0%, 100% { opacity: 1; box-shadow: 0 0 15px #0f0; } 50% { opacity: 0.8; box-shadow: 0 0 5px #0f0; } }
+
+        /* Theme Selector Styles */
+        .theme-option {
+            width: 45px; height: 45px; border-radius: 50%;
+            cursor: pointer; border: 3px solid #fff;
+            transition: transform 0.2s, border-color 0.2s;
+            flex-shrink: 0;
+            background-size: cover; background-position: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .theme-option:hover { transform: scale(1.1); }
+        .theme-option.selected { border-color: #6366f1; transform: scale(1.15); box-shadow: 0 0 10px rgba(99, 102, 241, 0.5); }
 
         /* UI FIX for Android Screens */
         @media (max-height: 800px) {
@@ -235,31 +236,17 @@
             </div>
 
             <div id="creator-form" class="fixed inset-0 bg-gray-50 z-50 p-6 flex flex-col hidden-screen overflow-y-auto">
-                <div class="flex items-center mb-8">
+                <div class="flex items-center mb-6">
                     <button onclick="playClick(); closeForm()" class="btn-click p-3 rounded-full bg-white text-gray-600 shadow-sm hover:bg-gray-100 transition"><i class="fas fa-arrow-left"></i></button>
                     <h2 class="text-2xl font-bold ml-4 text-gray-800">Customize Wish</h2>
                 </div>
 
-                <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 mb-6 space-y-6">
+                <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 mb-6 space-y-5">
                     
                     <div>
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Choose Theme</label>
-                        <div class="flex gap-4">
-                            <label class="flex-1 cursor-pointer group" onclick="playClick()">
-                                <input type="radio" name="gender" value="male" class="peer hidden" onchange="updateThemePreview('male')" checked>
-                                <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-600 transition group-hover:border-blue-200">
-                                    <span class="block text-xl mb-1">👨</span>
-                                    <span class="text-xs font-bold uppercase">Male</span>
-                                </div>
-                            </label>
-                            <label class="flex-1 cursor-pointer group" onclick="playClick()">
-                                <input type="radio" name="gender" value="female" class="peer hidden" onchange="updateThemePreview('female')">
-                                <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-pink-50 peer-checked:border-pink-500 peer-checked:text-pink-600 transition group-hover:border-pink-200">
-                                    <span class="block text-xl mb-1">👩</span>
-                                    <span class="text-xs font-bold uppercase">Female</span>
-                                </div>
-                            </label>
-                        </div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Choose Aesthetic</label>
+                        <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide" id="theme-selector">
+                            </div>
                     </div>
 
                     <div class="space-y-4">
@@ -270,7 +257,7 @@
                         
                         <div class="flex gap-4">
                             <div class="w-1/3">
-                                <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Age</label>
+                                <label id="label-age" class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Age</label>
                                 <input type="number" id="inp-age" placeholder="25" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition">
                             </div>
                             <div class="w-2/3">
@@ -284,6 +271,11 @@
                                     <option value="sibling">Brother / Sister</option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div>
+                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Custom Wish (Optional)</label>
+                            <textarea id="inp-custom-msg" rows="2" placeholder="Write your own message here..." class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-gray-700 transition text-sm"></textarea>
                         </div>
                     </div>
 
@@ -301,7 +293,7 @@
                         </div>
                     </div>
 
-                    <button onclick="playClick(); saveAndGenerate()" class="btn-click w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-bold shadow-xl shadow-indigo-200 flex justify-center items-center gap-3 text-lg mt-6">
+                    <button onclick="playClick(); saveAndGenerate()" class="btn-click w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-bold shadow-xl shadow-indigo-200 flex justify-center items-center gap-3 text-lg mt-2">
                         Create Magic <i class="fas fa-wand-magic-sparkles"></i>
                     </button>
                 </div>
@@ -320,10 +312,7 @@
 
             <div id="screen-display" class="flex-1 hidden-screen flex flex-col relative overflow-hidden transition-all duration-1000">
                 
-                <div class="absolute inset-0 pointer-events-none z-0">
-                    <div class="absolute top-10 left-10 w-20 h-20 bg-white opacity-20 rounded-full blur-2xl"></div>
-                    <div class="absolute bottom-20 right-10 w-32 h-32 bg-white opacity-20 rounded-full blur-3xl"></div>
-                </div>
+                <div id="bg-layer"></div>
 
                 <div id="top-controls" class="absolute top-4 w-full px-4 flex justify-between z-30">
                     <button onclick="playClick(); window.location.href = window.location.pathname" class="bg-white/30 backdrop-blur-md p-2 px-4 rounded-full text-gray-800 text-xs font-bold shadow-sm border border-white/40 hover:bg-white/50 transition">
@@ -400,103 +389,7 @@
 
     <script>
         // ==========================================
-        // 1. GEN Z CONFETTI ON ENTRY
-        // ==========================================
-        function fireGenZConfetti() {
-            var duration = 3 * 1000;
-            var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-            var randomInRange = (min, max) => Math.random() * (max - min) + min;
-
-            var interval = setInterval(function() {
-                var timeLeft = animationEnd - Date.now();
-
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
-
-                var particleCount = 50 * (timeLeft / duration);
-                
-                // Since particles fall down, start a bit higher than random
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-            }, 250);
-        }
-
-        // ==========================================
-        // 2. MATRIX EASTER EGG LOGIC
-        // ==========================================
-        let titleTapCount = 0;
-        let tapTimer;
-
-        function triggerEasterEgg() {
-            titleTapCount++;
-            
-            clearTimeout(tapTimer);
-            tapTimer = setTimeout(() => { titleTapCount = 0; }, 2000);
-
-            if (titleTapCount === 4) {
-                activateMatrix();
-                titleTapCount = 0;
-            }
-        }
-
-        function activateMatrix() {
-            const overlay = document.getElementById('matrix-overlay');
-            const controls = document.getElementById('matrix-controls');
-            
-            overlay.classList.remove('hidden-screen');
-            controls.style.opacity = '0'; 
-
-            startMatrixRain();
-
-            setTimeout(() => {
-                controls.style.opacity = '1';
-            }, 4000);
-        }
-
-        function exitMatrix() {
-             document.getElementById('matrix-overlay').classList.add('hidden-screen');
-        }
-
-        function startMatrixRain() {
-            const canvas = document.getElementById('matrix-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            const katakana = '01';
-            const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const nums = '0123456789';
-            const alphabet = katakana + latin + nums;
-
-            const fontSize = 16;
-            const columns = canvas.width / fontSize;
-            const rainDrops = [];
-
-            for (let x = 0; x < columns; x++) { rainDrops[x] = 1; }
-
-            const draw = () => {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#0F0';
-                ctx.font = fontSize + 'px monospace';
-
-                for (let i = 0; i < rainDrops.length; i++) {
-                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                    ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                        rainDrops[i] = 0;
-                    }
-                    rainDrops[i]++;
-                }
-            };
-            setInterval(draw, 30);
-        }
-
-        // ==========================================
-        // 3. CORE LOGIC
+        // 1. CONFIGURATION & STATE
         // ==========================================
         const popAudio = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"); 
         function playClick() { }
@@ -506,31 +399,77 @@
         const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentWishId = null;
-        let wishData = { type: '', gender: 'male', image: null };
-        
+        let wishData = { type: '', gender: 'male', image: null, theme: null }; 
+        // theme defaults to null so we know if user picked one manually or not
+
+        // 10+ Authentic Themes (Fixed Links)
+        const themes = [
+            { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue' },
+            { id: 'theme-pink', img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80', name: 'Pink' },
+            { id: 'theme-purple', img: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80', name: 'Purple' },
+            { id: 'theme-sunset', img: 'https://images.unsplash.com/photo-1495616811223-4d98c6e9d869?auto=format&fit=crop&w=800&q=80', name: 'Sunset' },
+            { id: 'theme-mint', img: 'https://images.unsplash.com/photo-1530092285049-1c42085fd31f?auto=format&fit=crop&w=800&q=80', name: 'Nature' },
+            { id: 'theme-gold', img: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80', name: 'Luxury' },
+            { id: 'theme-dark', img: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=800&q=80', name: 'Dark' },
+            { id: 'theme-ocean', img: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=800&q=80', name: 'Ocean' },
+            { id: 'theme-berry', img: 'https://images.unsplash.com/photo-1516550893885-dd0926b054f4?auto=format&fit=crop&w=800&q=80', name: 'Love' },
+            { id: 'theme-royal', img: 'https://images.unsplash.com/photo-1535868463750-c78d9543614f?auto=format&fit=crop&w=800&q=80', name: 'Classic' }
+        ];
+
+        // ==========================================
+        // 2. INITIALIZATION
+        // ==========================================
         window.onload = async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
+
+            setupThemeSelector();
 
             if (id) {
                 document.getElementById('screen-home').classList.add('hidden-screen');
                 document.getElementById('screen-loading').classList.remove('hidden-screen');
                 await fetchAndLoadWish(id);
             } else {
-                fireGenZConfetti(); // Fire on home screen too
                 loadHistory(); 
             }
         };
 
+        function setupThemeSelector() {
+            const container = document.getElementById('theme-selector');
+            container.innerHTML = '';
+            themes.forEach(t => {
+                const div = document.createElement('div');
+                div.className = `theme-option`;
+                div.style.backgroundImage = `url(${t.img})`;
+                div.onclick = () => {
+                    document.querySelectorAll('.theme-option').forEach(el => el.classList.remove('selected'));
+                    div.classList.add('selected');
+                    wishData.theme = t.id; // Manual selection
+                    playClick();
+                };
+                container.appendChild(div);
+            });
+        }
+
+        // ==========================================
+        // 3. UI FLOW
+        // ==========================================
         function selectType(type) {
             wishData.type = type;
-            document.getElementById('screen-home').classList.add('hidden-screen'); // Hide Main Menu
-            document.getElementById('creator-form').classList.remove('hidden-screen'); // Show Form
+            document.getElementById('screen-home').classList.add('hidden-screen'); 
+            document.getElementById('creator-form').classList.remove('hidden-screen');
+            
+            const ageLabel = document.getElementById('label-age');
+            if(type === 'wedding') {
+                ageLabel.innerText = "Years Together";
+            } else {
+                ageLabel.innerText = "Age";
+            }
         }
 
         function closeForm() {
-            document.getElementById('creator-form').classList.add('hidden-screen'); // Hide Form
-            document.getElementById('screen-home').classList.remove('hidden-screen'); // Show Main Menu
+            document.getElementById('creator-form').classList.add('hidden-screen'); 
+            document.getElementById('screen-home').classList.remove('hidden-screen'); 
         }
 
         function updateThemePreview(gender) {
@@ -560,25 +499,34 @@
             reader.readAsDataURL(file);
         }
 
+        // ==========================================
+        // 4. SAVING & GENERATING (SMART LOGIC)
+        // ==========================================
         async function saveAndGenerate() {
             const name = document.getElementById('inp-name').value;
             const age = document.getElementById('inp-age').value;
             const relation = document.getElementById('inp-relation').value;
+            const customMsg = document.getElementById('inp-custom-msg').value;
             
             if(!name) return alert("Please enter a name!");
 
-            let themeClass = 'theme-male';
-            if(wishData.type === 'wedding') themeClass = 'theme-wedding';
-            else if(age && age < 13) themeClass = 'theme-kid';
-            else if(wishData.gender === 'female') themeClass = 'theme-female';
+            // Message Logic
+            let msg = customMsg.trim();
+            if(!msg) {
+                msg = generateSmartWish(wishData.type, relation, name, age, wishData.gender);
+            }
 
-            const msg = generateSmartWish(wishData.type, relation, name, age, wishData.gender);
+            // Theme Logic (AI if not selected)
+            let finalTheme = wishData.theme;
+            if(!finalTheme) {
+                finalTheme = getSmartTheme(wishData.type, relation, age, wishData.gender);
+            }
             
             document.getElementById('screen-loading').classList.remove('hidden-screen');
 
             const { data, error } = await client.from('wishes').insert([{ 
                 type: wishData.type, name: name, message: msg, image_data: wishData.image, 
-                gender: wishData.gender, age: age, theme: themeClass
+                gender: wishData.gender, age: age, theme: finalTheme
             }]).select();
 
             if(error) {
@@ -591,6 +539,32 @@
             const newId = data[0].id;
             addToHistory(newId, name, wishData.type);
             window.location.href = `?id=${newId}`;
+        }
+
+        function getSmartTheme(type, relation, age, gender) {
+            const pools = {
+                wedding: ['theme-gold', 'theme-berry', 'theme-royal', 'theme-purple'],
+                child_male: ['theme-blue', 'theme-mint', 'theme-ocean'],
+                child_female: ['theme-pink', 'theme-purple', 'theme-sunset'],
+                partner: ['theme-berry', 'theme-sunset', 'theme-dark'],
+                female_adult: ['theme-pink', 'theme-berry', 'theme-sunset', 'theme-royal'],
+                male_adult: ['theme-dark', 'theme-royal', 'theme-ocean', 'theme-blue'],
+                default: ['theme-blue', 'theme-mint', 'theme-sunset']
+            };
+
+            let selectedPool = pools.default;
+
+            if (type === 'wedding') {
+                selectedPool = pools.wedding;
+            } else if (age && parseInt(age) < 13) {
+                selectedPool = gender === 'female' ? pools.child_female : pools.child_male;
+            } else if (relation === 'spouse' || relation === 'partner_young') {
+                selectedPool = pools.partner;
+            } else {
+                selectedPool = gender === 'female' ? pools.female_adult : pools.male_adult;
+            }
+
+            return selectedPool[Math.floor(Math.random() * selectedPool.length)];
         }
 
         async function fetchAndLoadWish(id) {
@@ -613,9 +587,15 @@
             document.getElementById('disp-name').innerText = data.name;
             document.getElementById('disp-msg').innerText = data.message;
             
-            document.getElementById('screen-display').className = `flex-1 hidden-screen flex flex-col relative overflow-hidden transition-all duration-1000 ${data.theme}`;
+            // Apply Theme Image
+            const themeObj = themes.find(t => t.id === data.theme) || themes[0];
+            document.getElementById('bg-layer').style.backgroundImage = `url(${themeObj.img})`;
 
             if(data.age && data.type === 'birthday') {
+                const badge = document.getElementById('disp-age-badge');
+                document.getElementById('age-text').innerText = data.age;
+                badge.classList.remove('hidden');
+            } else if (data.type === 'wedding' && data.age) {
                 const badge = document.getElementById('disp-age-badge');
                 document.getElementById('age-text').innerText = data.age;
                 badge.classList.remove('hidden');
@@ -642,11 +622,14 @@
             document.getElementById('screen-reveal').classList.remove('hidden-screen');
         }
 
+        // ==========================================
+        // 5. HELPER FUNCTIONS
+        // ==========================================
         function openWish() {
             document.getElementById('screen-reveal').classList.add('hidden-screen');
             document.getElementById('screen-display').classList.remove('hidden-screen');
             document.getElementById('audio-bg').play().catch(e => console.log("Tap for audio"));
-            fireConfetti(); // Fire only here as requested
+            fireConfetti();
         }
 
         function setupDecorativeEmojis(type, gender) {
@@ -687,6 +670,7 @@
                     `Happy Anniversary! 🕊️ Viewing the love you share is a beautiful thing. May you always find comfort in each other.`
                 ];
                 if(relation === 'spouse') return `Happy Anniversary, my love ${name}. ❤️ You are my rock, my soulmate, and my best friend.`;
+                if(relation === 'partner_young') return `Happy Anniversary babe! ❤️ ${age ? age + ' years' : ''} of annoying each other and still going strong. Love you!`;
                 return wishes[Math.floor(Math.random() * wishes.length)];
             }
 
@@ -731,13 +715,43 @@
                 ]
             };
 
-            // Spouse Logic override
-            if(relation === 'spouse') {
-                return isMale ? templates.spouse[0] : templates.spouse[1];
-            }
+            if(relation === 'spouse') return isMale ? templates.spouse[0] : templates.spouse[1];
 
             const cat = templates[relation] || templates['friend'];
             return cat[Math.floor(Math.random() * cat.length)];
+        }
+
+        // Matrix Easter Egg
+        let titleTapCount = 0; let tapTimer;
+        function triggerEasterEgg() {
+            titleTapCount++;
+            clearTimeout(tapTimer);
+            tapTimer = setTimeout(() => { titleTapCount = 0; }, 2000);
+            if (titleTapCount === 4) { activateMatrix(); titleTapCount = 0; }
+        }
+        function activateMatrix() {
+            document.getElementById('matrix-overlay').classList.remove('hidden-screen');
+            document.getElementById('matrix-controls').style.opacity = '0'; 
+            startMatrixRain();
+            setTimeout(() => { document.getElementById('matrix-controls').style.opacity = '1'; }, 4000);
+        }
+        function exitMatrix() { document.getElementById('matrix-overlay').classList.add('hidden-screen'); }
+        function startMatrixRain() {
+            const canvas = document.getElementById('matrix-canvas'); const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            const katakana = '01'; const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; const nums = '0123456789'; const alphabet = katakana + latin + nums;
+            const fontSize = 16; const columns = canvas.width / fontSize; const rainDrops = [];
+            for (let x = 0; x < columns; x++) { rainDrops[x] = 1; }
+            const draw = () => {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#0F0'; ctx.font = fontSize + 'px monospace';
+                for (let i = 0; i < rainDrops.length; i++) {
+                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                    ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) { rainDrops[i] = 0; }
+                    rainDrops[i]++;
+                }
+            }; setInterval(draw, 30);
         }
 
         function downloadImage() {
@@ -745,23 +759,9 @@
             const topControls = document.getElementById('top-controls');
             const shareSheet = document.getElementById('share-sheet');
             const watermark = document.getElementById('watermark');
-
-            topControls.style.display = 'none';
-            shareSheet.style.display = 'none';
-            watermark.style.display = 'block'; 
-            
-            html2canvas(screen, { 
-                scale: 3, 
-                useCORS: true, 
-                allowTaint: true,
-                backgroundColor: null, 
-                width: screen.offsetWidth,
-                height: screen.offsetHeight
-            }).then(canvas => {
-                topControls.style.display = 'flex';
-                shareSheet.style.display = 'block';
-                watermark.style.display = 'none';
-
+            topControls.style.display = 'none'; shareSheet.style.display = 'none'; watermark.style.display = 'block'; 
+            html2canvas(screen, { scale: 3, useCORS: true, allowTaint: true, backgroundColor: null, width: screen.offsetWidth, height: screen.offsetHeight }).then(canvas => {
+                topControls.style.display = 'flex'; shareSheet.style.display = 'block'; watermark.style.display = 'none';
                 const link = document.createElement('a');
                 link.download = `Wish_${document.getElementById('disp-name').innerText}.png`;
                 link.href = canvas.toDataURL('image/png');
@@ -780,7 +780,6 @@
             const name = document.getElementById('disp-name').innerText;
             const msg = document.getElementById('disp-msg').innerText;
             const text = `🎉 *Happy Birthday ${name}!* \n\n"${msg}"\n\nSee your special card here: ${window.location.href}`;
-            
             navigator.clipboard.writeText(text).then(() => alert("Wish + Link Copied! 📋"));
         }
 
@@ -797,7 +796,6 @@
             history.unshift({ id, name, type, date: new Date().toLocaleDateString() });
             localStorage.setItem('wish_history', JSON.stringify(history));
         }
-        
         function loadHistory() {
             let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
             const list = document.getElementById('history-list');
@@ -805,42 +803,24 @@
             if (history.length === 0) { section.classList.add('hidden-screen'); return; }
             section.classList.remove('hidden-screen');
             list.innerHTML = '';
-            
             history.forEach(item => {
                 const icon = item.type === 'birthday' ? '🎂' : '💍';
+                const fullUrl = `${window.location.origin}${window.location.pathname}?id=${item.id}`;
                 const div = document.createElement('div');
                 div.className = 'bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between shadow-sm hover:shadow-md transition';
-                
-                const fullUrl = `${window.location.origin}${window.location.pathname}?id=${item.id}`;
-
                 div.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <span class="text-xl bg-gray-50 p-2 rounded-lg">${icon}</span>
-                        <div><p class="font-bold text-gray-800 text-sm">${item.name}</p><p class="text-[10px] text-gray-400">${item.date}</p></div>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="copyHistoryLink('${fullUrl}')" class="bg-gray-100 text-gray-600 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 transition">
-                            <i class="fas fa-copy text-xs"></i>
-                        </button>
-                        <a href="?id=${item.id}" class="bg-indigo-50 text-indigo-600 text-xs font-bold px-3 py-2 rounded-lg hover:bg-indigo-100 flex items-center">View</a>
-                    </div>
+                    <div class="flex items-center gap-3"><span class="text-xl bg-gray-50 p-2 rounded-lg">${icon}</span><div><p class="font-bold text-gray-800 text-sm">${item.name}</p><p class="text-[10px] text-gray-400">${item.date}</p></div></div>
+                    <div class="flex gap-2"><button onclick="navigator.clipboard.writeText('${fullUrl}').then(()=>alert('Link Copied!'))" class="bg-gray-100 text-gray-600 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 transition"><i class="fas fa-copy text-xs"></i></button><a href="?id=${item.id}" class="bg-indigo-50 text-indigo-600 text-xs font-bold px-3 py-2 rounded-lg hover:bg-indigo-100 flex items-center">View</a></div>
                 `;
                 list.appendChild(div);
             });
         }
-
-        function copyHistoryLink(url) {
-            navigator.clipboard.writeText(url).then(() => alert("Link Copied! 📋"));
-        }
-
         function removeFromHistory(id) {
             let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
             history = history.filter(item => item.id !== id);
             localStorage.setItem('wish_history', JSON.stringify(history));
         }
-        function clearHistory() {
-            if(confirm("Clear history list?")) { localStorage.removeItem('wish_history'); location.reload(); }
-        }
+        function clearHistory() { if(confirm("Clear history list?")) { localStorage.removeItem('wish_history'); location.reload(); } }
 
         function setupFloatingIcons(age, gender, type) {
             const container = document.getElementById('reveal-icons');
@@ -863,20 +843,11 @@
             }
         }
         function fireConfetti() { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); }
-        
         function toggleAudio() {
             const audio = document.getElementById('audio-bg');
             const icon = document.getElementById('icon-audio');
-            
-            if(audio.paused) {
-                audio.play();
-                icon.className = "fas fa-volume-up text-xs"; // Normal Icon
-                icon.parentElement.classList.remove("text-red-500", "border-red-500");
-            } else {
-                audio.pause();
-                icon.className = "fas fa-volume-mute text-xs"; // Mute Icon
-                icon.parentElement.classList.add("text-red-500", "border-red-500");
-            }
+            if(audio.paused) { audio.play(); icon.className = "fas fa-volume-up text-xs"; icon.parentElement.classList.remove("text-red-500", "border-red-500"); } 
+            else { audio.pause(); icon.className = "fas fa-volume-mute text-xs"; icon.parentElement.classList.add("text-red-500", "border-red-500"); }
         }
     </script>
 </body>
