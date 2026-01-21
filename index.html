@@ -596,6 +596,7 @@
                 document.getElementById('age-text').innerText = data.age;
                 badge.classList.remove('hidden');
             } else if (data.type === 'wedding' && data.age) {
+                // For Anniversary, show years in badge
                 const badge = document.getElementById('disp-age-badge');
                 document.getElementById('age-text').innerText = data.age;
                 badge.classList.remove('hidden');
