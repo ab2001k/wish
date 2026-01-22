@@ -107,10 +107,7 @@
             font-family: 'VT323', monospace;
         }
         canvas#matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-        
-        /* Ensure content is ABOVE canvas and clickable */
         .matrix-content { z-index: 50; text-align: center; width: 100%; position: relative; }
-        
         .hacked-title { color: #0f0; font-size: 4rem; margin-bottom: 2rem; text-shadow: 0 0 10px #0f0; animation: zoomIn 5s infinite alternate; }
         #matrix-controls { opacity: 0; transition: opacity 1.5s ease-in; display: flex; flex-direction: column; align-items: center; pointer-events: auto; }
         @keyframes zoomIn { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
@@ -141,82 +138,57 @@
         .theme-option:hover { transform: scale(1.1); }
         .theme-option.selected { border-color: #6366f1; transform: scale(1.2); box-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
 
-        /* --- GHOST CURSOR ANIMATIONS (Absolute to Parent) --- */
+        /* --- GHOST CURSOR ANIMATIONS --- */
         .ghost-cursor {
-            position: absolute; /* Relative to the H1 wrapper */
+            position: absolute; 
             width: 28px; height: 28px; z-index: 100;
             pointer-events: none; 
             filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.4));
             opacity: 0; transform-origin: top left;
-            /* Start hidden */
             display: none; 
         }
 
-        /* The Movement Sequence */
-        .anim-move-click { 
-            display: block !important;
-            animation: mouseSequence 4.5s ease-in-out forwards; 
-        }
-        /* The Text Bump Sequence (Ghost) */
+        .anim-move-click { display: block !important; animation: mouseSequence 4.5s ease-in-out forwards; }
         .anim-text-bump { animation: titleBump 4.5s ease-in-out forwards; }
         
-        /* The User Click Bump (Manual) - SHORT & FAST */
         .manual-bump { animation: manualBump 0.2s ease-out forwards !important; }
-
         @keyframes manualBump {
             0% { transform: scale(1); color: #1f2937; }
             50% { transform: scale(0.9); color: #7c3aed; }
             100% { transform: scale(1); color: #1f2937; }
         }
 
-        /* Visual Ripple for the Click (Fixed to screen for visibility) */
         .click-ripple {
-            position: fixed;
-            width: 20px; height: 20px;
-            border-radius: 50%;
-            border: 2px solid rgba(59, 130, 246, 0.8);
-            background: rgba(59, 130, 246, 0.2);
-            transform: translate(-50%, -50%) scale(0);
-            pointer-events: none; z-index: 99;
+            position: fixed; width: 20px; height: 20px; border-radius: 50%;
+            border: 2px solid rgba(59, 130, 246, 0.8); background: rgba(59, 130, 246, 0.2);
+            transform: translate(-50%, -50%) scale(0); pointer-events: none; z-index: 99;
             animation: rippleEffect 0.5s ease-out forwards;
         }
-
         @keyframes rippleEffect {
             0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
             100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
         }
 
         @keyframes mouseSequence {
-            /* Start from Right (Relative to H1 container) */
             0% { left: 200%; top: 100%; opacity: 1; } 
-            20% { left: 80%; top: 50%; opacity: 1; } /* Hover Position */
-            /* Click 1 */
+            20% { left: 80%; top: 50%; opacity: 1; } 
             25% { transform: scale(0.8); } 30% { transform: scale(1); }
-            /* Click 2 */
             40% { transform: scale(0.8); } 45% { transform: scale(1); }
-            /* Click 3 */
             55% { transform: scale(0.8); } 60% { transform: scale(1); }
-            /* Click 4 */
             70% { transform: scale(0.8); } 75% { transform: scale(1); }
-            /* Exit */
             85% { left: 80%; top: 50%; opacity: 1; }
             100% { left: -100%; top: -100%; opacity: 0; }
         }
 
         @keyframes titleBump {
             0%, 23% { transform: scale(1); color: #1f2937; } 
-            /* Bump 1 */
             25% { transform: scale(0.9); color: #4f46e5; } 30% { transform: scale(1); color: #1f2937; }
-            /* Bump 2 */
             40% { transform: scale(0.9); color: #4f46e5; } 45% { transform: scale(1); color: #1f2937; }
-            /* Bump 3 */
             55% { transform: scale(0.9); color: #4f46e5; } 60% { transform: scale(1); color: #1f2937; }
-            /* Bump 4 */
             70% { transform: scale(0.9); color: #4f46e5; } 75% { transform: scale(1); color: #1f2937; }
             100% { transform: scale(1); color: #1f2937; }
         }
 
-        /* UI FIX for Android Screens */
         @media (max-height: 800px) {
             #capture-area { padding-top: 1rem !important; padding-bottom: 0.5rem !important; } 
             .photo-frame { width: 8rem !important; height: 8rem !important; } 
@@ -255,13 +227,11 @@
             </div>
 
             <div id="screen-home" class="flex-1 flex flex-col p-6 fade-in relative overflow-y-auto bg-white/95 scrollbar-hide">
-                
                 <div class="text-center mb-8 mt-6 select-none relative">
                     <div class="relative inline-block">
                         <h1 id="app-title" onclick="triggerEasterEgg()" class="text-5xl font-extrabold text-gray-800 tracking-tighter cursor-pointer select-none transition origin-center">
                             Wish<span class="text-indigo-600">Maker</span>
                         </h1>
-                        <img id="ghost-cursor" class="ghost-cursor" src="data:image/svg+xml,%3Csvg width='35' height='35' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.5 3.21429V20.3571L10.5 15.3571H17.6429L5.5 3.21429Z' fill='white' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E" alt="cursor">
                     </div>
                     <p class="text-xs text-gray-400 mt-2 uppercase tracking-[0.2em]">Celebrate Moments</p>
                 </div>
@@ -275,7 +245,6 @@
                             <p class="text-xs text-gray-500 mt-1">For friends, family & little ones</p>
                         </div>
                     </button>
-
                     <button onclick="playClick(); selectType('wedding')" id="btn-wedding" class="btn-click w-full bg-white p-6 rounded-3xl shadow-lg border border-gray-100 hover:border-purple-300 hover:shadow-xl transition flex items-center gap-5 group relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-r from-purple-50 to-white opacity-0 group-hover:opacity-100 transition duration-500"></div>
                         <div class="bg-purple-100 p-4 rounded-2xl text-4xl group-hover:rotate-12 transition relative z-10">💍</div>
@@ -285,7 +254,6 @@
                         </div>
                     </button>
                 </div>
-
                 <div id="history-section" class="mt-10 hidden-screen">
                     <div class="flex items-center justify-between mb-4 px-2">
                         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Your Creations</h3>
@@ -293,7 +261,6 @@
                     </div>
                     <div id="history-list" class="space-y-3 pb-20"></div>
                 </div>
-
                 <div class="mt-auto pt-10 pb-4 text-center">
                     <p class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">Made with ❤️ by Abhik</p>
                 </div>
@@ -304,41 +271,33 @@
                     <button onclick="playClick(); closeForm()" class="btn-click p-3 rounded-full bg-white text-gray-600 shadow-sm hover:bg-gray-100 transition"><i class="fas fa-arrow-left"></i></button>
                     <h2 class="text-2xl font-bold ml-4 text-gray-800">Customize Wish</h2>
                 </div>
-
                 <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 mb-6 space-y-5">
-                    
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Choose Aesthetic</label>
-                        <div class="flex gap-4 overflow-x-auto p-2 -mx-2 scrollbar-hide" id="theme-selector">
-                            </div>
+                        <div class="flex gap-4 overflow-x-auto p-2 -mx-2 scrollbar-hide" id="theme-selector"></div>
                     </div>
-
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Gender</label>
                         <div class="flex gap-4">
                             <label class="flex-1 cursor-pointer group" onclick="playClick()">
                                 <input type="radio" name="gender" value="male" class="peer hidden" onchange="updateThemePreview('male')" checked>
                                 <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-600 transition group-hover:border-blue-200">
-                                    <span class="block text-xl mb-1">👨</span>
-                                    <span class="text-xs font-bold uppercase">Male</span>
+                                    <span class="block text-xl mb-1">👨</span><span class="text-xs font-bold uppercase">Male</span>
                                 </div>
                             </label>
                             <label class="flex-1 cursor-pointer group" onclick="playClick()">
                                 <input type="radio" name="gender" value="female" class="peer hidden" onchange="updateThemePreview('female')">
                                 <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-pink-50 peer-checked:border-pink-500 peer-checked:text-pink-600 transition group-hover:border-pink-200">
-                                    <span class="block text-xl mb-1">👩</span>
-                                    <span class="text-xs font-bold uppercase">Female</span>
+                                    <span class="block text-xl mb-1">👩</span><span class="text-xs font-bold uppercase">Female</span>
                                 </div>
                             </label>
                         </div>
                     </div>
-
                     <div class="space-y-4">
                         <div>
                             <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Who is this for?</label>
                             <input type="text" id="inp-name" placeholder="Name (e.g. Rahul)" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition">
                         </div>
-                        
                         <div class="flex gap-4">
                             <div class="w-1/3">
                                 <label id="label-age" class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Age</label>
@@ -356,13 +315,11 @@
                                 </select>
                             </div>
                         </div>
-
                         <div>
-                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Custom Wish (Auto-Generates)</label>
-                            <textarea id="inp-custom-msg" rows="3" placeholder="Type here to override auto-generated wish..." class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-gray-700 transition text-sm"></textarea>
+                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Custom Wish (Auto-Generated)</label>
+                            <textarea id="inp-custom-msg" rows="3" placeholder="Type here to override the auto-generated wish..." class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-gray-700 transition text-sm"></textarea>
                         </div>
                     </div>
-
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-2">Add a Photo</label>
                         <div class="flex items-center gap-4 p-2 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
@@ -376,7 +333,6 @@
                             </label>
                         </div>
                     </div>
-
                     <button onclick="playClick(); saveAndGenerate()" class="btn-click w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-bold shadow-xl shadow-indigo-200 flex justify-center items-center gap-3 text-lg mt-2">
                         Create Magic <i class="fas fa-wand-magic-sparkles"></i>
                     </button>
@@ -385,7 +341,6 @@
 
             <div id="screen-reveal" class="flex-1 hidden-screen flex flex-col items-center justify-center bg-gray-900 text-white relative overflow-hidden">
                 <div id="reveal-icons" class="absolute inset-0 pointer-events-none opacity-50"></div> 
-                
                 <div class="relative z-10 text-center px-6">
                     <p class="text-indigo-300 font-bold uppercase tracking-widest text-xs mb-4">You have a message</p>
                     <h2 class="text-4xl font-extrabold mb-12 animate-pulse leading-tight elegant-font">A Special Surprise<br>is waiting...</h2>
@@ -395,9 +350,7 @@
             </div>
 
             <div id="screen-display" class="flex-1 hidden-screen flex flex-col relative overflow-hidden transition-all duration-1000">
-                
                 <div id="bg-layer"></div>
-
                 <div id="top-controls" class="absolute top-4 w-full px-4 flex justify-between z-30">
                     <button onclick="playClick(); window.location.href = window.location.pathname" class="bg-white/30 backdrop-blur-md p-2 px-4 rounded-full text-gray-800 text-xs font-bold shadow-sm border border-white/40 hover:bg-white/50 transition">
                         <i class="fas fa-home mr-1"></i> Home
@@ -411,58 +364,37 @@
                         </button>
                     </div>
                 </div>
-
                 <div id="capture-area" class="flex-1 flex flex-col items-center justify-center p-6 text-center z-10 overflow-y-auto no-scrollbar relative">
-                    
                     <div id="decorative-emojis" class="absolute inset-0 pointer-events-none z-0 overflow-hidden"></div>
-
                     <div class="relative mb-6 group z-10">
                         <div class="absolute inset-0 bg-white/50 rounded-full blur-xl animate-pulse group-hover:blur-2xl transition"></div>
                         <div class="photo-frame relative w-48 h-48 rounded-full p-2 bg-white/30 backdrop-blur-sm border border-white/60 shadow-2xl animate-[float_6s_infinite] mx-auto">
                             <img id="disp-img" src="" class="w-full h-full rounded-full object-cover border-4 border-white shadow-inner">
                         </div>
-                        
-                        <div id="disp-age-badge" class="shiny-badge hidden">
-                            <span id="age-text"></span>
-                        </div>
+                        <div id="disp-age-badge" class="shiny-badge hidden"><span id="age-text"></span></div>
                     </div>
-
                     <h1 id="disp-title" class="relative z-10 text-4xl font-bold text-white mb-2 drop-shadow-lg tracking-tight elegant-font leading-tight"></h1>
                     <h2 id="disp-name" class="relative z-10 text-3xl text-white/90 mb-6 handwritten drop-shadow-md transform -rotate-2"></h2>
-
                     <div class="glass-panel p-8 rounded-3xl shadow-2xl w-full max-w-sm relative z-10">
                         <i class="fas fa-quote-left text-indigo-400/30 text-3xl absolute -top-4 -left-2"></i>
                         <p id="disp-msg" class="text-gray-800 text-lg font-medium leading-relaxed font-serif italic"></p>
                         <i class="fas fa-quote-right text-indigo-400/30 text-3xl absolute -bottom-4 -right-2"></i>
-                        
-                        <div id="watermark" class="hidden mt-4 pt-4 border-t border-gray-200 text-center">
-                             <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">ab2001k.github.io/wish</p>
-                        </div>
+                        <div id="watermark" class="hidden mt-4 pt-4 border-t border-gray-200 text-center"><p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">ab2001k.github.io/wish</p></div>
                     </div>
                 </div>
-
                 <div id="share-sheet" class="bg-white p-5 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] z-20 relative transform transition w-full mt-auto">
                     <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-4"></div>
-                    
                     <div class="grid grid-cols-3 gap-2 mb-2">
                         <button onclick="playClick(); shareWhatsapp()" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
-                                <i class="fab fa-whatsapp text-lg"></i>
-                            </div>
+                            <div class="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition"><i class="fab fa-whatsapp text-lg"></i></div>
                             <span class="text-[10px] font-bold text-gray-500">WhatsApp</span>
                         </button>
-                        
                         <button onclick="playClick(); downloadImage()" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
-                                <i class="fab fa-instagram text-lg"></i>
-                            </div>
+                            <div class="w-10 h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition"><i class="fab fa-instagram text-lg"></i></div>
                             <span class="text-[10px] font-bold text-gray-500">Save Img</span>
                         </button>
-
                         <button onclick="playClick(); copyLink()" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
-                                <i class="fas fa-link text-lg"></i>
-                            </div>
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition"><i class="fas fa-link text-lg"></i></div>
                             <span class="text-[10px] font-bold text-gray-500">Copy Link</span>
                         </button>
                     </div>
@@ -472,9 +404,6 @@
     </div>
 
     <script>
-        // ==========================================
-        // 1. CONFIGURATION & STATE
-        // ==========================================
         const popAudio = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"); 
         function playClick() { }
 
@@ -485,30 +414,40 @@
         let currentWishId = null;
         let wishData = { type: '', gender: 'male', image: null, theme: null }; 
         let selectedFile = null;
-        let userModifiedText = false; // Flag to track if user edited text
+        let userModifiedText = false; // Flag to track manual edits
 
         const themes = [
-            { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue', mood: 'cool and refreshing' },
-            { id: 'theme-pink', img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80', name: 'Pink', mood: 'sweet and lovely' },
+            { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue', mood: 'refreshing' },
+            { id: 'theme-pink', img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80', name: 'Pink', mood: 'sweet' },
             { id: 'theme-purple', img: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80', name: 'Purple', mood: 'magical' },
-            { id: 'theme-sunset', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80', name: 'Sunset', mood: 'warm and bright' },
-            { id: 'theme-mint', img: 'https://images.unsplash.com/photo-1618130070080-91f4d55a2383?auto=format&fit=crop&w=800&q=80', name: 'Nature', mood: 'fresh and peaceful' },
-            { id: 'theme-gold', img: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80', name: 'Luxury', mood: 'golden and precious' },
-            { id: 'theme-dark', img: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=800&q=80', name: 'Dark', mood: 'starry and grand' },
-            { id: 'theme-ocean', img: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=800&q=80', name: 'Ocean', mood: 'deep and calm' },
-            { id: 'theme-berry', img: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80', name: 'Love', mood: 'loving and sweet' },
+            { id: 'theme-sunset', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80', name: 'Sunset', mood: 'warm' },
+            { id: 'theme-mint', img: 'https://images.unsplash.com/photo-1618130070080-91f4d55a2383?auto=format&fit=crop&w=800&q=80', name: 'Nature', mood: 'fresh' },
+            { id: 'theme-gold', img: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80', name: 'Luxury', mood: 'golden' },
+            { id: 'theme-dark', img: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=800&q=80', name: 'Dark', mood: 'starry' },
+            { id: 'theme-ocean', img: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=800&q=80', name: 'Ocean', mood: 'peaceful' },
+            { id: 'theme-berry', img: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80', name: 'Love', mood: 'lovely' },
             { id: 'theme-royal', img: 'https://images.unsplash.com/photo-1535868463750-c78d9543614f?auto=format&fit=crop&w=800&q=80', name: 'Classic', mood: 'timeless' }
         ];
 
-        // ==========================================
-        // 2. INITIALIZATION
-        // ==========================================
         window.onload = async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
-
             setupThemeSelector();
-            setupInputListeners(); // NEW: Listen for changes
+            
+            // NEW: Add listeners for dynamic text generation
+            ['inp-name', 'inp-age', 'inp-relation'].forEach(id => {
+                document.getElementById(id).addEventListener('input', generateLiveText);
+            });
+            document.querySelectorAll('input[name="gender"]').forEach(el => {
+                el.addEventListener('change', (e) => {
+                    updateThemePreview(e.target.value);
+                    generateLiveText();
+                });
+            });
+            // Stop auto-generation if user types manually
+            document.getElementById('inp-custom-msg').addEventListener('input', () => {
+                userModifiedText = true;
+            });
 
             if (id) {
                 document.getElementById('screen-home').classList.add('hidden-screen');
@@ -520,33 +459,12 @@
             }
         };
 
-        // NEW: LISTENERS FOR LIVE TEXT GENERATION
-        function setupInputListeners() {
-            const inputs = ['inp-name', 'inp-age', 'inp-relation'];
-            inputs.forEach(id => {
-                document.getElementById(id).addEventListener('input', generateLiveText);
-            });
-            
-            // Radio buttons for gender
-            document.querySelectorAll('input[name="gender"]').forEach(el => {
-                el.addEventListener('change', (e) => {
-                    updateThemePreview(e.target.value);
-                    generateLiveText();
-                });
-            });
-
-            // Text Area Listener - stops auto-gen if user types
-            document.getElementById('inp-custom-msg').addEventListener('input', () => {
-                userModifiedText = true;
-            });
-        }
-
-        // NEW: LIVE WISH GENERATOR LOGIC
+        // DYNAMIC WISH LOGIC
         function generateLiveText() {
-            if (userModifiedText) return; // Don't overwrite if user edited manually
+            if (userModifiedText) return; // Respect user override
 
-            const name = document.getElementById('inp-name').value.trim() || 'My Dear';
-            const age = document.getElementById('inp-age').value;
+            const name = document.getElementById('inp-name').value.trim() || 'Dear';
+            const ageVal = document.getElementById('inp-age').value;
             const relation = document.getElementById('inp-relation').value;
             const gender = wishData.gender;
             const type = wishData.type;
@@ -554,12 +472,9 @@
             const mood = themeObj.mood;
 
             let msg = "";
-            const isMale = gender === 'male';
-
-            // AGE LOGIC
             let ageGroup = 'adult';
-            if (age) {
-                const a = parseInt(age);
+            if (ageVal) {
+                const a = parseInt(ageVal);
                 if (a < 13) ageGroup = 'child';
                 else if (a < 20) ageGroup = 'teen';
                 else if (a > 60) ageGroup = 'senior';
@@ -567,31 +482,29 @@
 
             if (type === 'birthday') {
                 if (ageGroup === 'child') {
-                    msg = `Happy Birthday to our little superstar, ${name}! 🎈✨ You bring so much joy to everyone. May your day be as colorful and fun as this ${mood} card! Keep shining bright!`;
+                    msg = `Happy Birthday, little superstar ${name}! 🎈✨ You light up our world with your smile. May your day be as fun and ${mood} as you are!`;
                 } else if (ageGroup === 'teen') {
-                    msg = `Happy Birthday ${name}! 🚀 Hope your day is absolutely epic. You are growing into such an amazing person. Wishing you a year full of adventures and ${mood} vibes!`;
+                    msg = `Happy Birthday ${name}! 🚀 Hope your day is epic. You are growing into such an amazing person. Wishing you a year full of adventures and ${mood} vibes!`;
                 } else if (ageGroup === 'senior') {
-                    msg = `Happy Birthday ${name}. 🌹 Wishing you a day filled with peace, love, and cherished moments. Your wisdom is a gift to us all. May this year bring you good health.`;
+                    msg = `Happy Birthday ${name}. 🌹 Wishing you a day filled with peace, love, and cherished moments. Your wisdom is a gift. May this ${mood} year bring you good health.`;
                 } else {
-                    // Adult
-                    if (relation === 'friend') msg = `Happy Birthday ${name}! 🥂 Another year wiser and cooler. Grateful to have a friend like you. Hope this ${mood} year brings you all the success you deserve!`;
+                    if (relation === 'friend') msg = `Happy Birthday ${name}! 🥂 Another year wiser and cooler. Grateful for our friendship. Hope this ${mood} year brings you all the success you deserve!`;
                     else if (relation === 'partner_young' || relation === 'spouse') msg = `To my amazing ${name}, Happy Birthday! ❤️ You make my world complete. Wishing you a day as beautiful and ${mood} as your soul. I love you!`;
                     else msg = `Happy Birthday ${name}! 🎂 Wishing you a fantastic year ahead filled with happiness and success. Enjoy your special ${mood} day!`;
                 }
             } else {
                 // Wedding
-                const years = age ? `${age} years` : 'another year';
+                const years = ageVal ? `${ageVal} years` : 'another year';
                 if (relation === 'spouse') {
-                    msg = `Happy Anniversary, my love ${name}! ❤️ ${years} of togetherness and my heart still skips a beat. Here's to us and our ${mood} journey forever.`;
+                    msg = `Happy Anniversary, my love ${name}! ❤️ ${years} together and my heart still skips a beat. Here's to our ${mood} journey forever.`;
                 } else {
                     msg = `Happy Anniversary ${name}! 💍 Celebrating ${years} of your beautiful love story. May your bond grow stronger and more ${mood} with every passing day!`;
                 }
             }
-
             document.getElementById('inp-custom-msg').value = msg;
         }
 
-        // ... [REST OF THE CODE REMAINS EXACTLY THE SAME - GHOST, MATRIX, ETC] ...
+        // ... [REST OF CODE: Ghost Loop, Matrix, Supabase, etc. same as before] ...
         
         function startGhostLoop() {
             function runSequence() {
@@ -705,7 +618,7 @@
                     div.classList.add('selected');
                     wishData.theme = t.id; 
                     playClick();
-                    generateLiveText(); // NEW: Trigger update on theme change
+                    generateLiveText(); // Update text on theme change
                 };
                 container.appendChild(div);
             });
@@ -718,7 +631,7 @@
             document.getElementById('ghost-cursor').style.display = 'none';
             const ageLabel = document.getElementById('label-age');
             if(type === 'wedding') { ageLabel.innerText = "Years Together"; } else { ageLabel.innerText = "Age"; }
-            generateLiveText(); // NEW: Trigger initial update
+            generateLiveText(); // Initial generation
         }
 
         function closeForm() {
@@ -736,20 +649,15 @@
             
             if(!name) return alert("Please enter a name!");
 
-            // Use the value in the text box (which is either auto-gen or user edited)
+            // Use the value in the box (auto or manual)
             let msg = customMsg.trim();
-            
-            // Fallback just in case empty
-            if(!msg) {
-                msg = `Happy ${wishData.type === 'birthday' ? 'Birthday' : 'Anniversary'} ${name}! Wishing you all the happiness in the world!`;
-            }
+            if(!msg) msg = `Happy ${wishData.type === 'birthday' ? 'Birthday' : 'Anniversary'} ${name}!`;
 
             let finalTheme = wishData.theme;
             if(!finalTheme) { finalTheme = getSmartTheme(wishData.type, relation, age, wishData.gender); }
             
             document.getElementById('screen-loading').classList.remove('hidden-screen');
 
-            // 1. Upload Image
             let finalImageUrl = null;
             if(selectedFile) {
                 const fileName = `wish_${Date.now()}_${Math.random().toString(36).substr(2, 9)}.jpg`;
@@ -760,7 +668,6 @@
                 }
             }
 
-            // 2. Insert DB
             const { data, error } = await client.from('wishes').insert([{ 
                 type: wishData.type, name: name, message: msg, image_data: finalImageUrl, 
                 gender: wishData.gender, age: age, theme: finalTheme
@@ -777,9 +684,6 @@
             addToHistory(newId, name, wishData.type);
             window.location.href = `?id=${newId}`;
         }
-
-        // ... [Rest of helper functions: getSmartTheme, fetchAndLoadWish, etc. remain unchanged] ...
-        // Re-included strictly as requested to keep logic intact:
 
         function getSmartTheme(type, relation, age, gender) {
             const pools = {
