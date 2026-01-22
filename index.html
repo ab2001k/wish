@@ -138,82 +138,58 @@
         .theme-option:hover { transform: scale(1.1); }
         .theme-option.selected { border-color: #6366f1; transform: scale(1.2); box-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
 
-        /* --- GHOST CURSOR ANIMATIONS (Absolute to Parent) --- */
+        /* --- GHOST CURSOR ANIMATIONS (Absolute to Title) --- */
         .ghost-cursor {
-            position: absolute; /* Relative to the H1 wrapper */
+            position: absolute; 
             width: 28px; height: 28px; z-index: 100;
             pointer-events: none; 
             filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.4));
             opacity: 0; transform-origin: top left;
-            /* Start hidden */
             display: none; 
         }
 
-        /* The Movement Sequence */
-        .anim-move-click { 
-            display: block !important;
-            animation: mouseSequence 4.5s ease-in-out forwards; 
-        }
-        /* The Text Bump Sequence (Ghost) */
+        .anim-move-click { display: block !important; animation: mouseSequence 4.5s ease-in-out forwards; }
         .anim-text-bump { animation: titleBump 4.5s ease-in-out forwards; }
         
-        /* The User Click Bump (Manual) - SHORT & FAST */
         .manual-bump { animation: manualBump 0.2s ease-out forwards !important; }
-
         @keyframes manualBump {
             0% { transform: scale(1); color: #1f2937; }
             50% { transform: scale(0.9); color: #7c3aed; }
             100% { transform: scale(1); color: #1f2937; }
         }
 
-        /* Visual Ripple for the Click (Fixed to screen for visibility) */
         .click-ripple {
-            position: fixed;
-            width: 20px; height: 20px;
-            border-radius: 50%;
-            border: 2px solid rgba(59, 130, 246, 0.8);
-            background: rgba(59, 130, 246, 0.2);
-            transform: translate(-50%, -50%) scale(0);
-            pointer-events: none; z-index: 99;
+            position: fixed; width: 20px; height: 20px; border-radius: 50%;
+            border: 2px solid rgba(59, 130, 246, 0.8); background: rgba(59, 130, 246, 0.2);
+            transform: translate(-50%, -50%) scale(0); pointer-events: none; z-index: 99;
             animation: rippleEffect 0.5s ease-out forwards;
         }
-
         @keyframes rippleEffect {
             0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
             100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
         }
 
-        /* FIXED KEYFRAMES - Targets specifically the "M" in "WishMaker" */
         @keyframes mouseSequence {
             0% { left: 150%; top: 150%; opacity: 1; } 
-            /* 58% left roughly aligns with the start of the 'Maker' span */
-            20% { left: 58%; top: 60%; opacity: 1; } 
-            
-            /* Click Animations (Scale Down) */
+            /* 47% is start of M (Wish=4, Maker=5, 4/9 = ~44%) */
+            20% { left: 47%; top: 50%; opacity: 1; } 
             25% { transform: scale(0.8); } 30% { transform: scale(1); }
             40% { transform: scale(0.8); } 45% { transform: scale(1); }
             55% { transform: scale(0.8); } 60% { transform: scale(1); }
             70% { transform: scale(0.8); } 75% { transform: scale(1); }
-            
-            /* Exit */
-            85% { left: 58%; top: 60%; opacity: 1; }
-            100% { left: -50%; top: -50%; opacity: 0; }
+            85% { left: 47%; top: 50%; opacity: 1; }
+            100% { left: -100%; top: -100%; opacity: 0; }
         }
 
         @keyframes titleBump {
             0%, 23% { transform: scale(1); color: #1f2937; } 
-            /* Bump 1 */
             25% { transform: scale(0.9); color: #4f46e5; } 30% { transform: scale(1); color: #1f2937; }
-            /* Bump 2 */
             40% { transform: scale(0.9); color: #4f46e5; } 45% { transform: scale(1); color: #1f2937; }
-            /* Bump 3 */
             55% { transform: scale(0.9); color: #4f46e5; } 60% { transform: scale(1); color: #1f2937; }
-            /* Bump 4 */
             70% { transform: scale(0.9); color: #4f46e5; } 75% { transform: scale(1); color: #1f2937; }
             100% { transform: scale(1); color: #1f2937; }
         }
 
-        /* UI FIX for Android Screens */
         @media (max-height: 800px) {
             #capture-area { padding-top: 1rem !important; padding-bottom: 0.5rem !important; } 
             .photo-frame { width: 8rem !important; height: 8rem !important; } 
@@ -270,6 +246,7 @@
                             <p class="text-xs text-gray-500 mt-1">For friends, family & little ones</p>
                         </div>
                     </button>
+
                     <button onclick="playClick(); selectType('wedding')" id="btn-wedding" class="btn-click w-full bg-white p-6 rounded-3xl shadow-lg border border-gray-100 hover:border-purple-300 hover:shadow-xl transition flex items-center gap-5 group relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-r from-purple-50 to-white opacity-0 group-hover:opacity-100 transition duration-500"></div>
                         <div class="bg-purple-100 p-4 rounded-2xl text-4xl group-hover:rotate-12 transition relative z-10">💍</div>
@@ -279,6 +256,7 @@
                         </div>
                     </button>
                 </div>
+
                 <div id="history-section" class="mt-10 hidden-screen">
                     <div class="flex items-center justify-between mb-4 px-2">
                         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Your Creations</h3>
@@ -303,6 +281,7 @@
                     <button onclick="playClick(); closeForm()" class="btn-click p-3 rounded-full bg-white text-gray-600 shadow-sm hover:bg-gray-100 transition"><i class="fas fa-arrow-left"></i></button>
                     <h2 class="text-2xl font-bold ml-4 text-gray-800">Customize Wish</h2>
                 </div>
+
                 <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 mb-6 space-y-5">
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Choose Aesthetic</label>
