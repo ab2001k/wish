@@ -138,38 +138,52 @@
         .theme-option:hover { transform: scale(1.1); }
         .theme-option.selected { border-color: #6366f1; transform: scale(1.2); box-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
 
-        /* --- GHOST CURSOR ANIMATIONS --- */
+        /* --- GHOST CURSOR ANIMATIONS (Absolute to Parent) --- */
         .ghost-cursor {
-            position: absolute; 
+            position: absolute; /* Relative to the H1 wrapper */
             width: 28px; height: 28px; z-index: 100;
             pointer-events: none; 
             filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.4));
             opacity: 0; transform-origin: top left;
+            /* Start hidden */
             display: none; 
         }
 
-        .anim-move-click { display: block !important; animation: mouseSequence 4.5s ease-in-out forwards; }
+        /* The Movement Sequence */
+        .anim-move-click { 
+            display: block !important;
+            animation: mouseSequence 4.5s ease-in-out forwards; 
+        }
+        /* The Text Bump Sequence (Ghost) */
         .anim-text-bump { animation: titleBump 4.5s ease-in-out forwards; }
         
+        /* The User Click Bump (Manual) - SHORT & FAST */
         .manual-bump { animation: manualBump 0.2s ease-out forwards !important; }
+
         @keyframes manualBump {
             0% { transform: scale(1); color: #1f2937; }
             50% { transform: scale(0.9); color: #7c3aed; }
             100% { transform: scale(1); color: #1f2937; }
         }
 
+        /* Visual Ripple for the Click (Fixed to screen for visibility) */
         .click-ripple {
-            position: fixed; width: 20px; height: 20px; border-radius: 50%;
-            border: 2px solid rgba(59, 130, 246, 0.8); background: rgba(59, 130, 246, 0.2);
-            transform: translate(-50%, -50%) scale(0); pointer-events: none; z-index: 99;
+            position: fixed;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(59, 130, 246, 0.8);
+            background: rgba(59, 130, 246, 0.2);
+            transform: translate(-50%, -50%) scale(0);
+            pointer-events: none; z-index: 99;
             animation: rippleEffect 0.5s ease-out forwards;
         }
+
         @keyframes rippleEffect {
             0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
             100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
         }
 
-      /* FIXED KEYFRAMES - Targets specifically the "M" in "WishMaker" */
+        /* FIXED KEYFRAMES - Targets specifically the "M" in "WishMaker" */
         @keyframes mouseSequence {
             0% { left: 150%; top: 150%; opacity: 1; } 
             /* 58% left roughly aligns with the start of the 'Maker' span */
@@ -188,13 +202,18 @@
 
         @keyframes titleBump {
             0%, 23% { transform: scale(1); color: #1f2937; } 
+            /* Bump 1 */
             25% { transform: scale(0.9); color: #4f46e5; } 30% { transform: scale(1); color: #1f2937; }
+            /* Bump 2 */
             40% { transform: scale(0.9); color: #4f46e5; } 45% { transform: scale(1); color: #1f2937; }
+            /* Bump 3 */
             55% { transform: scale(0.9); color: #4f46e5; } 60% { transform: scale(1); color: #1f2937; }
+            /* Bump 4 */
             70% { transform: scale(0.9); color: #4f46e5; } 75% { transform: scale(1); color: #1f2937; }
             100% { transform: scale(1); color: #1f2937; }
         }
 
+        /* UI FIX for Android Screens */
         @media (max-height: 800px) {
             #capture-area { padding-top: 1rem !important; padding-bottom: 0.5rem !important; } 
             .photo-frame { width: 8rem !important; height: 8rem !important; } 
@@ -501,7 +520,7 @@
             } else {
                 const years = ageVal ? `${ageVal} years` : 'another year';
                 if (relation === 'spouse') {
-                    msg = `Happy Anniversary, my love ${name}! ❤️ ${years} together and my heart still skips a beat. Here's to us and our ${mood} journey forever.`;
+                    msg = `Happy Anniversary, my love ${name}! ❤️ ${years} of togetherness and my heart still skips a beat. Here's to us and our ${mood} journey forever.`;
                 } else {
                     msg = `Happy Anniversary ${name}! 💍 Celebrating ${years} of your beautiful love story. May your bond grow stronger and more ${mood} with every passing day!`;
                 }
@@ -543,9 +562,17 @@
         function createRipple() {
             const title = document.getElementById('app-title');
             if(!title) return;
-            const rect = title.getBoundingClientRect();
-            const x = rect.left + rect.width / 2;
-            const y = rect.top + rect.height / 2;
+            const targetSpan = title.querySelector('span');
+            let x, y;
+            if (targetSpan) {
+                const rect = targetSpan.getBoundingClientRect();
+                x = rect.left + 15; 
+                y = rect.top + (rect.height / 2);
+            } else {
+                const rect = title.getBoundingClientRect();
+                x = rect.left + rect.width / 2;
+                y = rect.top + rect.height / 2;
+            }
             const ripple = document.createElement('div');
             ripple.className = 'click-ripple';
             ripple.style.left = `${x}px`;
@@ -862,4 +889,3 @@
     </script>
 </body>
 </html>
-
