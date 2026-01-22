@@ -138,7 +138,7 @@
         .theme-option:hover { transform: scale(1.1); }
         .theme-option.selected { border-color: #6366f1; transform: scale(1.2); box-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
 
-        /* --- GHOST CURSOR ANIMATIONS (Absolute to Title Wrapper) --- */
+        /* --- GHOST CURSOR ANIMATIONS --- */
         .ghost-cursor {
             position: absolute; 
             width: 28px; height: 28px; z-index: 100;
@@ -169,16 +169,15 @@
             100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
         }
 
-        /* FIXED KEYFRAMES - Targets Center of Title */
         @keyframes mouseSequence {
-            0% { left: 150%; top: 150%; opacity: 1; } 
-            20% { left: 55%; top: 65%; opacity: 1; } /* Precise Center of 'WishMaker' */
-            25% { transform: scale(0.8); } 30% { transform: scale(1); } /* Click 1 */
-            40% { transform: scale(0.8); } 45% { transform: scale(1); } /* Click 2 */
-            55% { transform: scale(0.8); } 60% { transform: scale(1); } /* Click 3 */
-            70% { transform: scale(0.8); } 75% { transform: scale(1); } /* Click 4 */
-            85% { left: 55%; top: 65%; opacity: 1; }
-            100% { left: -50%; top: -50%; opacity: 0; }
+            0% { left: 200%; top: 100%; opacity: 1; } 
+            20% { left: 80%; top: 50%; opacity: 1; } 
+            25% { transform: scale(0.8); } 30% { transform: scale(1); }
+            40% { transform: scale(0.8); } 45% { transform: scale(1); }
+            55% { transform: scale(0.8); } 60% { transform: scale(1); }
+            70% { transform: scale(0.8); } 75% { transform: scale(1); }
+            85% { left: 80%; top: 50%; opacity: 1; }
+            100% { left: -100%; top: -100%; opacity: 0; }
         }
 
         @keyframes titleBump {
@@ -201,6 +200,8 @@
     </style>
 </head>
 <body>
+
+    <img id="ghost-cursor" class="ghost-cursor" src="data:image/svg+xml,%3Csvg width='35' height='35' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.5 3.21429V20.3571L10.5 15.3571H17.6429L5.5 3.21429Z' fill='white' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E" alt="cursor">
 
     <div id="app-wrapper">
         <div id="app-container" class="bg-gray-50/90 backdrop-blur w-full h-[100dvh] sm:max-w-md sm:h-[850px] sm:rounded-3xl shadow-2xl overflow-hidden relative flex flex-col">
@@ -231,7 +232,6 @@
                         <h1 id="app-title" onclick="triggerEasterEgg()" class="text-5xl font-extrabold text-gray-800 tracking-tighter cursor-pointer select-none transition origin-center">
                             Wish<span class="text-indigo-600">Maker</span>
                         </h1>
-                        <img id="ghost-cursor" class="ghost-cursor" src="data:image/svg+xml,%3Csvg width='35' height='35' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.5 3.21429V20.3571L10.5 15.3571H17.6429L5.5 3.21429Z' fill='white' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E" alt="cursor">
                     </div>
                     <p class="text-xs text-gray-400 mt-2 uppercase tracking-[0.2em]">Celebrate Moments</p>
                 </div>
@@ -261,6 +261,13 @@
                     </div>
                     <div id="history-list" class="space-y-3 pb-20"></div>
                 </div>
+
+                <div class="mt-6 px-4">
+                    <button onclick="shareApp()" class="w-full bg-[#25D366] text-white py-3 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-2 hover:opacity-90 transition transform active:scale-95">
+                        <i class="fab fa-whatsapp text-xl"></i> Share App
+                    </button>
+                </div>
+
                 <div class="mt-auto pt-10 pb-4 text-center">
                     <p class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">Made with ❤️ by Abhik</p>
                 </div>
@@ -328,7 +335,7 @@
                                 <i class="fas fa-image absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300"></i>
                             </div>
                             <label onclick="playClick()" class="flex-1 bg-white hover:bg-gray-100 text-gray-700 py-3 rounded-xl text-xs font-bold uppercase tracking-wide cursor-pointer text-center transition shadow-sm border border-gray-200">
-                                Choose Image
+                                <span id="photo-label-text">Choose Image</span>
                                 <input type="file" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
                             </label>
                         </div>
@@ -413,7 +420,6 @@
 
         let currentWishId = null;
         let wishData = { type: '', gender: 'male', image: null, theme: null }; 
-        let selectedFile = null;
         let userModifiedText = false; 
 
         const themes = [
@@ -433,8 +439,6 @@
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             setupThemeSelector();
-            
-            // Listeners for dynamic text
             ['inp-name', 'inp-age', 'inp-relation'].forEach(id => {
                 document.getElementById(id).addEventListener('input', generateLiveText);
             });
@@ -491,7 +495,7 @@
             } else {
                 const years = ageVal ? `${ageVal} years` : 'another year';
                 if (relation === 'spouse') {
-                    msg = `Happy Anniversary, my love ${name}! ❤️ ${years} of togetherness and my heart still skips a beat. Here's to us and our ${mood} journey forever.`;
+                    msg = `Happy Anniversary, my love ${name}! ❤️ ${years} together and my heart still skips a beat. Here's to us and our ${mood} journey forever.`;
                 } else {
                     msg = `Happy Anniversary ${name}! 💍 Celebrating ${years} of your beautiful love story. May your bond grow stronger and more ${mood} with every passing day!`;
                 }
@@ -499,7 +503,6 @@
             document.getElementById('inp-custom-msg').value = msg;
         }
 
-        // Loop Ghost
         function startGhostLoop() {
             function runSequence() {
                 const cursor = document.getElementById('ghost-cursor');
@@ -508,11 +511,7 @@
                 const matrixOverlay = document.getElementById('matrix-overlay');
                 const creatorForm = document.getElementById('creator-form');
                 
-                if(cursor && title && 
-                   !homeScreen.classList.contains('hidden-screen') && 
-                   matrixOverlay.classList.contains('hidden-screen') &&
-                   creatorForm.classList.contains('hidden-screen')) {
-                    
+                if(cursor && title && !homeScreen.classList.contains('hidden-screen') && matrixOverlay.classList.contains('hidden-screen') && creatorForm.classList.contains('hidden-screen')) {
                     cursor.classList.remove('anim-move-click');
                     title.classList.remove('anim-text-bump');
                     void cursor.offsetWidth; 
@@ -550,24 +549,17 @@
         }
 
         let titleTapCount = 0; let tapTimer;
-
         function triggerEasterEgg() {
             const title = document.getElementById('app-title');
             title.classList.remove('anim-text-bump');
             title.classList.remove('manual-bump');
             void title.offsetWidth; 
             title.classList.add('manual-bump');
-
             titleTapCount++;
             clearTimeout(tapTimer);
             tapTimer = setTimeout(() => { titleTapCount = 0; }, 2000);
-
-            if (titleTapCount === 4) {
-                activateMatrix();
-                titleTapCount = 0;
-            }
+            if (titleTapCount === 4) { activateMatrix(); titleTapCount = 0; }
         }
-
         function activateMatrix() {
             document.getElementById('matrix-overlay').classList.remove('hidden-screen');
             document.getElementById('ghost-cursor').style.display = 'none'; 
@@ -575,11 +567,7 @@
             startMatrixRain();
             setTimeout(() => { document.getElementById('matrix-controls').style.opacity = '1'; }, 4000);
         }
-
-        function exitMatrix() { 
-             document.getElementById('matrix-overlay').classList.add('hidden-screen');
-        }
-
+        function exitMatrix() { document.getElementById('matrix-overlay').classList.add('hidden-screen'); }
         function startMatrixRain() {
             const canvas = document.getElementById('matrix-canvas');
             const ctx = canvas.getContext('2d');
@@ -650,10 +638,11 @@
                     canvas.height = img.height * scaleSize;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    // Save as Base64 for Direct DB storage
                     wishData.image = canvas.toDataURL('image/jpeg', 0.7);
                     document.getElementById('preview-thumb').src = wishData.image;
                     document.getElementById('preview-thumb').classList.remove('hidden');
-                    canvas.toBlob((blob) => { selectedFile = blob; }, 'image/jpeg', 0.8);
+                    document.getElementById('photo-label-text').innerText = "Photo Added!";
                 };
             };
             reader.readAsDataURL(file);
@@ -673,19 +662,10 @@
             
             document.getElementById('screen-loading').classList.remove('hidden-screen');
 
-            let finalImageUrl = null;
-            if(selectedFile) {
-                const fileName = `wish_${Date.now()}_${Math.random().toString(36).substr(2, 9)}.jpg`;
-                const { data, error } = await client.storage.from('wish-images').upload(fileName, selectedFile, { contentType: 'image/jpeg', upsert: false });
-                if(error) { alert("Image upload failed: " + error.message); }
-                else {
-                    const { data: urlData } = client.storage.from('wish-images').getPublicUrl(fileName);
-                    finalImageUrl = urlData.publicUrl;
-                }
-            }
-
+            // DIRECT DB SAVE (No Buckets = No 401 Errors)
             const { data, error } = await client.from('wishes').insert([{ 
-                type: wishData.type, name: name, message: msg, image_data: finalImageUrl, 
+                type: wishData.type, name: name, message: msg, 
+                image_data: wishData.image, // Saves the base64 string directly
                 gender: wishData.gender, age: age, theme: finalTheme
             }]).select();
 
@@ -793,6 +773,11 @@
             const name = document.getElementById('disp-name').innerText;
             const text = `Hey ${name}, I made a special wish for you! ✨ Tap to see: ${window.location.href}`;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        function shareApp() {
+            const text = "Check out WishMaker! ✨ Create amazing birthday & anniversary wishes here: " + window.location.href;
+            window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank");
         }
 
         function copyLink() {
