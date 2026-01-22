@@ -141,17 +141,22 @@
         .theme-option:hover { transform: scale(1.1); }
         .theme-option.selected { border-color: #6366f1; transform: scale(1.2); box-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
 
-        /* --- GHOST CURSOR ANIMATIONS --- */
+        /* --- GHOST CURSOR ANIMATIONS (Absolute to Parent) --- */
         .ghost-cursor {
-            position: fixed; top: 50%; left: 110%; /* Start off-screen */
+            position: absolute; /* Relative to the H1 wrapper */
             width: 28px; height: 28px; z-index: 100;
-            pointer-events: none; /* Crucial */
+            pointer-events: none; 
             filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.4));
             opacity: 0; transform-origin: top left;
+            /* Start hidden */
+            display: none; 
         }
 
         /* The Movement Sequence */
-        .anim-move-click { animation: mouseSequence 4.5s ease-in-out forwards; }
+        .anim-move-click { 
+            display: block !important;
+            animation: mouseSequence 4.5s ease-in-out forwards; 
+        }
         /* The Text Bump Sequence (Ghost) */
         .anim-text-bump { animation: titleBump 4.5s ease-in-out forwards; }
         
@@ -164,7 +169,7 @@
             100% { transform: scale(1); color: #1f2937; }
         }
 
-        /* Visual Ripple for the Click */
+        /* Visual Ripple for the Click (Fixed to screen for visibility) */
         .click-ripple {
             position: fixed;
             width: 20px; height: 20px;
@@ -182,8 +187,9 @@
         }
 
         @keyframes mouseSequence {
-            0% { left: 110%; top: 60%; opacity: 1; } 
-            20% { left: 50%; top: 15%; margin-left: -50px; opacity: 1; } /* Hover Position */
+            /* Start from Right (Relative to H1 container) */
+            0% { left: 200%; top: 100%; opacity: 1; } 
+            20% { left: 80%; top: 50%; opacity: 1; } /* Hover Position */
             /* Click 1 */
             25% { transform: scale(0.8); } 30% { transform: scale(1); }
             /* Click 2 */
@@ -193,8 +199,8 @@
             /* Click 4 */
             70% { transform: scale(0.8); } 75% { transform: scale(1); }
             /* Exit */
-            85% { left: 50%; top: 15%; margin-left: -50px; opacity: 1; }
-            100% { left: -20%; top: -20%; opacity: 0; }
+            85% { left: 80%; top: 50%; opacity: 1; }
+            100% { left: -100%; top: -100%; opacity: 0; }
         }
 
         @keyframes titleBump {
@@ -223,8 +229,6 @@
 </head>
 <body>
 
-    <img id="ghost-cursor" class="ghost-cursor" src="data:image/svg+xml,%3Csvg width='35' height='35' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.5 3.21429V20.3571L10.5 15.3571H17.6429L5.5 3.21429Z' fill='white' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E" alt="cursor">
-
     <div id="app-wrapper">
         <div id="app-container" class="bg-gray-50/90 backdrop-blur w-full h-[100dvh] sm:max-w-md sm:h-[850px] sm:rounded-3xl shadow-2xl overflow-hidden relative flex flex-col">
             
@@ -250,10 +254,13 @@
 
             <div id="screen-home" class="flex-1 flex flex-col p-6 fade-in relative overflow-y-auto bg-white/95 scrollbar-hide">
                 
-                <div class="text-center mb-8 mt-6 select-none relative">
-                    <h1 id="app-title" onclick="triggerEasterEgg()" class="text-5xl font-extrabold text-gray-800 tracking-tighter cursor-pointer select-none transition origin-center">
-                        Wish<span class="text-indigo-600">Maker</span>
-                    </h1>
+                <div class="text-center mb-8 mt-6 select-none">
+                    <div class="relative inline-block">
+                        <h1 id="app-title" onclick="triggerEasterEgg()" class="text-5xl font-extrabold text-gray-800 tracking-tighter cursor-pointer select-none transition origin-center">
+                            Wish<span class="text-indigo-600">Maker</span>
+                        </h1>
+                        <img id="ghost-cursor" class="ghost-cursor" src="data:image/svg+xml,%3Csvg width='35' height='35' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.5 3.21429V20.3571L10.5 15.3571H17.6429L5.5 3.21429Z' fill='white' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E" alt="cursor">
+                    </div>
                     <p class="text-xs text-gray-400 mt-2 uppercase tracking-[0.2em]">Celebrate Moments</p>
                 </div>
 
@@ -476,7 +483,7 @@
         let currentWishId = null;
         let wishData = { type: '', gender: 'male', image: null, theme: null }; 
         
-        // 10+ Authentic Themes (Fixed Links)
+        // 10+ Authentic Themes (Fixed Links + Specific Mint)
         const themes = [
             { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue' },
             { id: 'theme-pink', img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80', name: 'Pink' },
@@ -520,9 +527,14 @@
                 const title = document.getElementById('app-title');
                 const homeScreen = document.getElementById('screen-home');
                 const matrixOverlay = document.getElementById('matrix-overlay');
+                const creatorForm = document.getElementById('creator-form');
                 
-                // Only run on main page AND if matrix is not showing
-                if(cursor && title && !homeScreen.classList.contains('hidden-screen') && matrixOverlay.classList.contains('hidden-screen')) {
+                // Only run on main page AND if matrix/form is not showing
+                if(cursor && title && 
+                   !homeScreen.classList.contains('hidden-screen') && 
+                   matrixOverlay.classList.contains('hidden-screen') &&
+                   creatorForm.classList.contains('hidden-screen')) {
+                    
                     // Reset
                     cursor.classList.remove('anim-move-click');
                     title.classList.remove('anim-text-bump');
