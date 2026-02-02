@@ -138,7 +138,7 @@
         .theme-option:hover { transform: scale(1.1); }
         .theme-option.selected { border-color: #6366f1; transform: scale(1.2); box-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
 
-        /* --- GHOST CURSOR ANIMATIONS (Absolute to Title) --- */
+        /* --- GHOST CURSOR ANIMATIONS --- */
         .ghost-cursor {
             position: absolute; 
             width: 28px; height: 28px; z-index: 100;
@@ -169,18 +169,13 @@
             100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
         }
 
-        /* PRECISION ALIGNMENT: 48% Left / 55% Top hits the "M" perfectly on standard font size */
         @keyframes mouseSequence {
             0% { left: 150%; top: 150%; opacity: 1; } 
-            20% { left: 48%; top: 55%; opacity: 1; } /* Arrival */
-            
-            /* Clicks (No Scaling, Just Wait) */
+            20% { left: 48%; top: 55%; opacity: 1; } 
             25% { transform: translate(1px, 1px); } 30% { transform: translate(0, 0); }
             40% { transform: translate(1px, 1px); } 45% { transform: translate(0, 0); }
             55% { transform: translate(1px, 1px); } 60% { transform: translate(0, 0); }
             70% { transform: translate(1px, 1px); } 75% { transform: translate(0, 0); }
-            
-            /* Exit */
             85% { left: 48%; top: 55%; opacity: 1; }
             100% { left: -100%; top: -100%; opacity: 0; }
         }
@@ -223,14 +218,14 @@
                     <h1 class="hacked-title">SYSTEM HACKED</h1>
                     <div id="matrix-controls">
                         <h2 class="text-white text-3xl mb-8">...Just Kidding! 😜</h2>
-                        <a href="https://wa.me/+918822967314?text=Hello%20Developer%2C%20I%20found%20the%20secret%20Matrix%20zone%20in%20WishMaker!%20%F0%9F%95%B6%EF%B8%8F" class="matrix-btn">> TALK TO DEV_</a>
+                        <a href="https://wa.me/+918822967314" class="matrix-btn">> TALK TO DEV_</a>
                         <button onclick="exitMatrix()" class="matrix-btn-back">< GO BACK</button>
                     </div>
                 </div>
             </div>
 
             <div id="screen-home" class="flex-1 flex flex-col p-6 fade-in relative overflow-y-auto bg-white/95 scrollbar-hide">
-                <div class="text-center mb-8 mt-6 select-none relative">
+                <div class="text-center mb-6 mt-6 select-none relative">
                     <div class="relative inline-block">
                         <h1 id="app-title" onclick="triggerEasterEgg()" class="text-5xl font-extrabold text-gray-800 tracking-tighter cursor-pointer select-none transition origin-center">
                             Wish<span class="text-indigo-600">Maker</span>
@@ -240,24 +235,50 @@
                     <p class="text-xs text-gray-400 mt-2 uppercase tracking-[0.2em]">Celebrate Moments</p>
                 </div>
 
-                <div class="space-y-5">
-                    <button onclick="playClick(); selectType('birthday')" id="btn-birthday" class="btn-click w-full bg-white p-6 rounded-3xl shadow-lg border border-gray-100 hover:border-pink-300 hover:shadow-xl transition flex items-center gap-5 group relative overflow-hidden">
+                <div class="space-y-4">
+                    <button onclick="playClick(); selectType('birthday')" id="btn-birthday" class="btn-click w-full bg-white p-5 rounded-3xl shadow-lg border border-gray-100 hover:border-pink-300 hover:shadow-xl transition flex items-center gap-5 group relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-r from-pink-50 to-white opacity-0 group-hover:opacity-100 transition duration-500"></div>
-                        <div class="bg-pink-100 p-4 rounded-2xl text-4xl group-hover:rotate-12 transition relative z-10">🎂</div>
+                        <div class="bg-pink-100 p-3 rounded-2xl text-3xl group-hover:rotate-12 transition relative z-10">🎂</div>
                         <div class="text-left relative z-10">
-                            <h3 class="text-xl font-bold text-gray-800">Birthday Wish</h3>
-                            <p class="text-xs text-gray-500 mt-1">For friends, family & little ones</p>
+                            <h3 class="text-lg font-bold text-gray-800">Birthday Wish</h3>
+                            <p class="text-[10px] text-gray-500">Friends, family & little ones</p>
                         </div>
                     </button>
 
-                    <button onclick="playClick(); selectType('wedding')" id="btn-wedding" class="btn-click w-full bg-white p-6 rounded-3xl shadow-lg border border-gray-100 hover:border-purple-300 hover:shadow-xl transition flex items-center gap-5 group relative overflow-hidden">
+                    <button onclick="playClick(); selectType('wedding')" id="btn-wedding" class="btn-click w-full bg-white p-5 rounded-3xl shadow-lg border border-gray-100 hover:border-purple-300 hover:shadow-xl transition flex items-center gap-5 group relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-r from-purple-50 to-white opacity-0 group-hover:opacity-100 transition duration-500"></div>
-                        <div class="bg-purple-100 p-4 rounded-2xl text-4xl group-hover:rotate-12 transition relative z-10">💍</div>
+                        <div class="bg-purple-100 p-3 rounded-2xl text-3xl group-hover:rotate-12 transition relative z-10">💍</div>
                         <div class="text-left relative z-10">
-                            <h3 class="text-xl font-bold text-gray-800">Anniversary</h3>
-                            <p class="text-xs text-gray-500 mt-1">For weddings & couples</p>
+                            <h3 class="text-lg font-bold text-gray-800">Anniversary</h3>
+                            <p class="text-[10px] text-gray-500">Weddings & couples</p>
                         </div>
                     </button>
+
+                    <div class="mt-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="h-[1px] bg-gray-200 flex-1"></div>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Indian Festival Pack</span>
+                            <div class="h-[1px] bg-gray-200 flex-1"></div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="playClick(); selectType('diwali')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-orange-100 hover:border-orange-400 flex flex-col items-center gap-2">
+                                <span class="text-2xl">🪔</span> <span class="text-xs font-bold text-gray-700">Diwali</span>
+                            </button>
+                            <button onclick="playClick(); selectType('holi')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-pink-100 hover:border-pink-400 flex flex-col items-center gap-2">
+                                <span class="text-2xl">🎨</span> <span class="text-xs font-bold text-gray-700">Holi</span>
+                            </button>
+                            <button onclick="playClick(); selectType('ganesha')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-yellow-100 hover:border-yellow-400 flex flex-col items-center gap-2">
+                                <span class="text-2xl">🐘</span> <span class="text-xs font-bold text-gray-700">Ganesha</span>
+                            </button>
+                            <button onclick="playClick(); selectType('durga')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-red-100 hover:border-red-400 flex flex-col items-center gap-2">
+                                <span class="text-2xl">🔱</span> <span class="text-xs font-bold text-gray-700">Durga Puja</span>
+                            </button>
+                            <button onclick="playClick(); selectType('independence')" class="col-span-2 btn-click bg-white p-3 rounded-2xl shadow-sm border border-blue-100 hover:border-blue-400 flex items-center justify-center gap-3">
+                                <span class="text-2xl">🇮🇳</span> <span class="text-xs font-bold text-gray-700">Independence Day</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="history-section" class="mt-10 hidden-screen">
@@ -268,13 +289,7 @@
                     <div id="history-list" class="space-y-3 pb-20"></div>
                 </div>
 
-                <div class="mt-6 px-4">
-                    <button onclick="shareApp()" class="w-full bg-[#25D366] text-white py-3 rounded-2xl font-bold shadow-lg flex items-center justify-center gap-2 hover:opacity-90 transition transform active:scale-95">
-                        <i class="fab fa-whatsapp text-xl"></i> Share App
-                    </button>
-                </div>
-
-                <div class="mt-auto pt-10 pb-4 text-center">
+                <div class="mt-auto pt-8 pb-4 text-center">
                     <p class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">Made with ❤️ by Abhik</p>
                 </div>
             </div>
@@ -293,7 +308,7 @@
                     </div>
 
                     <div>
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Gender</label>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Gender (Optional)</label>
                         <div class="flex gap-4">
                             <label class="flex-1 cursor-pointer group" onclick="playClick()">
                                 <input type="radio" name="gender" value="male" class="peer hidden" onchange="updateThemePreview('male')" checked>
@@ -314,11 +329,11 @@
 
                     <div class="space-y-4">
                         <div>
-                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Who is this for?</label>
+                            <label id="label-name" class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Who is this for?</label>
                             <input type="text" id="inp-name" placeholder="Name (e.g. Rahul)" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition">
                         </div>
                         
-                        <div class="flex gap-4">
+                        <div class="flex gap-4" id="row-details">
                             <div class="w-1/3">
                                 <label id="label-age" class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Age</label>
                                 <input type="number" id="inp-age" placeholder="25" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition">
@@ -327,18 +342,16 @@
                                 <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Relation</label>
                                 <select id="inp-relation" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition appearance-none">
                                     <option value="friend">Friend / Bestie</option>
-                                    <option value="partner_young">Boyfriend / Girlfriend</option>
-                                    <option value="family">Parent / Elder</option>
-                                    <option value="spouse">Spouse / Partner</option>
-                                    <option value="child">Son / Daughter</option>
-                                    <option value="sibling">Brother / Sister</option>
+                                    <option value="family">Family Member</option>
+                                    <option value="partner">Partner</option>
+                                    <option value="colleague">Colleague</option>
                                 </select>
                             </div>
                         </div>
 
                         <div>
                             <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Custom Wish (Auto-Generates)</label>
-                            <textarea id="inp-custom-msg" rows="3" placeholder="Type here to override the auto-generated wish..." class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-gray-700 transition text-sm"></textarea>
+                            <textarea id="inp-custom-msg" rows="3" placeholder="Type here to override..." class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-gray-700 transition text-sm"></textarea>
                         </div>
                     </div>
 
@@ -415,7 +428,7 @@
                         <i class="fas fa-quote-right text-indigo-400/30 text-3xl absolute -bottom-4 -right-2"></i>
                         
                         <div id="watermark" class="hidden mt-4 pt-4 border-t border-gray-200 text-center">
-                             <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">ab2001k.github.io/wish</p>
+                             <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">WishMaker App</p>
                         </div>
                     </div>
                 </div>
@@ -454,16 +467,21 @@
         // ==========================================
         // 1. CONFIGURATION & STATE
         // ==========================================
+        
+        // *** IMPORTNAT: PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ***
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLaIZ3dO1SwoGrMZsulNFMtZlGVgWaFHho2APeuZEzwyPzt9w7e_XvUsZq61qfSFHuZA/exec"; 
+        
         const popAudio = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"); 
         function playClick() { }
 
+        // KEEPING SUPABASE FOR LINK SHARING FUNCTIONALITY (DB)
         const SUPABASE_URL = 'https://rhodybetonjerkcsdstj.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJob2R5YmV0b25qZXJrY3Nkc3RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4OTU5MDAsImV4cCI6MjA4NDQ3MTkwMH0.IEO-2spCVUxYFiQW-ARlA4RH57R_DQttQsWW0tGnUMI';
         const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentWishId = null;
         let wishData = { type: '', gender: 'male', image: null, theme: null }; 
-        let userModifiedText = false; // Flag to track manual edits
+        let userModifiedText = false;
 
         const themes = [
             { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue', mood: 'refreshing' },
@@ -475,7 +493,9 @@
             { id: 'theme-dark', img: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=800&q=80', name: 'Dark', mood: 'starry' },
             { id: 'theme-ocean', img: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=800&q=80', name: 'Ocean', mood: 'peaceful' },
             { id: 'theme-berry', img: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80', name: 'Love', mood: 'lovely' },
-            { id: 'theme-royal', img: 'https://images.unsplash.com/photo-1535868463750-c78d9543614f?auto=format&fit=crop&w=800&q=80', name: 'Classic', mood: 'timeless' }
+            { id: 'theme-royal', img: 'https://images.unsplash.com/photo-1535868463750-c78d9543614f?auto=format&fit=crop&w=800&q=80', name: 'Classic', mood: 'timeless' },
+            { id: 'theme-holi', img: 'https://images.unsplash.com/photo-1552084117-5633b4c1945f?auto=format&fit=crop&w=800&q=80', name: 'Holi', mood: 'colorful' },
+            { id: 'theme-diwali', img: 'https://images.unsplash.com/photo-1571556270929-e3144d2847be?auto=format&fit=crop&w=800&q=80', name: 'Diwali', mood: 'bright' }
         ];
 
         // ==========================================
@@ -487,7 +507,6 @@
 
             setupThemeSelector();
             
-            // NEW: Add listeners for dynamic text generation
             ['inp-name', 'inp-age', 'inp-relation'].forEach(id => {
                 document.getElementById(id).addEventListener('input', generateLiveText);
             });
@@ -497,7 +516,6 @@
                     generateLiveText();
                 });
             });
-            // Stop auto-generation if user types manually
             document.getElementById('inp-custom-msg').addEventListener('input', () => {
                 userModifiedText = true;
             });
@@ -514,45 +532,37 @@
 
         // DYNAMIC WISH LOGIC
         function generateLiveText() {
-            if (userModifiedText) return; // Respect user override
+            if (userModifiedText) return; 
 
             const name = document.getElementById('inp-name').value.trim() || 'Dear';
             const ageVal = document.getElementById('inp-age').value;
             const relation = document.getElementById('inp-relation').value;
-            const gender = wishData.gender;
             const type = wishData.type;
             const themeObj = themes.find(t => t.id === wishData.theme) || themes[0];
             const mood = themeObj.mood;
 
             let msg = "";
             let ageGroup = 'adult';
-            if (ageVal) {
-                const a = parseInt(ageVal);
-                if (a < 13) ageGroup = 'child';
-                else if (a < 20) ageGroup = 'teen';
-                else if (a > 60) ageGroup = 'senior';
+            if (ageVal && parseInt(ageVal) < 13) ageGroup = 'child';
+
+            // FESTIVAL & EVENT LOGIC
+            if (type === 'birthday') {
+                if (ageGroup === 'child') msg = `Happy Birthday little star ${name}! 🎈✨ May your day be as colorful as this ${mood} card!`;
+                else msg = `Happy Birthday ${name}! 🎂 Wishing you a fantastic year filled with ${mood} vibes and success.`;
+            } else if (type === 'wedding') {
+                msg = `Happy Anniversary ${name}! 💍 Celebrating your beautiful journey. Stay blessed and happy forever.`;
+            } else if (type === 'diwali') {
+                msg = `Happy Diwali ${name}! 🪔 May the lamps of joy illuminate your life with good health and wealth.`;
+            } else if (type === 'holi') {
+                msg = `Happy Holi ${name}! 🎨 May your life be as colorful and joyful as this festival. Have a blast!`;
+            } else if (type === 'ganesha') {
+                msg = `Happy Ganesh Chaturthi ${name}! 🐘 May Lord Ganesha remove all obstacles and bless you.`;
+            } else if (type === 'durga') {
+                msg = `Happy Durga Puja ${name}! 🔱 May Maa Durga empower you with strength and happiness.`;
+            } else if (type === 'independence') {
+                msg = `Happy Independence Day ${name}! 🇮🇳 Saluting the spirit of India. Jai Hind!`;
             }
 
-            if (type === 'birthday') {
-                if (ageGroup === 'child') {
-                    msg = `Happy Birthday to our little superstar, ${name}! 🎈✨ You bring so much joy to everyone. May your day be as colorful and fun as this ${mood} card! Keep shining bright!`;
-                } else if (ageGroup === 'teen') {
-                    msg = `Happy Birthday ${name}! 🚀 Hope your day is absolutely epic. You are growing into such an amazing person. Wishing you a year full of adventures and ${mood} vibes!`;
-                } else if (ageGroup === 'senior') {
-                    msg = `Happy Birthday ${name}. 🌹 Wishing you a day filled with peace, love, and cherished moments. Your wisdom is a gift to us all. May this year bring you good health.`;
-                } else {
-                    if (relation === 'friend') msg = `Happy Birthday ${name}! 🥂 Another year wiser and cooler. Grateful to have a friend like you. Hope this ${mood} year brings you all the success you deserve!`;
-                    else if (relation === 'partner_young' || relation === 'spouse') msg = `To my amazing ${name}, Happy Birthday! ❤️ You make my world complete. Wishing you a day as beautiful and ${mood} as your soul. I love you!`;
-                    else msg = `Happy Birthday ${name}! 🎂 Wishing you a fantastic year ahead filled with happiness and success. Enjoy your special ${mood} day!`;
-                }
-            } else {
-                const years = ageVal ? `${ageVal} years` : 'another year';
-                if (relation === 'spouse') {
-                    msg = `Happy Anniversary, my love ${name}! ❤️ ${years} of togetherness and my heart still skips a beat. Here's to us and our ${mood} journey forever.`;
-                } else {
-                    msg = `Happy Anniversary ${name}! 💍 Celebrating ${years} of your beautiful love story. May your bond grow stronger and more ${mood} with every passing day!`;
-                }
-            }
             document.getElementById('inp-custom-msg').value = msg;
         }
         
@@ -597,9 +607,8 @@
             const targetSpan = title.querySelector('span');
             let x, y;
             if (targetSpan) {
-                // Pinpoint the "M" in Maker
                 const rect = targetSpan.getBoundingClientRect();
-                x = rect.left + 8; // Slight adjustment to center on the M letter stroke
+                x = rect.left + 8;
                 y = rect.top + (rect.height / 2);
             } else {
                 const rect = title.getBoundingClientRect();
@@ -688,9 +697,20 @@
             document.getElementById('screen-home').classList.add('hidden-screen'); 
             document.getElementById('creator-form').classList.remove('hidden-screen');
             document.getElementById('ghost-cursor').style.display = 'none';
+            
             const ageLabel = document.getElementById('label-age');
-            if(type === 'wedding') { ageLabel.innerText = "Years Together"; } else { ageLabel.innerText = "Age"; }
-            generateLiveText(); // Initial generation
+            const rowDetails = document.getElementById('row-details');
+            
+            // Adjust UI based on type
+            if(type === 'wedding') { ageLabel.innerText = "Years"; rowDetails.style.display = 'flex'; }
+            else if (['diwali','holi','ganesha','durga','independence'].includes(type)) {
+                rowDetails.style.display = 'none'; // Hide age/relation for festivals
+            } else { 
+                ageLabel.innerText = "Age"; 
+                rowDetails.style.display = 'flex'; 
+            }
+            
+            generateLiveText(); 
         }
 
         function closeForm() {
@@ -715,11 +735,10 @@
                     canvas.height = img.height * scaleSize;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    // Save as Base64 for Direct DB storage
                     wishData.image = canvas.toDataURL('image/jpeg', 0.7);
                     document.getElementById('preview-thumb').src = wishData.image;
                     document.getElementById('preview-thumb').classList.remove('hidden');
-                    document.getElementById('photo-label-text').innerText = "Photo Added!";
+                    document.getElementById('photo-label-text').innerText = "Changed";
                 };
             };
             reader.readAsDataURL(file);
@@ -727,22 +746,41 @@
 
         async function saveAndGenerate() {
             const name = document.getElementById('inp-name').value;
-            const age = document.getElementById('inp-age').value;
-            const relation = document.getElementById('inp-relation').value;
+            const age = document.getElementById('inp-age').value || 0;
             const customMsg = document.getElementById('inp-custom-msg').value;
             
             if(!name) return alert("Please enter a name!");
+            
             let msg = customMsg.trim();
-            if(!msg) msg = `Happy ${wishData.type === 'birthday' ? 'Birthday' : 'Anniversary'} ${name}!`;
+            if(!msg) msg = `Happy ${wishData.type}`;
+            
             let finalTheme = wishData.theme;
-            if(!finalTheme) { finalTheme = getSmartTheme(wishData.type, relation, age, wishData.gender); }
+            if(!finalTheme) { finalTheme = getSmartTheme(wishData.type, age, wishData.gender); }
             
             document.getElementById('screen-loading').classList.remove('hidden-screen');
 
-            // DIRECT DB SAVE (No Buckets = No 401 Errors)
+            // 1. SAVE TO GOOGLE SHEET (If configured)
+            // We use no-cors to prevent errors, even though we can't read the response.
+            if(GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.startsWith('http')) {
+                try {
+                    const formData = new FormData();
+                    formData.append('type', wishData.type);
+                    formData.append('name', name);
+                    formData.append('message', msg);
+                    formData.append('date', new Date().toLocaleString());
+                    
+                    fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        body: formData,
+                        mode: 'no-cors' 
+                    }).then(() => console.log("Sent to Google Sheet"));
+                } catch (e) { console.error("Sheet Error", e); }
+            }
+
+            // 2. SAVE TO SUPABASE (For Link Generation)
             const { data, error } = await client.from('wishes').insert([{ 
                 type: wishData.type, name: name, message: msg, 
-                image_data: wishData.image, // Saves the base64 string directly
+                image_data: wishData.image, 
                 gender: wishData.gender, age: age, theme: finalTheme
             }]).select();
 
@@ -758,22 +796,24 @@
             window.location.href = `?id=${newId}`;
         }
 
-        function getSmartTheme(type, relation, age, gender) {
+        function getSmartTheme(type, age, gender) {
             const pools = {
                 wedding: ['theme-gold', 'theme-berry', 'theme-royal', 'theme-purple'],
                 child_male: ['theme-blue', 'theme-mint', 'theme-ocean'],
                 child_female: ['theme-pink', 'theme-purple', 'theme-sunset'],
-                partner: ['theme-berry', 'theme-sunset', 'theme-dark'],
-                female_adult: ['theme-pink', 'theme-berry', 'theme-sunset', 'theme-royal'],
-                male_adult: ['theme-dark', 'theme-royal', 'theme-ocean', 'theme-blue'],
+                diwali: ['theme-diwali', 'theme-gold', 'theme-sunset'],
+                holi: ['theme-holi', 'theme-pink', 'theme-blue'],
+                ganesha: ['theme-gold', 'theme-orange'],
+                durga: ['theme-red', 'theme-gold'],
+                independence: ['theme-mint', 'theme-blue'],
                 default: ['theme-blue', 'theme-mint', 'theme-sunset']
             };
-            let selectedPool = pools.default;
-            if (type === 'wedding') { selectedPool = pools.wedding; } 
-            else if (age && parseInt(age) < 13) { selectedPool = gender === 'female' ? pools.child_female : pools.child_male; } 
-            else if (relation === 'spouse' || relation === 'partner_young') { selectedPool = pools.partner; } 
-            else { selectedPool = gender === 'female' ? pools.female_adult : pools.male_adult; }
-            return selectedPool[Math.floor(Math.random() * selectedPool.length)];
+            
+            if (type === 'diwali') return pools.diwali[0];
+            if (type === 'holi') return pools.holi[0];
+            if (type === 'wedding') return pools.wedding[0];
+            
+            return pools.default[0];
         }
 
         async function fetchAndLoadWish(id) {
@@ -783,23 +823,33 @@
             
             const defaultAvatar = data.gender === 'female' ? 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png' : 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
             document.getElementById('disp-img').src = data.image_data || defaultAvatar;
-            document.getElementById('disp-title').innerText = data.type === 'birthday' ? "Happy Birthday!" : "Happy Anniversary!";
+            
+            // Set Title based on Type
+            let title = "Best Wishes!";
+            if(data.type === 'birthday') title = "Happy Birthday!";
+            else if(data.type === 'wedding') title = "Happy Anniversary!";
+            else if(data.type === 'diwali') title = "Happy Diwali!";
+            else if(data.type === 'holi') title = "Happy Holi!";
+            else if(data.type === 'ganesha') title = "Happy Ganesh Chaturthi!";
+            else if(data.type === 'durga') title = "Happy Durga Puja!";
+            else if(data.type === 'independence') title = "Jai Hind!";
+            
+            document.getElementById('disp-title').innerText = title;
             document.getElementById('disp-name').innerText = data.name;
             document.getElementById('disp-msg').innerText = data.message;
+            
             const themeObj = themes.find(t => t.id === data.theme) || themes[0];
             document.getElementById('bg-layer').style.backgroundImage = `url(${themeObj.img})`;
 
-            if(data.age) {
+            if(data.age && data.age > 0) {
                 const badge = document.getElementById('disp-age-badge');
                 document.getElementById('age-text').innerText = data.age;
                 badge.classList.remove('hidden');
             }
             let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
             if(history.some(item => item.id === id)) { document.getElementById('btn-delete').classList.remove('hidden'); }
-            let audioSrc = 'happy-birthday.mp3'; 
-            if (data.type === 'wedding') { audioSrc = 'wedding.mp3'; } 
-            else if (data.type === 'birthday' && data.age && parseInt(data.age) < 13) { audioSrc = 'birthday-children.mp3'; }
-            document.getElementById('audio-bg').src = audioSrc;
+            
+            document.getElementById('audio-bg').src = 'happy-birthday.mp3'; // You can add logic to switch MP3 based on type
             setupFloatingIcons(data.age, data.gender, data.type);
             setupDecorativeEmojis(data.type, data.gender); 
             document.getElementById('screen-loading').classList.add('hidden-screen');
@@ -818,7 +868,9 @@
             container.innerHTML = '';
             let emojis = ['✨', '🎈', '🎉'];
             if (type === 'birthday') { emojis = gender === 'female' ? ['🦋', '🌸', '🧁', '✨'] : ['🔥', '🚀', '🎸', '⚡']; } 
-            else { emojis = ['🥂', '💍', '🕊️', '❤️']; }
+            else if (type === 'diwali') { emojis = ['🪔', '✨', '🎇']; }
+            else if (type === 'holi') { emojis = ['🎨', '💧', '🌈']; }
+            
             const positions = [ { top: '10%', left: '10%' }, { top: '15%', right: '10%' }, { bottom: '35%', left: '5%' }, { bottom: '40%', right: '5%' } ];
             positions.forEach((pos, index) => {
                 const el = document.createElement('div');
@@ -842,7 +894,7 @@
                 link.download = `Wish_${document.getElementById('disp-name').innerText}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                alert("Image Saved! 📸\nCheck your gallery.");
+                alert("Image Saved! 📸");
             });
         }
 
@@ -852,16 +904,8 @@
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
 
-        function shareApp() {
-            const text = "Check out WishMaker! ✨ Create amazing birthday & anniversary wishes here: " + window.location.href;
-            window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank");
-        }
-
         function copyLink() {
-            const name = document.getElementById('disp-name').innerText;
-            const msg = document.getElementById('disp-msg').innerText;
-            const text = `🎉 *Happy Birthday ${name}!* \n\n"${msg}"\n\nSee your special card here: ${window.location.href}`;
-            navigator.clipboard.writeText(text).then(() => alert("Wish + Link Copied! 📋"));
+            navigator.clipboard.writeText(window.location.href).then(() => alert("Wish + Link Copied! 📋"));
         }
 
         function deleteWish() {
@@ -885,7 +929,7 @@
             section.classList.remove('hidden-screen');
             list.innerHTML = '';
             history.forEach(item => {
-                const icon = item.type === 'birthday' ? '🎂' : '💍';
+                const icon = item.type === 'birthday' ? '🎂' : '✨';
                 const fullUrl = `${window.location.origin}${window.location.pathname}?id=${item.id}`;
                 const div = document.createElement('div');
                 div.className = 'bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between shadow-sm hover:shadow-md transition';
@@ -906,11 +950,9 @@
         function setupFloatingIcons(age, gender, type) {
             const container = document.getElementById('reveal-icons');
             let icons = ['✨', '🎁']; 
-            if(type === 'birthday') {
-                if(age && age < 13) icons = ['🧸', '🎈', '🦄', '🍭', '🎮'];
-                else if (gender === 'female') icons = ['🦋', '🌸', '🧁', '🍷', '✨'];
-                else icons = ['🚀', '🍕', '🍺', '🔥', '🎸'];
-            } else { icons = ['🥂', '💍', '🕊️', '❤️', '🌹']; }
+            if(type === 'birthday') icons = ['🎈', '🎂', '🥳'];
+            else if(type === 'diwali') icons = ['🪔', '✨', '🎇'];
+            
             container.innerHTML = '';
             for(let i=0; i<20; i++) {
                 const el = document.createElement('div');
