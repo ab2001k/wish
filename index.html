@@ -91,6 +91,14 @@
         .btn-click:active { transform: scale(0.95); }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
 
+        /* TITLE BUMP ANIMATION */
+        .manual-bump { animation: manualBump 0.2s ease-out forwards; }
+        @keyframes manualBump {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
         /* MATRIX OVERLAY */
         #matrix-overlay {
             position: fixed; inset: 0; background: black; z-index: 9999;
@@ -139,6 +147,13 @@
             border: 1px solid #e5e7eb; background: white; cursor: pointer; transition: all 0.2s;
         }
         .val-theme-btn.active { background: #be185d; color: white; border-color: #be185d; }
+
+        /* BRANDING WATERMARK */
+        #watermark-branding {
+            position: absolute; bottom: 8px; left: 0; width: 100%; text-align: center;
+            font-size: 10px; color: rgba(255, 255, 255, 0.7); font-weight: bold;
+            text-transform: uppercase; letter-spacing: 1px; z-index: 50; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
 
         /* RESPONSIVE */
         @media (max-height: 800px) {
@@ -229,7 +244,7 @@
 
                     <div id="valentine-section" class="hidden mt-6">
                         <button onclick="openValentineModal()" class="btn-click w-full bg-gradient-to-r from-pink-500 to-red-600 p-5 rounded-3xl shadow-xl shadow-pink-200 border-2 border-white flex items-center justify-between group relative overflow-hidden">
-                            <div class="absolute top-0 right-0 bg-white/20 text-white text-[9px] px-2 py-1 rounded-bl-lg font-bold">LIMITED TIME</div>
+                            <div class="absolute top-0 right-0 bg-white text-pink-600 text-[10px] px-3 py-1 rounded-bl-xl font-extrabold border-l border-b border-pink-100 shadow-sm uppercase tracking-wider">Limited Time</div>
                             <div class="flex items-center gap-4 relative z-10">
                                 <div class="bg-white/20 p-3 rounded-full text-2xl backdrop-blur-sm">💖</div>
                                 <div class="text-left text-white">
@@ -289,13 +304,27 @@
                         </div>
                         <div><label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Custom Wish</label><textarea id="inp-custom-msg" rows="3" placeholder="Type here..." class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-gray-700 transition text-sm"></textarea></div>
                     </div>
+                    
                     <div>
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-2">Add Photo</label>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Image</label>
+                            <button onclick="openSmartSearch()" class="text-[10px] text-indigo-600 font-bold hover:underline"><i class="fas fa-search"></i> Search Web Image</button>
+                        </div>
+                        
+                        <div id="smart-search-box" class="hidden mb-3 p-3 bg-indigo-50 rounded-xl border border-indigo-100">
+                            <p class="text-[10px] text-gray-500 mb-2">1. Click Search below<br>2. Copy image address<br>3. Paste here</p>
+                            <div class="flex gap-2 mb-2">
+                                <button onclick="window.open(`https://www.google.com/search?tbm=isch&q=${wishData.type}+wishes+aesthetic`, '_blank')" class="bg-white border border-gray-300 px-3 py-2 rounded-lg text-xs font-bold text-gray-700">🔍 Search Images</button>
+                            </div>
+                            <input type="text" id="inp-img-url" placeholder="Paste Image Link here..." class="w-full p-2 text-xs border rounded-lg" onchange="handleUrlImage(this.value)">
+                        </div>
+
                         <div class="flex items-center gap-4 p-2 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
                             <div class="w-14 h-14 rounded-xl bg-white shadow-sm overflow-hidden relative flex-shrink-0"><img id="preview-thumb" class="w-full h-full object-cover hidden"><i class="fas fa-image absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300"></i></div>
-                            <label class="flex-1 bg-white hover:bg-gray-100 text-gray-700 py-3 rounded-xl text-xs font-bold uppercase tracking-wide cursor-pointer text-center transition shadow-sm border border-gray-200"><span id="photo-label-text">Choose Image</span><input type="file" class="hidden" accept="image/*" onchange="handleImageUpload(event)"></label>
+                            <label class="flex-1 bg-white hover:bg-gray-100 text-gray-700 py-3 rounded-xl text-xs font-bold uppercase tracking-wide cursor-pointer text-center transition shadow-sm border border-gray-200"><span id="photo-label-text">Upload / Paste</span><input type="file" class="hidden" accept="image/*" onchange="handleImageUpload(event)"></label>
                         </div>
                     </div>
+
                     <button onclick="saveAndGenerate()" class="btn-click w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-bold shadow-xl shadow-indigo-200 flex justify-center items-center gap-3 text-lg mt-2">Create Magic <i class="fas fa-wand-magic-sparkles"></i></button>
                 </div>
             </div>
@@ -326,9 +355,28 @@
                     </div>
 
                     <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Couple Photo (Optional)</label>
+                        <div class="flex items-center gap-4 p-2 bg-pink-50 rounded-2xl border border-dashed border-pink-200">
+                            <div class="w-12 h-12 rounded-lg bg-white overflow-hidden relative"><img id="val-preview" class="w-full h-full object-cover hidden"></div>
+                            <label class="flex-1 bg-white text-pink-600 py-2 rounded-lg text-xs font-bold text-center cursor-pointer border border-pink-100">
+                                <span>Add Photo</span>
+                                <input type="file" class="hidden" accept="image/*" onchange="handleValImage(event)">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3 block">Select Mood</label>
                         <div class="flex flex-wrap gap-2" id="val-theme-list">
                             </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide">Message</label>
+                            <button onclick="shuffleValMsg()" class="text-xs text-pink-500 font-bold hover:underline"><i class="fas fa-random"></i> Shuffle Wish 🎲</button>
+                        </div>
+                        <textarea id="val-msg" rows="2" class="w-full p-3 bg-gray-50 rounded-xl border border-gray-200 text-sm text-gray-600 focus:ring-2 focus:ring-pink-400 outline-none"></textarea>
                     </div>
 
                     <button onclick="createValentine()" class="btn-click w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-pink-200 flex justify-center items-center gap-2 text-lg mt-2 font-serif">
@@ -380,6 +428,8 @@
                             <i class="fas fa-quote-right text-indigo-400/30 text-3xl absolute -bottom-4 -right-2"></i>
                         </div>
                     </div>
+                    
+                    <div id="watermark-branding">ab2001k.github.io/wish</div>
                 </div>
 
                 <div id="share-sheet" class="bg-white p-5 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] z-20 relative transform transition w-full mt-auto">
@@ -410,7 +460,7 @@
 
         // --- State ---
         let wishData = { type: '', gender: 'male', image: null, theme: null }; 
-        let valData = { gift: 'chocolate', theme: 'ai-romantic' }; // Valentine Default
+        let valData = { gift: 'chocolate', theme: 'ai-romantic', photo: null }; // Valentine Data
         let userModifiedText = false;
         let generatedLink = ""; 
 
@@ -457,9 +507,9 @@
 
             checkValentineDate();
             setupThemeSelector();
-            setupValentineUI(); // Setup the new modal UI
+            setupValentineUI(); 
             
-            // Hint Reveal Timeout
+            // Hint Reveal
             setTimeout(() => {
                 document.getElementById('egg-hint').classList.remove('text-indigo-300/0');
                 document.getElementById('egg-hint').classList.add('text-indigo-300');
@@ -487,19 +537,17 @@
             }
         };
 
-        // --- VALENTINE LOGIC START ---
+        // --- VALENTINE LOGIC ---
         function checkValentineDate() {
             const d = new Date();
             const month = d.getMonth(); // 0 = Jan, 1 = Feb
             const day = d.getDate();
-            // Show if Jan (0) OR Feb 1-14
             if (month === 0 || (month === 1 && day <= 14)) {
                 document.getElementById('valentine-section').classList.remove('hidden');
             }
         }
 
         function setupValentineUI() {
-            // Fill Gift Grid
             const grid = document.getElementById('val-gift-grid');
             grid.innerHTML = '';
             valGifts.forEach(g => {
@@ -510,7 +558,6 @@
                 grid.appendChild(el);
             });
 
-            // Fill Themes
             const themeList = document.getElementById('val-theme-list');
             themeList.innerHTML = '';
             Object.keys(valentineThemes).forEach(key => {
@@ -522,15 +569,47 @@
                     document.querySelectorAll('.val-theme-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     valData.theme = key;
+                    shuffleValMsg(); // Auto shuffle on theme change
                 }
                 themeList.appendChild(btn);
             });
+            
+            shuffleValMsg(); // Init message
         }
 
         function selectValGift(id, el) {
             valData.gift = id;
             document.querySelectorAll('.val-grid-item').forEach(d => d.classList.remove('val-selected'));
             el.classList.add('val-selected');
+        }
+
+        function handleValImage(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                valData.photo = e.target.result;
+                document.getElementById('val-preview').src = valData.photo;
+                document.getElementById('val-preview').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function shuffleValMsg() {
+            const p1 = document.getElementById('val-name1').value.trim() || 'You';
+            const p2 = document.getElementById('val-name2').value.trim() || 'Them';
+            const giftName = valData.gift.charAt(0).toUpperCase() + valData.gift.slice(1);
+            
+            const messages = [
+                `To ${p2} 💖. This ${giftName} is a small token of my endless love. Forever yours, ${p1}.`,
+                `${p1} & ${p2} — A love story written in the stars. Sending you this ${giftName}! ✨`,
+                `Happy Valentine's Day ${p2}! 💘 You make my heart skip a beat every day.`,
+                `For my one and only, ${p2}. This ${giftName} comes with all my love and hugs! 🧸`,
+                `To the most beautiful soul, ${p2}. Every moment with you is magic. Love, ${p1}.`
+            ];
+            
+            const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+            document.getElementById('val-msg').value = randomMsg;
         }
 
         function openValentineModal() {
@@ -547,46 +626,38 @@
             const p1 = document.getElementById('val-name1').value.trim() || 'You';
             const p2 = document.getElementById('val-name2').value.trim() || 'My Love';
             const nameCombined = `${p1} & ${p2}`;
-            
-            // 6️⃣ Message Generator (Offline)
-            let msg = "";
-            const mood = valentineThemes[valData.theme].name;
-            const giftName = valData.gift.charAt(0).toUpperCase() + valData.gift.slice(1);
-            
-            if (valData.theme === 'ai-luxury') {
-                msg = `To ${nameCombined} 💍. A premium ${giftName} for a love that shines brighter than gold. Forever yours.`;
-            } else if (valData.theme === 'ai-cute') {
-                msg = `Hey ${p2}! 🧸 Sending you this ${giftName} and a big hug! You make ${p1} smile every day!`;
-            } else if (valData.theme === 'ai-dark') {
-                msg = `${nameCombined} 🌑. This ${giftName} symbolizes our eternal bond. Deep, mysterious, and forever.`;
-            } else {
-                msg = `To my Valentine, ${p2} 💖. This ${giftName} is a small token of my endless love for you. Love, ${p1}.`;
-            }
+            const msg = document.getElementById('val-msg').value;
 
-            // Get Image Data (PNG URL)
-            const giftObj = valGifts.find(g => g.id === valData.gift);
-            const imgData = giftObj.img;
+            // Use photo if uploaded, else use gift image
+            let imgData = "";
+            let subType = "gift";
+            
+            if (valData.photo) {
+                imgData = valData.photo;
+                subType = "photo"; // Marker for layout
+            } else {
+                const giftObj = valGifts.find(g => g.id === valData.gift);
+                imgData = giftObj.img;
+            }
 
             document.getElementById('screen-loading').classList.remove('hidden-screen');
 
-            // Save using existing DB
             const secretId = Math.random().toString(36).substring(2, 10);
             
             const { error } = await client.from('wishes').insert([{ 
                 id: secretId, 
-                type: 'valentine', // SPECIAL TYPE
+                type: 'valentine', 
                 name: nameCombined, 
                 message: msg, 
                 image_data: imgData, 
-                theme: valData.theme 
+                theme: valData.theme,
+                gender: subType // Hijacking gender field to store type (photo vs gift)
             }]);
 
             if(error) { alert("Connection Error"); document.getElementById('screen-loading').classList.add('hidden-screen'); return; }
 
-            // Update Link & Redirect
             generatedLink = `${window.location.origin}${window.location.pathname}?id=${secretId}`;
             
-            // Backup to Sheet
             const params = new URLSearchParams();
             params.append('type', 'valentine'); params.append('name', nameCombined); params.append('message', msg);
             fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: params, mode: 'no-cors' }).catch(()=>{});
@@ -594,44 +665,43 @@
             addToHistory(secretId, nameCombined, 'valentine');
             window.location.href = generatedLink; 
         }
-        // --- VALENTINE LOGIC END ---
 
         async function loadWishById(id) {
             const { data, error } = await client.from('wishes').select('*').eq('id', id).single();
             if(error || !data) { alert("Wish not found!"); window.location.href = window.location.pathname; return; }
 
             generatedLink = window.location.href; 
-
-            // --- 5️⃣ IMAGE LAYOUT LOGIC ---
             const container = document.getElementById('dynamic-content');
             
             if (data.type === 'valentine') {
-                // Audio
                 document.getElementById('audio-bg').src = 'wish2.mp3';
-                
-                // Get Theme Data
                 const vTheme = valentineThemes[data.theme] || valentineThemes['ai-romantic'];
-                
-                // RENDER NEW LAYOUT (4:5 Portrait Card)
                 document.getElementById('bg-layer').style.backgroundImage = `url(${vTheme.bg})`;
                 
-                // Inject specific HTML structure for Valentine
+                // Layout: Check if it's a PHOTO or a GIFT
+                const isPhoto = data.gender === 'photo'; 
+                
+                let imgHtml = '';
+                if (isPhoto) {
+                    // Frame Layout for Couple Photo
+                    imgHtml = `<div class="photo-frame relative w-48 h-48 rounded-full p-2 bg-white/30 backdrop-blur-sm border-2 border-pink-200 shadow-2xl mx-auto"><img src="${data.image_data}" class="w-full h-full rounded-full object-cover border-4 border-white shadow-inner"></div>`;
+                } else {
+                    // Floating Layout for Gift
+                    imgHtml = `<div class="relative w-full flex-1 flex items-center justify-center animate-[float_4s_infinite]"><img src="${data.image_data}" class="w-48 h-48 object-contain drop-shadow-2xl filter brightness-110"></div>`;
+                }
+
                 container.innerHTML = `
                     <div class="glass-panel w-full max-w-sm aspect-[4/5] flex flex-col items-center justify-between p-6 rounded-3xl relative overflow-hidden border border-white/40 shadow-2xl">
-                        <div class="relative w-full flex-1 flex items-center justify-center animate-[float_4s_infinite]">
-                            <img src="${data.image_data}" class="w-48 h-48 object-contain drop-shadow-2xl filter brightness-110">
-                        </div>
-                        
+                        ${imgHtml}
                         <div class="w-full text-center z-10 mt-4 bg-white/40 backdrop-blur-md p-4 rounded-xl shadow-sm border border-white/50">
                             <h2 class="text-2xl font-bold text-gray-900 mb-2" style="font-family: '${vTheme.font}', serif;">${data.name}</h2>
                             <p class="text-gray-800 text-sm font-medium leading-relaxed italic">"${data.message}"</p>
                         </div>
-                        
                         <div class="absolute bottom-2 text-[8px] text-gray-500 uppercase tracking-widest opacity-60">Valentine Special</div>
                     </div>
                 `;
             } else {
-                // STANDARD LOAD
+                // Standard Logic
                 let audioFile = 'wish.mp3'; 
                 if (data.type === 'wedding') audioFile = 'wedding.mp3';
                 else if (data.type === 'birthday') audioFile = (data.age && parseInt(data.age) < 13) ? 'birthday-children.mp3' : 'happy-birthday.mp3';
@@ -640,7 +710,6 @@
                 const themeObj = themes.find(t => t.id === data.theme) || themes[0];
                 document.getElementById('bg-layer').style.backgroundImage = `url(${themeObj.img})`;
                 
-                // Standard Layout
                 const defaultAvatar = data.gender === 'female' ? 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png' : 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
                 const imgSrc = data.image_data || defaultAvatar;
                 const badgeHtml = (data.age && data.age > 0) ? `<div id="disp-age-badge" class="shiny-badge"><span id="age-text">${data.age}</span></div>` : '';
@@ -671,7 +740,18 @@
             setupDecorativeEmojis(data.type);
         }
 
-        // --- SMART AI LOGIC ---
+        // --- SMART IMAGE LOGIC ---
+        function openSmartSearch() {
+            document.getElementById('smart-search-box').classList.toggle('hidden');
+        }
+        function handleUrlImage(url) {
+            if(!url) return;
+            wishData.image = url;
+            document.getElementById('preview-thumb').src = url;
+            document.getElementById('preview-thumb').classList.remove('hidden');
+            document.getElementById('photo-label-text').innerText = "Link Added";
+        }
+
         function generateLiveText() {
             if (userModifiedText) return; 
             const name = document.getElementById('inp-name').value.trim() || 'Dear';
@@ -757,21 +837,10 @@
             if(!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 500; 
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    wishData.image = canvas.toDataURL('image/jpeg', 0.7);
-                    document.getElementById('preview-thumb').src = wishData.image;
-                    document.getElementById('preview-thumb').classList.remove('hidden');
-                    document.getElementById('photo-label-text').innerText = "Changed";
-                };
+                wishData.image = e.target.result;
+                document.getElementById('preview-thumb').src = wishData.image;
+                document.getElementById('preview-thumb').classList.remove('hidden');
+                document.getElementById('photo-label-text').innerText = "Changed";
             };
             reader.readAsDataURL(file);
         }
@@ -914,10 +983,15 @@
             const topControls = document.getElementById('top-controls');
             const shareSheet = document.getElementById('share-sheet');
             topControls.style.display = 'none'; shareSheet.style.display = 'none'; 
+            
+            // Dynamic Filename Logic
+            const nameEl = document.getElementById('disp-name').innerText.replace(/[^a-z0-9]/gi, '_').substring(0, 15);
+            const fileName = `${nameEl}_Celebration.png`;
+
             html2canvas(screen, { scale: 3, useCORS: true, allowTaint: true, backgroundColor: null }).then(canvas => {
                 topControls.style.display = 'flex'; shareSheet.style.display = 'block'; 
                 const link = document.createElement('a');
-                link.download = `Wish.png`;
+                link.download = fileName;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
@@ -929,7 +1003,6 @@
             localStorage.setItem('wish_history', JSON.stringify(history));
         }
         
-        // --- DELETE FROM HISTORY ---
         function deleteFromHistory(id, event) {
             event.stopPropagation(); // Stop click from opening link
             if(!confirm("Remove from this list?")) return;
@@ -968,7 +1041,6 @@
 
         let titleTapCount = 0; let tapTimer;
         
-        // --- INTERACTIVE TITLE ---
         function triggerEasterEgg() {
             const title = document.getElementById('app-title');
             const suffix = document.getElementById('title-suffix');
