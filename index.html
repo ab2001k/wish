@@ -539,6 +539,19 @@
             reader.readAsDataURL(file);
         }
 
+        // --- UTF-8 SAFE ENCODING ---
+        function safeBtoa(str) {
+            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode('0x' + p1);
+            }));
+        }
+
+        function safeAtob(str) {
+            return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+        }
+
         async function saveAndGenerate() {
             const name = document.getElementById('inp-name').value;
             const age = document.getElementById('inp-age').value || 0;
@@ -566,10 +579,17 @@
                 g: wishData.gender
             };
             
-            // --- 2. GENERATE SPECIFIC LINK *BEFORE* SHOWING RESULT ---
-            // This is the key fix. We generate the link NOW so it's ready for sharing.
-            const encoded = btoa(JSON.stringify(payload));
-            generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
+            // --- 2. GENERATE SPECIFIC LINK ---
+            try {
+                // Use Safe Encoding for Emojis
+                const encoded = safeBtoa(JSON.stringify(payload));
+                generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
+            } catch (e) {
+                console.error("Encoding error", e);
+                alert("Error creating link. Try removing emojis.");
+                document.getElementById('screen-loading').classList.add('hidden-screen');
+                return;
+            }
             
             // --- 3. SHOW RESULT IMMEDIATELY ---
             setTimeout(() => {
@@ -592,7 +612,7 @@
 
         function loadFromUrl(encodedData) {
             try {
-                const payload = JSON.parse(atob(encodedData));
+                const payload = JSON.parse(safeAtob(encodedData));
                 loadViewMode(payload, null);
             } catch(e) {
                 alert("Invalid Link!");
@@ -628,7 +648,7 @@
             
             // Ensure Link is ready for sharing if loaded from URL
             if(!generatedLink || generatedLink === "") {
-                 const encoded = btoa(JSON.stringify(data));
+                 const encoded = safeBtoa(JSON.stringify(data));
                  generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
             }
             
@@ -711,9 +731,10 @@
 
         // Sharing - ROBUST CHECK
         function shareWhatsapp() {
-            // Logic: If for some reason link is empty (it shouldn't be), rebuild it
-            if(!generatedLink) generatedLink = window.location.href;
-            
+            // Safety check: if link is empty, regenerate it
+            if(!generatedLink || generatedLink === "") {
+               generatedLink = window.location.href;
+            }
             const text = `Hey, I made a special wish for you! ✨ Tap to see: ${generatedLink}`;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
