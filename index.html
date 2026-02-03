@@ -373,13 +373,13 @@
     </div>
 
     <script>
-        // *** YOUR DEPLOYED WEB APP URL (Hardcoded as requested) ***
+        // *** YOUR DEPLOYED WEB APP URL (Hardcoded) ***
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3Jd86OmAT6Q0ywpzSpNFvYGjqro7VeKlvV9sf0tlux_YiCF6bnSWlIA3rQJAS8Zid2Q/exec"; 
         
         // --- State ---
         let wishData = { type: '', gender: 'male', image: null, theme: null }; 
         let userModifiedText = false;
-        let generatedLink = "";
+        let generatedLink = ""; // This tracks the URL for WhatsApp
 
         // --- FULL THEME LIST (15 Themes) ---
         const themes = [
@@ -421,9 +421,10 @@
             document.getElementById('inp-relation').addEventListener('change', generateLiveText);
 
             if (dataParam) {
-                // VIEW MODE
+                // VIEW MODE - Auto-detect link for sharing
                 document.getElementById('screen-home').classList.add('hidden-screen');
                 document.getElementById('screen-loading').classList.remove('hidden-screen');
+                generatedLink = window.location.href; // STORE THE LINK FOR WHATSAPP
                 loadFromUrl(dataParam);
             }
         };
@@ -506,7 +507,6 @@
             }
             
             // AUTO SELECT THEME LOGIC
-            // If user selects festival, pick festival theme. Else pick blue default.
             if(type === 'diwali') wishData.theme = 'theme-diwali';
             else if(type === 'holi') wishData.theme = 'theme-holi';
             else if(type === 'ganesha') wishData.theme = 'theme-ganesha';
@@ -516,7 +516,6 @@
 
             // Highlight the selected theme
             document.querySelectorAll('.theme-option').forEach(el => el.classList.remove('selected'));
-            
             generateLiveText(); 
         }
 
@@ -548,7 +547,7 @@
             if(!name) return alert("Please enter a name!");
             let msg = customMsg.trim() || `Happy ${wishData.type}`;
             
-            // Auto-Theme Logic: If theme is null, pick a smart default
+            // Auto-Theme Fallback
             let finalTheme = wishData.theme;
             if(!finalTheme) {
                  if(wishData.gender === 'female') finalTheme = 'theme-pink';
@@ -567,11 +566,10 @@
                 g: wishData.gender
             };
             
-            // --- 2. SHOW RESULT IMMEDIATELY (Optimistic UI) ---
-            // We do not wait for the save to finish. We show the result NOW.
+            // --- 2. SHOW RESULT IMMEDIATELY ---
             setTimeout(() => {
                  loadViewMode(payload, wishData.image); 
-            }, 1500); // 1.5s fake loader for effect
+            }, 1500);
 
             // --- 3. SAVE TO GOOGLE SHEET IN BACKGROUND ---
             const params = new URLSearchParams();
@@ -586,7 +584,7 @@
                 mode: 'no-cors' 
             }).catch(e => console.log("Background save failed:", e));
 
-            // --- 4. GENERATE LINK ---
+            // --- 4. GENERATE LINK FOR WHATSAPP ---
             const encoded = btoa(JSON.stringify(payload));
             generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
         }
@@ -618,7 +616,6 @@
                 : 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
             document.getElementById('disp-img').src = localImage || defaultAvatar;
 
-            // SHOW AGE BADGE IF AGE EXISTS
             if(data.a && data.a > 0) {
                 const badge = document.getElementById('disp-age-badge');
                 badge.classList.remove('hidden');
@@ -628,6 +625,7 @@
             setupFloatingIcons(data.t);
             setupDecorativeEmojis(data.t);
             
+            // Ensure Link is ready for sharing
             if(!generatedLink) {
                  const encoded = btoa(JSON.stringify(data));
                  generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
@@ -710,12 +708,17 @@
             else { audio.pause(); icon.className = "fas fa-volume-mute text-xs"; }
         }
 
-        // Sharing
+        // Sharing - ROBUST CHECK
         function shareWhatsapp() {
+            // Safety check: if link is empty, regenerate it
+            if(!generatedLink || generatedLink === "") {
+               generatedLink = window.location.href;
+            }
             const text = `Hey, I made a special wish for you! ✨ Tap to see: ${generatedLink}`;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
         function copyLink() {
+            if(!generatedLink) generatedLink = window.location.href;
             navigator.clipboard.writeText(generatedLink).then(() => alert("Wish + Link Copied! 📋"));
         }
         function downloadImage() {
