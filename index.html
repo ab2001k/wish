@@ -9,6 +9,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -143,7 +144,7 @@
 
             <div id="screen-loading" class="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center hidden-screen">
                 <div class="loader mb-4"></div>
-                <p class="text-indigo-600 font-bold tracking-widest text-xs uppercase">Saving & Creating...</p>
+                <p class="text-indigo-600 font-bold tracking-widest text-xs uppercase">Saving Magic...</p>
             </div>
 
             <div id="matrix-overlay" class="hidden-screen">
@@ -210,6 +211,14 @@
                             </button>
                         </div>
                     </div>
+                </div>
+
+                <div id="history-section" class="mt-10 hidden-screen">
+                    <div class="flex items-center justify-between mb-4 px-2">
+                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Recent Creations</h3>
+                        <span class="text-xs text-indigo-500 font-bold cursor-pointer hover:underline" onclick="clearHistory()">Clear</span>
+                    </div>
+                    <div id="history-list" class="space-y-3 pb-20"></div>
                 </div>
 
                 <div class="mt-auto pt-8 pb-4 text-center">
@@ -373,13 +382,18 @@
     </div>
 
     <script>
-        // *** YOUR DEPLOYED WEB APP URL (Hardcoded) ***
+        // *** CONFIG ***
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3Jd86OmAT6Q0ywpzSpNFvYGjqro7VeKlvV9sf0tlux_YiCF6bnSWlIA3rQJAS8Zid2Q/exec"; 
+        const SUPABASE_URL = 'https://rhodybetonjerkcsdstj.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJob2R5YmV0b25qZXJrY3Nkc3RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4OTU5MDAsImV4cCI6MjA4NDQ3MTkwMH0.IEO-2spCVUxYFiQW-ARlA4RH57R_DQttQsWW0tGnUMI';
         
+        // Init Supabase
+        const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         // --- State ---
         let wishData = { type: '', gender: 'male', image: null, theme: null }; 
         let userModifiedText = false;
-        let generatedLink = ""; // This tracks the SPECIFIC URL for WhatsApp
+        let generatedLink = ""; // This tracks the SPECIFIC ID URL
 
         // --- FULL THEME LIST (15 Themes) ---
         const themes = [
@@ -401,9 +415,9 @@
         ];
 
         // --- Init ---
-        window.onload = () => {
+        window.onload = async () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const dataParam = urlParams.get('data');
+            const idParam = urlParams.get('id');
 
             setupThemeSelector();
             
@@ -420,14 +434,58 @@
             document.getElementById('inp-custom-msg').addEventListener('input', () => { userModifiedText = true; });
             document.getElementById('inp-relation').addEventListener('change', generateLiveText);
 
-            if (dataParam) {
-                // VIEW MODE - Auto-detect link for sharing
+            // LOAD BY ID FROM SUPABASE
+            if (idParam) {
                 document.getElementById('screen-home').classList.add('hidden-screen');
                 document.getElementById('screen-loading').classList.remove('hidden-screen');
-                generatedLink = window.location.href; // STORE THE LINK FOR WHATSAPP
-                loadFromUrl(dataParam);
+                await loadWishById(idParam);
+            } else {
+                // If on homepage, load recent history
+                loadHistory();
             }
         };
+
+        // --- SUPABASE LOAD LOGIC ---
+        async function loadWishById(id) {
+            const { data, error } = await client.from('wishes').select('*').eq('id', id).single();
+            
+            if(error || !data) {
+                alert("Wish not found! Creating a new one.");
+                window.location.href = window.location.pathname;
+                return;
+            }
+
+            // Set global link for sharing
+            generatedLink = window.location.href;
+
+            document.getElementById('creator-form').classList.add('hidden-screen');
+            document.getElementById('screen-loading').classList.add('hidden-screen');
+            document.getElementById('screen-reveal').classList.remove('hidden-screen');
+
+            // Populate Data
+            document.getElementById('disp-title').innerText = getTitle(data.type);
+            document.getElementById('disp-name').innerText = data.name;
+            document.getElementById('disp-msg').innerText = data.message;
+            
+            // Theme
+            const themeObj = themes.find(t => t.id === data.theme) || themes[0];
+            document.getElementById('bg-layer').style.backgroundImage = `url(${themeObj.img})`;
+
+            // Image
+            const defaultAvatar = data.gender === 'female' 
+                ? 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png' 
+                : 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
+            document.getElementById('disp-img').src = data.image_data || defaultAvatar;
+
+            // Age
+            if(data.age && data.age > 0) {
+                document.getElementById('disp-age-badge').classList.remove('hidden');
+                document.getElementById('age-text').innerText = data.age;
+            }
+
+            setupFloatingIcons(data.type);
+            setupDecorativeEmojis(data.type);
+        }
 
         // --- SMART AI LOGIC ---
         function generateLiveText() {
@@ -506,7 +564,6 @@
                 genderSelect.style.display = 'block';
             }
             
-            // AUTO SELECT THEME LOGIC
             if(type === 'diwali') wishData.theme = 'theme-diwali';
             else if(type === 'holi') wishData.theme = 'theme-holi';
             else if(type === 'ganesha') wishData.theme = 'theme-ganesha';
@@ -514,7 +571,6 @@
             else if(type === 'independence') wishData.theme = 'theme-independence';
             else wishData.theme = 'theme-blue';
 
-            // Highlight the selected theme
             document.querySelectorAll('.theme-option').forEach(el => el.classList.remove('selected'));
             generateLiveText(); 
         }
@@ -531,27 +587,26 @@
             if(!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
-                wishData.image = e.target.result;
-                document.getElementById('preview-thumb').src = wishData.image;
-                document.getElementById('preview-thumb').classList.remove('hidden');
-                document.getElementById('photo-label-text').innerText = "Changed";
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 500; 
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    wishData.image = canvas.toDataURL('image/jpeg', 0.7);
+                    document.getElementById('preview-thumb').src = wishData.image;
+                    document.getElementById('preview-thumb').classList.remove('hidden');
+                    document.getElementById('photo-label-text').innerText = "Changed";
+                };
             };
             reader.readAsDataURL(file);
         }
 
-        // --- UTF-8 SAFE ENCODING ---
-        function safeBtoa(str) {
-            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-                return String.fromCharCode('0x' + p1);
-            }));
-        }
-
-        function safeAtob(str) {
-            return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-        }
-
+        // --- SAVE LOGIC (Supabase + Google Sheet) ---
         async function saveAndGenerate() {
             const name = document.getElementById('inp-name').value;
             const age = document.getElementById('inp-age').value || 0;
@@ -560,7 +615,6 @@
             if(!name) return alert("Please enter a name!");
             let msg = customMsg.trim() || `Happy ${wishData.type}`;
             
-            // Auto-Theme Fallback
             let finalTheme = wishData.theme;
             if(!finalTheme) {
                  if(wishData.gender === 'female') finalTheme = 'theme-pink';
@@ -569,34 +623,28 @@
 
             document.getElementById('screen-loading').classList.remove('hidden-screen');
 
-            // --- 1. PREPARE DATA ---
-            const payload = {
-                t: wishData.type,
-                n: name,
-                m: msg,
-                th: finalTheme,
-                a: age,
-                g: wishData.gender
-            };
-            
-            // --- 2. GENERATE SPECIFIC LINK ---
-            try {
-                // Use Safe Encoding for Emojis
-                const encoded = safeBtoa(JSON.stringify(payload));
-                generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
-            } catch (e) {
-                console.error("Encoding error", e);
-                alert("Error creating link. Try removing emojis.");
+            // 1. SAVE TO SUPABASE (Getting ID is CRITICAL)
+            const { data, error } = await client.from('wishes').insert([{ 
+                type: wishData.type, 
+                name: name, 
+                message: msg, 
+                image_data: wishData.image, 
+                gender: wishData.gender, 
+                age: age, 
+                theme: finalTheme
+            }]).select();
+
+            if(error) {
+                console.error(error);
+                alert("Error saving to database! Check connection.");
                 document.getElementById('screen-loading').classList.add('hidden-screen');
                 return;
             }
-            
-            // --- 3. SHOW RESULT IMMEDIATELY ---
-            setTimeout(() => {
-                 loadViewMode(payload, wishData.image); 
-            }, 1500);
 
-            // --- 4. SAVE TO GOOGLE SHEET (Fire & Forget) ---
+            const newId = data[0].id;
+            generatedLink = `${window.location.origin}${window.location.pathname}?id=${newId}`;
+
+            // 2. SAVE TO GOOGLE SHEET (Backup)
             const params = new URLSearchParams();
             params.append('type', wishData.type);
             params.append('name', name);
@@ -607,53 +655,13 @@
                 method: 'POST',
                 body: params,
                 mode: 'no-cors' 
-            }).catch(e => console.log("Background save failed:", e));
-        }
+            }).catch(e => console.log("Google Sheet save failed (Backup only):", e));
 
-        function loadFromUrl(encodedData) {
-            try {
-                const payload = JSON.parse(safeAtob(encodedData));
-                loadViewMode(payload, null);
-            } catch(e) {
-                alert("Invalid Link!");
-                window.location.href = window.location.pathname;
-            }
-        }
+            // 3. UPDATE LOCAL HISTORY
+            addToHistory(newId, name, wishData.type);
 
-        function loadViewMode(data, localImage) {
-            document.getElementById('creator-form').classList.add('hidden-screen');
-            document.getElementById('screen-loading').classList.add('hidden-screen');
-            document.getElementById('screen-reveal').classList.remove('hidden-screen');
-
-            document.getElementById('disp-title').innerText = getTitle(data.t);
-            document.getElementById('disp-name').innerText = data.n;
-            document.getElementById('disp-msg').innerText = data.m;
-            
-            const themeObj = themes.find(t => t.id === data.th) || themes[0];
-            document.getElementById('bg-layer').style.backgroundImage = `url(${themeObj.img})`;
-
-            const defaultAvatar = data.g === 'female' 
-                ? 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png' 
-                : 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
-            document.getElementById('disp-img').src = localImage || defaultAvatar;
-
-            if(data.a && data.a > 0) {
-                const badge = document.getElementById('disp-age-badge');
-                badge.classList.remove('hidden');
-                document.getElementById('age-text').innerText = data.a;
-            }
-
-            setupFloatingIcons(data.t);
-            setupDecorativeEmojis(data.t);
-            
-            // Ensure Link is ready for sharing if loaded from URL
-            if(!generatedLink || generatedLink === "") {
-                 const encoded = safeBtoa(JSON.stringify(data));
-                 generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
-            }
-            
-            // SILENTLY UPDATE URL BAR (So copy-paste from bar also works)
-            window.history.pushState({path: generatedLink}, '', generatedLink);
+            // 4. REDIRECT TO SPECIFIC LINK
+            window.location.href = generatedLink;
         }
 
         function openWish() {
@@ -731,10 +739,9 @@
 
         // Sharing - ROBUST CHECK
         function shareWhatsapp() {
-            // Safety check: if link is empty, regenerate it
-            if(!generatedLink || generatedLink === "") {
-               generatedLink = window.location.href;
-            }
+            // Logic: If for some reason link is empty (it shouldn't be), rebuild it
+            if(!generatedLink) generatedLink = window.location.href;
+            
             const text = `Hey, I made a special wish for you! ✨ Tap to see: ${generatedLink}`;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
@@ -755,6 +762,33 @@
                 link.click();
             });
         }
+
+        // Local History
+        function addToHistory(id, name, type) {
+            let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
+            history.unshift({ id, name, type, date: new Date().toLocaleDateString() });
+            localStorage.setItem('wish_history', JSON.stringify(history));
+        }
+        function loadHistory() {
+            let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
+            const list = document.getElementById('history-list');
+            const section = document.getElementById('history-section');
+            if (history.length === 0) { section.classList.add('hidden-screen'); return; }
+            section.classList.remove('hidden-screen');
+            list.innerHTML = '';
+            history.forEach(item => {
+                const icon = item.type === 'birthday' ? '🎂' : '✨';
+                const fullUrl = `${window.location.origin}${window.location.pathname}?id=${item.id}`;
+                const div = document.createElement('div');
+                div.className = 'bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between shadow-sm hover:shadow-md transition';
+                div.innerHTML = `
+                    <div class="flex items-center gap-3"><span class="text-xl bg-gray-50 p-2 rounded-lg">${icon}</span><div><p class="font-bold text-gray-800 text-sm">${item.name}</p><p class="text-[10px] text-gray-400">${item.date}</p></div></div>
+                    <div class="flex gap-2"><button onclick="navigator.clipboard.writeText('${fullUrl}').then(()=>alert('Link Copied!'))" class="bg-gray-100 text-gray-600 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 transition"><i class="fas fa-copy text-xs"></i></button><a href="?id=${item.id}" class="bg-indigo-50 text-indigo-600 text-xs font-bold px-3 py-2 rounded-lg hover:bg-indigo-100 flex items-center">View</a></div>
+                `;
+                list.appendChild(div);
+            });
+        }
+        function clearHistory() { if(confirm("Clear history list?")) { localStorage.removeItem('wish_history'); location.reload(); } }
 
         // Matrix Easter Egg
         let titleTapCount = 0; let tapTimer;
