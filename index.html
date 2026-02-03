@@ -17,131 +17,96 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Pacifico&family=Great+Vibes&family=Cinzel:wght@400;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
-        /* RESET & LAYOUT */
-        html, body {
-            height: 100%; width: 100%; margin: 0; padding: 0;
-            overflow: hidden; background-color: #000;
-            font-family: 'Poppins', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        /* RESET */
+        html, body { height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden; background-color: #000; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        #app-wrapper {
-            width: 100%; height: 100%; display: flex;
-            justify-content: center; align-items: center;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        #app-wrapper { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); background-size: 400% 400%; animation: gradientBG 15s ease infinite; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         /* UTILS */
         .hidden-screen { display: none !important; }
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* GLASS & THEME */
-        #bg-layer {
-            position: absolute; inset: 0; z-index: 0;
-            background-size: cover; background-position: center;
-            filter: blur(8px) brightness(0.85);
-            transform: scale(1.1); 
-        }
-
-        /* PREMIUM CARD STYLES */
+        
+        /* BACKGROUND & GLASS */
+        #bg-layer { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; filter: blur(8px) brightness(0.85); transform: scale(1.1); }
+        
+        /* PREMIUM CARD LAYOUT */
         .premium-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-radius: 24px;
-            overflow: hidden;
-            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.4);
+            overflow: hidden; position: relative;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
+        .border-gold { border: 3px solid #ffd700; box-shadow: 0 0 25px rgba(255, 215, 0, 0.6); }
+        .border-silver { border: 3px solid #e0e0e0; box-shadow: 0 0 25px rgba(255, 255, 255, 0.5); }
+        .border-pink { border: 3px solid #ff69b4; box-shadow: 0 0 25px rgba(255, 105, 180, 0.6); }
         
-        .border-gold { border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
-        .border-silver { border: 2px solid #c0c0c0; box-shadow: 0 0 15px rgba(192, 192, 192, 0.5); }
-        
-        /* SHINY AGE BADGE */
-        .shiny-badge {
-            position: absolute; bottom: 0; right: 0; width: 3.5rem; height: 3.5rem;
-            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; font-family: 'Playfair Display', serif; font-weight: 800; font-size: 1.25rem;
-            border: 3px solid #fff;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            transform: rotate(10deg); z-index: 20;
-        }
+        /* TEXT STYLES */
+        .text-gradient-gold { background: linear-gradient(to right, #BF953F, #FCF6BA, #AA771C); -webkit-background-clip: text; color: transparent; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .text-gradient-pink { background: linear-gradient(to right, #ff9a9e, #fecfef, #ff9a9e); -webkit-background-clip: text; color: transparent; }
+        .font-fancy { font-family: 'Great Vibes', cursive; }
+        .font-royal { font-family: 'Cinzel', serif; }
 
-        /* ANIMATIONS */
-        .gift-box-anim { animation: shake 2.5s infinite ease-in-out; cursor: pointer; }
-        .gift-box-anim:active { transform: scale(0.95); }
-        @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } }
-        
-        /* FLOATING BUBBLES IN BUTTON */
-        .bubble {
-            position: absolute; bottom: -10px; background: rgba(255,255,255,0.3);
-            border-radius: 50%; animation: floatUp 3s infinite linear;
+        /* BUBBLE ANIMATION */
+        .bubble { position: absolute; bottom: -10px; background: rgba(255,255,255,0.4); border-radius: 50%; animation: floatUp 3s infinite linear; pointer-events: none; }
+        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-60px); opacity: 0; } }
+
+        /* FLOATING GRAPHICS (Replaces Text Emojis) */
+        .floating-graphic {
+            position: absolute; 
+            animation: floatGraphic 8s infinite ease-in-out;
+            opacity: 0.8; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+            font-size: 1.8rem; /* For Icons */
         }
-        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-50px); opacity: 0; } }
+        .floating-graphic img { width: 32px; height: 32px; object-fit: contain; }
+        
+        @keyframes floatGraphic { 
+            0% { transform: translateY(110%) rotate(0deg); opacity: 0; } 
+            10% { opacity: 0.9; }
+            90% { opacity: 0.9; }
+            100% { transform: translateY(-10%) rotate(360deg); opacity: 0; } 
+        }
 
         .btn-click:active { transform: scale(0.95); }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
 
-        /* MATRIX OVERLAY */
+        /* MATRIX & EASTER EGGS */
         #matrix-overlay { position: fixed; inset: 0; background: black; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'VT323', monospace; }
         canvas#matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
         .matrix-content { z-index: 50; text-align: center; width: 100%; position: relative; }
         .hacked-title { color: #0f0; font-size: 4rem; margin-bottom: 2rem; text-shadow: 0 0 10px #0f0; }
-        
+        #matrix-controls { opacity: 0; transition: opacity 1.5s ease-in; pointer-events: auto; }
         .matrix-btn { background: black; color: #0f0; border: 2px solid #0f0; padding: 15px 30px; font-size: 1.5rem; text-transform: uppercase; animation: blinkMatrix 1s infinite steps(2, start); cursor: pointer; display: inline-block; margin-top: 20px; }
-        .matrix-btn-back { background: black; color: white; border: 2px solid white; padding: 10px 20px; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 10px white; cursor: pointer; margin-top: 20px; display: inline-block; transition: all 0.3s; }
+        .matrix-btn-back { background: black; color: white; border: 2px solid white; padding: 10px 20px; font-size: 1.2rem; cursor: pointer; margin-top: 20px; display: inline-block; }
         @keyframes blinkMatrix { 0%, 100% { opacity: 1; box-shadow: 0 0 15px #0f0; } 50% { opacity: 0.8; } }
+        
+        /* TITLE BUMP */
+        .manual-bump { animation: manualBump 0.2s ease-out forwards; }
+        @keyframes manualBump { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
 
-        /* THEME SELECTOR - FIXED */
-        .theme-option {
-            width: 50px; 
-            height: 50px; 
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid #e5e7eb; /* Soft gray border to see against white */
-            transition: transform 0.2s, border-color 0.2s;
-            flex-shrink: 0; /* CRITICAL FIX: Prevents squishing */
-            background-size: cover;
-            background-position: center;
-            background-color: #f3f4f6; /* Fallback color */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .theme-option.selected {
-            border-color: #6366f1; /* Indigo when selected */
-            transform: scale(1.15);
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
-        }
+        /* THEME SELECTOR */
+        .theme-option { width: 50px; height: 50px; border-radius: 50%; cursor: pointer; border: 2px solid #ddd; transition: transform 0.2s; background-size: cover; background-position: center; flex-shrink: 0; }
+        .theme-option.selected { border-color: #6366f1; transform: scale(1.15); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3); }
 
-        /* VALENTINE STYLES */
+        /* VALENTINE GRID */
         .val-grid-item { aspect-ratio: 1/1; border: 2px solid #fce7f3; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; background: white; }
         .val-grid-item:hover { transform: translateY(-2px); border-color: #ec4899; }
         .val-selected { border-color: #db2777 !important; background: #fff1f2; box-shadow: 0 0 10px rgba(236, 72, 153, 0.3); }
         .val-theme-btn { padding: 8px 16px; border-radius: 20px; font-size: 10px; font-weight: bold; border: 1px solid #e5e7eb; background: white; cursor: pointer; transition: all 0.2s; }
         .val-theme-btn.active { background: #be185d; color: white; border-color: #be185d; }
 
-        #watermark-branding { position: absolute; bottom: 15px; width: 100%; text-align: center; font-size: 10px; color: rgba(255, 255, 255, 0.6); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 1px 3px rgba(0,0,0,0.8); z-index: 20; }
+        #watermark-branding { position: absolute; bottom: 12px; width: 100%; text-align: center; font-size: 9px; color: rgba(255, 255, 255, 0.6); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); z-index: 20; }
 
-        @media (max-height: 800px) {
-            #capture-area { padding-top: 0.5rem !important; } 
-            .photo-frame { width: 8rem !important; height: 8rem !important; } 
-        }
+        @media (max-height: 800px) { #capture-area { padding-top: 0.5rem !important; } }
     </style>
 </head>
 <body>
 
     <div id="app-wrapper">
         <div id="app-container" class="bg-gray-50/90 backdrop-blur w-full h-[100dvh] sm:max-w-md sm:h-[850px] sm:rounded-3xl shadow-2xl overflow-hidden relative flex flex-col">
-            
             <audio id="audio-bg" loop preload="auto"></audio>
 
             <div id="screen-loading" class="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center hidden-screen">
@@ -161,28 +126,17 @@
                     <button onclick="selectType('birthday')" class="btn-click w-full bg-white p-5 rounded-3xl shadow-lg border border-gray-100 hover:border-pink-300 transition flex items-center gap-5 group relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-r from-pink-50 to-white opacity-0 group-hover:opacity-100 transition duration-500"></div>
                         <div class="bg-pink-100 p-3 rounded-2xl text-3xl group-hover:rotate-12 transition relative z-10">🎂</div>
-                        <div class="text-left relative z-10">
-                            <h3 class="text-lg font-bold text-gray-800">Birthday Wish</h3>
-                            <p class="text-[10px] text-gray-500">Friends, family & little ones</p>
-                        </div>
+                        <div class="text-left relative z-10"><h3 class="text-lg font-bold text-gray-800">Birthday Wish</h3><p class="text-[10px] text-gray-500">Friends, family & little ones</p></div>
                     </button>
 
                     <button onclick="selectType('wedding')" class="btn-click w-full bg-white p-5 rounded-3xl shadow-lg border border-gray-100 hover:border-purple-300 transition flex items-center gap-5 group relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-r from-purple-50 to-white opacity-0 group-hover:opacity-100 transition duration-500"></div>
                         <div class="bg-purple-100 p-3 rounded-2xl text-3xl group-hover:rotate-12 transition relative z-10">💍</div>
-                        <div class="text-left relative z-10">
-                            <h3 class="text-lg font-bold text-gray-800">Anniversary</h3>
-                            <p class="text-[10px] text-gray-500">Weddings & couples</p>
-                        </div>
+                        <div class="text-left relative z-10"><h3 class="text-lg font-bold text-gray-800">Anniversary</h3><p class="text-[10px] text-gray-500">Weddings & couples</p></div>
                     </button>
 
                     <div class="mt-6">
-                        <div class="flex items-center gap-2 mb-3">
-                            <div class="h-[1px] bg-gray-200 flex-1"></div>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Indian Festival Pack</span>
-                            <div class="h-[1px] bg-gray-200 flex-1"></div>
-                        </div>
-                        
+                        <div class="flex items-center gap-2 mb-3"><div class="h-[1px] bg-gray-200 flex-1"></div><span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Indian Festival Pack</span><div class="h-[1px] bg-gray-200 flex-1"></div></div>
                         <div class="grid grid-cols-2 gap-3">
                             <button onclick="selectType('diwali')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-orange-100 hover:border-orange-400 flex flex-col items-center gap-2"><span class="text-2xl">🪔</span><span class="text-xs font-bold text-gray-700">Diwali</span></button>
                             <button onclick="selectType('holi')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-pink-100 hover:border-pink-400 flex flex-col items-center gap-2"><span class="text-2xl">🎨</span><span class="text-xs font-bold text-gray-700">Holi</span></button>
@@ -194,22 +148,11 @@
 
                     <div id="valentine-section" class="hidden mt-6">
                         <button onclick="openValentineModal()" class="btn-click w-full bg-gradient-to-r from-red-500 to-rose-600 p-5 rounded-3xl shadow-xl shadow-red-200 border-2 border-white flex items-center justify-between group relative overflow-hidden">
-                            <div class="bubble w-2 h-2 left-4" style="animation-delay: 0s"></div>
-                            <div class="bubble w-3 h-3 left-10" style="animation-delay: 1s"></div>
-                            <div class="bubble w-1 h-1 left-20" style="animation-delay: 2s"></div>
-
-                            <div class="absolute top-0 right-0 bg-white border-l border-b border-gray-100 px-3 py-1 rounded-bl-xl shadow-sm z-20">
-                                <span class="text-[9px] font-extrabold text-red-600 tracking-wider uppercase">Limited Time</span>
-                            </div>
-                            
+                            <div class="bubble w-2 h-2 left-4" style="animation-delay: 0s"></div><div class="bubble w-3 h-3 left-10" style="animation-delay: 1s"></div><div class="bubble w-1 h-1 left-20" style="animation-delay: 2s"></div>
+                            <div class="absolute top-0 right-0 bg-white border-l border-b border-gray-100 px-3 py-1 rounded-bl-xl shadow-sm z-20"><span class="text-[9px] font-extrabold text-red-600 tracking-wider uppercase border border-red-100 px-1 rounded">Limited Time</span></div>
                             <div class="flex items-center gap-4 relative z-10">
-                                <div class="bg-white/20 p-3 rounded-full text-2xl backdrop-blur-sm flex items-center justify-center">
-                                    <i class="fas fa-heart text-white text-2xl"></i>
-                                </div>
-                                <div class="text-left text-white">
-                                    <h3 class="text-lg font-bold font-serif">Valentine Wish</h3>
-                                    <p class="text-[10px] opacity-90">Create something magical 💘</p>
-                                </div>
+                                <div class="bg-white/20 p-3 rounded-full text-2xl backdrop-blur-sm text-white flex items-center justify-center"><i class="fas fa-heart text-white"></i></div>
+                                <div class="text-left text-white"><h3 class="text-lg font-bold font-serif">Valentine Wish</h3><p class="text-[10px] opacity-90">Create something magical 💘</p></div>
                             </div>
                             <i class="fas fa-heart text-white/50 text-4xl absolute -bottom-2 -right-2 rotate-12"></i>
                         </button>
@@ -217,45 +160,20 @@
                 </div>
 
                 <div id="history-section" class="mt-10 hidden-screen">
-                    <div class="flex items-center justify-between mb-4 px-2">
-                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Recent Creations</h3>
-                        <span class="text-xs text-indigo-500 font-bold cursor-pointer hover:underline" onclick="clearHistory()">Clear All</span>
-                    </div>
+                    <div class="flex items-center justify-between mb-4 px-2"><h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Recent Creations</h3><span class="text-xs text-indigo-500 font-bold cursor-pointer hover:underline" onclick="clearHistory()">Clear All</span></div>
                     <div id="history-list" class="space-y-3 pb-20"></div>
                 </div>
-
-                <div class="mt-auto pt-8 pb-2 text-center">
-                    <p class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">Made with ❤️ by Abhik</p>
-                    <p id="egg-hint" class="text-[9px] text-indigo-300/0 mt-2 transition-all duration-1000 select-none">Psst! Tap 'WishMaker' 4 times... 🕶️</p>
-                </div>
+                <div class="mt-auto pt-8 pb-2 text-center"><p class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">Made with ❤️ by Abhik</p><p id="egg-hint" class="text-[9px] text-indigo-300/0 mt-2 transition-all duration-1000 select-none">Psst! Tap 'WishMaker' 4 times... 🕶️</p></div>
             </div>
 
             <div id="creator-form" class="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col hidden-screen overflow-y-auto">
-                <div class="flex items-center mb-6">
-                    <button onclick="closeForm()" class="btn-click p-3 rounded-full bg-white text-gray-600 shadow-sm hover:bg-gray-100 transition"><i class="fas fa-arrow-left"></i></button>
-                    <h2 class="text-2xl font-bold ml-4 text-gray-800">Customize Wish</h2>
-                </div>
+                <div class="flex items-center mb-6"><button onclick="closeForm()" class="btn-click p-3 rounded-full bg-white text-gray-600 shadow-sm hover:bg-gray-100 transition"><i class="fas fa-arrow-left"></i></button><h2 class="text-2xl font-bold ml-4 text-gray-800">Customize Wish</h2></div>
                 <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 mb-6 space-y-5">
-                    <div>
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Choose Aesthetic</label>
-                        <div class="flex gap-4 overflow-x-auto p-2 -mx-2 scrollbar-hide" id="theme-selector"></div>
-                    </div>
+                    <div><label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Choose Aesthetic</label><div class="flex gap-4 overflow-x-auto p-2 -mx-2 scrollbar-hide" id="theme-selector"></div></div>
                     <div id="gender-select"><label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Gender</label><div class="flex gap-4"><label class="flex-1 cursor-pointer group"><input type="radio" name="gender" value="male" class="peer hidden" onchange="updateThemePreview('male')" checked><div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-600 transition group-hover:border-blue-200"><span class="block text-xl mb-1">👨</span><span class="text-xs font-bold uppercase">Male</span></div></label><label class="flex-1 cursor-pointer group"><input type="radio" name="gender" value="female" class="peer hidden" onchange="updateThemePreview('female')"><div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-pink-50 peer-checked:border-pink-500 peer-checked:text-pink-600 transition group-hover:border-pink-200"><span class="block text-xl mb-1">👩</span><span class="text-xs font-bold uppercase">Female</span></div></label></div></div>
                     <div class="space-y-4">
                         <div><label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Who is this for?</label><input type="text" id="inp-name" placeholder="Name" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition"></div>
-                        <div class="flex gap-4" id="row-details">
-                            <div class="w-1/3"><label id="label-age" class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Age</label><input type="number" id="inp-age" placeholder="25" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition"></div>
-                            <div class="w-2/3"><label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Relation</label>
-                                <select id="inp-relation" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition appearance-none">
-                                    <option value="friend">Friend</option>
-                                    <option value="partner">Partner</option>
-                                    <option value="spouse">Spouse</option>
-                                    <option value="family">Family</option>
-                                    <option value="sibling">Sibling</option>
-                                    <option value="colleague">Colleague</option>
-                                </select>
-                            </div>
-                        </div>
+                        <div class="flex gap-4" id="row-details"><div class="w-1/3"><label id="label-age" class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Age</label><input type="number" id="inp-age" placeholder="25" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition"></div><div class="w-2/3"><label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Relation</label><select id="inp-relation" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition appearance-none"><option value="friend">Friend</option><option value="partner">Partner</option><option value="spouse">Spouse</option><option value="family">Family</option><option value="sibling">Sibling</option><option value="colleague">Colleague</option></select></div></div>
                         <div><label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Custom Wish</label><textarea id="inp-custom-msg" rows="3" placeholder="Type here..." class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-gray-700 transition text-sm"></textarea></div>
                     </div>
                     <div>
@@ -299,15 +217,9 @@
                 <div id="share-sheet" class="bg-white p-5 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] z-20 relative transform transition w-full mt-auto">
                     <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-4"></div>
                     <div class="grid grid-cols-3 gap-2 mb-2">
-                        <button onclick="shareWhatsapp()" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition"><i class="fab fa-whatsapp text-lg"></i></div><span class="text-[10px] font-bold text-gray-500">WhatsApp</span>
-                        </button>
-                        <button onclick="downloadImage()" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition"><i class="fab fa-instagram text-lg"></i></div><span class="text-[10px] font-bold text-gray-500">Save Img</span>
-                        </button>
-                        <button onclick="copyLink()" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition"><i class="fas fa-link text-lg"></i></div><span class="text-[10px] font-bold text-gray-500">Copy Link</span>
-                        </button>
+                        <button onclick="shareWhatsapp()" class="flex flex-col items-center gap-1 group"><div class="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition"><i class="fab fa-whatsapp text-lg"></i></div><span class="text-[10px] font-bold text-gray-500">WhatsApp</span></button>
+                        <button onclick="downloadImage()" class="flex flex-col items-center gap-1 group"><div class="w-10 h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition"><i class="fab fa-instagram text-lg"></i></div><span class="text-[10px] font-bold text-gray-500">Save Img</span></button>
+                        <button onclick="copyLink()" class="flex flex-col items-center gap-1 group"><div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition"><i class="fas fa-link text-lg"></i></div><span class="text-[10px] font-bold text-gray-500">Copy Link</span></button>
                     </div>
                 </div>
             </div>
@@ -341,7 +253,6 @@
             { id: 'ring', icon: '💍', img: 'https://cdn-icons-png.flaticon.com/512/2658/2658142.png', msg: "A ring to promise my forever to you." },
             { id: 'card', icon: '💌', img: 'https://cdn-icons-png.flaticon.com/512/3062/3062634.png', msg: "My heart written on paper, just for you." }
         ];
-        // FULL THEME LIST (15+ Items)
         const themes = [
             { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue', mood: 'refreshing' },
             { id: 'theme-pink', img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80', name: 'Pink', mood: 'sweet' },
@@ -405,17 +316,15 @@
         }
 
         function shuffleValMsg() {
-            if(userModifiedText) return; // Respect manual edit
+            if(userModifiedText) return; 
             const p1 = document.getElementById('val-name1').value.trim() || 'You';
             const p2 = document.getElementById('val-name2').value.trim() || 'Them';
-            const giftName = valData.gift.charAt(0).toUpperCase() + valData.gift.slice(1);
-            let msg = "";
             const giftObj = valGifts.find(g => g.id === valData.gift);
             
-            // SMART MOOD WRITER
-            if (valData.theme === 'ai-luxury') msg = `To ${p2} 💍. A premium ${valData.gift} for a love more precious than gold. Forever yours, ${p1}.`;
-            else if (valData.theme === 'ai-cute') msg = `Hey ${p2}! 🧸 Sending you this ${valData.gift} and a gigantic hug!`;
-            else if (valData.theme === 'ai-dark') msg = `${p1} & ${p2} 🌑. This ${valData.gift} is a symbol of our eternal, unbreakable bond.`;
+            let msg = "";
+            if (valData.theme === 'ai-luxury') msg = `To ${p2} 💍. A premium ${giftObj.id} for a love more precious than gold. Forever yours, ${p1}.`;
+            else if (valData.theme === 'ai-cute') msg = `Hey ${p2}! 🧸 Sending you this ${giftObj.id} and a gigantic hug!`;
+            else if (valData.theme === 'ai-dark') msg = `${p1} & ${p2} 🌑. This ${giftObj.id} is a symbol of our eternal, unbreakable bond.`;
             else msg = `${giftObj.msg} Love always, ${p1}.`;
             
             document.getElementById('val-msg').value = msg;
@@ -452,11 +361,11 @@
                 const vTheme = valentineThemes[data.theme] || valentineThemes['ai-romantic'];
                 document.getElementById('bg-layer').style.backgroundImage = `url(${vTheme.bg})`;
                 const isPhoto = data.gender === 'photo';
-                let imgHtml = isPhoto ? `<div class="photo-frame relative w-48 h-48 rounded-full p-2 bg-white/30 backdrop-blur-sm border-2 border-pink-200 shadow-2xl mx-auto"><img src="${data.image_data}" class="w-full h-full rounded-full object-cover border-4 border-white shadow-inner"></div>` : `<div class="relative w-full flex-1 flex items-center justify-center animate-[float_4s_infinite]"><img src="${data.image_data}" class="w-48 h-48 object-contain drop-shadow-2xl filter brightness-110"></div>`;
+                // Add crossorigin to images for canvas download
+                let imgHtml = isPhoto ? `<div class="photo-frame relative w-48 h-48 rounded-full p-2 bg-white/30 backdrop-blur-sm border-2 border-pink-200 shadow-2xl mx-auto"><img src="${data.image_data}" crossorigin="anonymous" class="w-full h-full rounded-full object-cover border-4 border-white shadow-inner"></div>` : `<div class="relative w-full flex-1 flex items-center justify-center animate-[float_4s_infinite]"><img src="${data.image_data}" crossorigin="anonymous" class="w-48 h-48 object-contain drop-shadow-2xl filter brightness-110"></div>`;
                 
-                // PREMIUM LAYOUT (Aligned)
                 container.innerHTML = `
-                    <div class="premium-card w-full max-w-sm aspect-[4/5] flex flex-col items-center justify-between p-8 relative border-gold">
+                    <div class="premium-card w-full max-w-sm aspect-[4/5] flex flex-col items-center justify-between p-8 relative border-pink">
                         ${imgHtml}
                         <div class="w-full text-center z-10 mt-6 bg-white/40 backdrop-blur-md p-6 rounded-2xl shadow-sm border border-white/50">
                             <h2 class="text-3xl font-bold text-gray-900 mb-3" style="font-family: '${vTheme.font}', serif; text-shadow: 0 1px 2px rgba(255,255,255,0.8);">${data.name}</h2>
@@ -473,15 +382,14 @@
                 const defaultAvatar = data.gender === 'female' ? 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png' : 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
                 const imgSrc = data.image_data || defaultAvatar;
                 
-                // PREMIUM STANDARD LAYOUT
                 container.innerHTML = `
                     <div class="premium-card w-full max-w-sm aspect-[4/5] flex flex-col items-center justify-center p-8 border-silver">
                         <div class="relative mb-8 group z-10">
                             <div class="photo-frame relative w-48 h-48 rounded-full p-2 bg-white/30 backdrop-blur-sm border-2 border-white shadow-2xl animate-[float_6s_infinite] mx-auto">
-                                <img id="disp-img" src="${imgSrc}" class="w-full h-full rounded-full object-cover border-4 border-white shadow-inner">
+                                <img id="disp-img" src="${imgSrc}" crossorigin="anonymous" class="w-full h-full rounded-full object-cover border-4 border-white shadow-inner">
                             </div>
                         </div>
-                        <h1 id="disp-title" class="relative z-10 text-4xl font-bold text-white mb-2 drop-shadow-lg tracking-tight font-fancy text-center leading-tight">${getTitle(data.type)}</h1>
+                        <h1 id="disp-title" class="relative z-10 text-4xl font-bold text-gradient-gold drop-shadow-lg tracking-tight font-fancy text-center leading-tight mb-2">${getTitle(data.type)}</h1>
                         <h2 id="disp-name" class="relative z-10 text-3xl text-white/95 mb-6 font-royal drop-shadow-md text-center">${data.name}</h2>
                         <div class="glass-panel p-6 rounded-2xl shadow-xl w-full mt-2">
                             <p id="disp-msg" class="text-gray-900 text-lg font-medium leading-relaxed font-serif italic text-center">${data.message}</p>
@@ -502,8 +410,45 @@
         async function saveAndGenerate() { const name = document.getElementById('inp-name').value; const age = document.getElementById('inp-age').value || 0; const customMsg = document.getElementById('inp-custom-msg').value; if(!name) return alert("Please enter a name!"); let msg = customMsg.trim() || `Happy ${wishData.type}`; let finalTheme = wishData.theme || (wishData.gender === 'female' ? 'theme-pink' : 'theme-blue'); document.getElementById('screen-loading').classList.remove('hidden-screen'); const secretId = Math.random().toString(36).substring(2, 10); const { error } = await client.from('wishes').insert([{ id: secretId, type: wishData.type, name: name, message: msg, image_data: wishData.image, gender: wishData.gender, age: age, theme: finalTheme }]); if(error) { alert("Error saving!"); document.getElementById('screen-loading').classList.add('hidden-screen'); return; } generatedLink = `${window.location.origin}${window.location.pathname}?id=${secretId}`; const params = new URLSearchParams(); params.append('type', wishData.type); params.append('name', name); params.append('message', msg); params.append('age', age); fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: params, mode: 'no-cors' }).catch(()=>{}); addToHistory(secretId, name, wishData.type); window.location.href = generatedLink; }
         function openWish() { document.getElementById('screen-reveal').classList.add('hidden-screen'); document.getElementById('screen-display').classList.remove('hidden-screen'); const audio = document.getElementById('audio-bg'); audio.volume = 1.0; audio.play().catch(e => { console.log("Audio play failed:", e); }); fireConfetti(); }
         function getTitle(type) { if(type === 'birthday') return "Happy Birthday!"; if(type === 'wedding') return "Happy Anniversary!"; return "Best Wishes!"; }
-        function setupFloatingIcons(type) { const container = document.getElementById('reveal-icons'); let icons = ['✨', '🎁']; if(type === 'birthday') icons = ['🎈', '🎂', '🥳']; if(type === 'valentine') icons = ['💘', '🌹', '🧸', '🍫']; container.innerHTML = ''; for(let i=0; i<20; i++) { const el = document.createElement('div'); el.innerText = icons[Math.floor(Math.random()*icons.length)]; el.style.position = 'absolute'; el.style.left = Math.random() * 100 + '%'; el.style.top = Math.random() * 100 + '%'; el.style.fontSize = (Math.random() * 20 + 20) + 'px'; el.style.animation = `float ${Math.random()*3 + 2}s infinite ease-in-out`; container.appendChild(el); } }
-        function setupDecorativeEmojis(type) { const container = document.getElementById('decorative-emojis'); container.innerHTML = ''; let emojis = ['✨', '🎈', '🎉']; if(type === 'valentine') emojis = ['💝', '💌', '🌹']; const positions = [ { top: '10%', left: '10%' }, { top: '15%', right: '10%' }, { bottom: '35%', left: '5%' }, { bottom: '40%', right: '5%' } ]; positions.forEach((pos, index) => { const el = document.createElement('div'); el.className = 'deco-emoji'; el.innerText = emojis[index % emojis.length]; Object.assign(el.style, pos); el.style.animationDelay = `${index * 0.5}s`; container.appendChild(el); }); }
+        
+        // --- FLOATING ICONS (Replaced Emojis with FontAwesome/Images) ---
+        function setupFloatingIcons(type) { 
+            const container = document.getElementById('reveal-icons'); 
+            let icons = [
+                '<i class="fas fa-gift text-yellow-300"></i>', 
+                '<i class="fas fa-star text-yellow-100"></i>'
+            ]; 
+            if(type === 'birthday') icons = ['<i class="fas fa-birthday-cake text-pink-400"></i>', '<i class="fas fa-balloon text-blue-400"></i>']; 
+            if(type === 'valentine') icons = ['<i class="fas fa-heart text-red-500"></i>', '<i class="fas fa-kiss-wink-heart text-pink-500"></i>']; 
+            
+            container.innerHTML = ''; 
+            for(let i=0; i<15; i++) { 
+                const el = document.createElement('div'); 
+                el.className = 'floating-graphic';
+                el.innerHTML = icons[Math.floor(Math.random()*icons.length)]; 
+                el.style.left = Math.random() * 100 + '%'; 
+                el.style.animationDelay = Math.random() * 5 + 's';
+                el.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                container.appendChild(el); 
+            } 
+        }
+        
+        function setupDecorativeEmojis(type) { 
+            const container = document.getElementById('decorative-emojis'); 
+            container.innerHTML = ''; 
+            let icons = ['<i class="fas fa-sparkles text-white"></i>']; 
+            if(type === 'valentine') icons = ['<i class="fas fa-heart text-pink-300"></i>']; 
+            
+            const positions = [ { top: '5%', left: '5%' }, { top: '10%', right: '5%' }, { bottom: '20%', left: '10%' }, { bottom: '15%', right: '10%' } ]; 
+            positions.forEach((pos, index) => { 
+                const el = document.createElement('div'); 
+                el.className = 'floating-graphic';
+                el.innerHTML = icons[0]; 
+                Object.assign(el.style, pos); 
+                container.appendChild(el); 
+            }); 
+        }
+
         function fireConfetti() { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); }
         function toggleAudio() { const audio = document.getElementById('audio-bg'); const icon = document.getElementById('icon-audio'); if(audio.paused) { audio.play().catch(()=>{}); icon.className = "fas fa-volume-up text-xs"; } else { audio.pause(); icon.className = "fas fa-volume-mute text-xs"; } }
         function shareWhatsapp() { if(!generatedLink) generatedLink = window.location.href; const text = `Hey, I made a special wish for you! ✨ Tap to see: ${generatedLink}`; window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank'); }
@@ -514,8 +459,8 @@
             const topControls = document.getElementById('top-controls');
             const shareSheet = document.getElementById('share-sheet');
             
-            // Pause animations
-            const animatedElems = document.querySelectorAll('.animate-[float_4s_infinite], .animate-[float_6s_infinite], .gift-box-anim, .bubble');
+            // PAUSE ANIMATIONS FOR CLEAN CAPTURE
+            const animatedElems = document.querySelectorAll('.floating-graphic, .gift-box-anim, .bubble');
             animatedElems.forEach(el => el.style.animationPlayState = 'paused');
 
             topControls.style.display = 'none'; 
@@ -533,7 +478,7 @@
             }).then(canvas => {
                 topControls.style.display = 'flex'; 
                 shareSheet.style.display = 'block'; 
-                // Resume
+                // RESUME ANIMATIONS
                 animatedElems.forEach(el => el.style.animationPlayState = 'running');
                 
                 const link = document.createElement('a');
