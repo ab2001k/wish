@@ -379,7 +379,7 @@
         // --- State ---
         let wishData = { type: '', gender: 'male', image: null, theme: null }; 
         let userModifiedText = false;
-        let generatedLink = ""; // This tracks the URL for WhatsApp
+        let generatedLink = ""; // This tracks the SPECIFIC URL for WhatsApp
 
         // --- FULL THEME LIST (15 Themes) ---
         const themes = [
@@ -566,12 +566,17 @@
                 g: wishData.gender
             };
             
-            // --- 2. SHOW RESULT IMMEDIATELY ---
+            // --- 2. GENERATE SPECIFIC LINK *BEFORE* SHOWING RESULT ---
+            // This is the key fix. We generate the link NOW so it's ready for sharing.
+            const encoded = btoa(JSON.stringify(payload));
+            generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
+            
+            // --- 3. SHOW RESULT IMMEDIATELY ---
             setTimeout(() => {
                  loadViewMode(payload, wishData.image); 
             }, 1500);
 
-            // --- 3. SAVE TO GOOGLE SHEET IN BACKGROUND ---
+            // --- 4. SAVE TO GOOGLE SHEET (Fire & Forget) ---
             const params = new URLSearchParams();
             params.append('type', wishData.type);
             params.append('name', name);
@@ -583,10 +588,6 @@
                 body: params,
                 mode: 'no-cors' 
             }).catch(e => console.log("Background save failed:", e));
-
-            // --- 4. GENERATE LINK FOR WHATSAPP ---
-            const encoded = btoa(JSON.stringify(payload));
-            generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
         }
 
         function loadFromUrl(encodedData) {
@@ -625,13 +626,13 @@
             setupFloatingIcons(data.t);
             setupDecorativeEmojis(data.t);
             
-            // Ensure Link is ready for sharing
-            if(!generatedLink) {
+            // Ensure Link is ready for sharing if loaded from URL
+            if(!generatedLink || generatedLink === "") {
                  const encoded = btoa(JSON.stringify(data));
                  generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
             }
             
-            // SILENTLY UPDATE URL
+            // SILENTLY UPDATE URL BAR (So copy-paste from bar also works)
             window.history.pushState({path: generatedLink}, '', generatedLink);
         }
 
@@ -710,10 +711,9 @@
 
         // Sharing - ROBUST CHECK
         function shareWhatsapp() {
-            // Safety check: if link is empty, regenerate it
-            if(!generatedLink || generatedLink === "") {
-               generatedLink = window.location.href;
-            }
+            // Logic: If for some reason link is empty (it shouldn't be), rebuild it
+            if(!generatedLink) generatedLink = window.location.href;
+            
             const text = `Hey, I made a special wish for you! ✨ Tap to see: ${generatedLink}`;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
