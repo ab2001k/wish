@@ -90,6 +90,14 @@
         .btn-click:active { transform: scale(0.95); }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
 
+        /* TITLE BUMP ANIMATION */
+        .manual-bump { animation: manualBump 0.2s ease-out forwards; }
+        @keyframes manualBump {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
         /* MATRIX OVERLAY */
         #matrix-overlay {
             position: fixed; inset: 0; background: black; z-index: 9999;
@@ -161,8 +169,8 @@
 
             <div id="screen-home" class="flex-1 flex flex-col p-6 fade-in relative overflow-y-auto bg-white/95 scrollbar-hide">
                 <div class="text-center mb-6 mt-6 select-none relative">
-                    <h1 id="app-title" onclick="triggerEasterEgg()" class="text-5xl font-extrabold text-gray-800 tracking-tighter cursor-pointer select-none transition origin-center">
-                        Wish<span class="text-indigo-600">Maker</span>
+                    <h1 id="app-title" onclick="triggerEasterEgg()" class="text-5xl font-extrabold text-gray-800 tracking-tighter cursor-pointer select-none transition origin-center duration-200">
+                        Wish<span id="title-suffix" class="text-indigo-600">Maker</span>
                     </h1>
                     <p class="text-xs text-gray-400 mt-2 uppercase tracking-[0.2em]">Celebrate Moments</p>
                 </div>
@@ -216,13 +224,14 @@
                 <div id="history-section" class="mt-10 hidden-screen">
                     <div class="flex items-center justify-between mb-4 px-2">
                         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Recent Creations</h3>
-                        <span class="text-xs text-indigo-500 font-bold cursor-pointer hover:underline" onclick="clearHistory()">Clear</span>
+                        <span class="text-xs text-indigo-500 font-bold cursor-pointer hover:underline" onclick="clearHistory()">Clear All</span>
                     </div>
                     <div id="history-list" class="space-y-3 pb-20"></div>
                 </div>
 
-                <div class="mt-auto pt-8 pb-4 text-center">
+                <div class="mt-auto pt-8 pb-2 text-center">
                     <p class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">Made with ❤️ by Abhik</p>
+                    <p id="egg-hint" class="text-[9px] text-indigo-300/0 mt-2 transition-all duration-1000 select-none">Psst! Tap 'WishMaker' 4 times... 🕶️</p>
                 </div>
             </div>
 
@@ -420,6 +429,13 @@
 
             setupThemeSelector();
             
+            // Hint Reveal Timeout (5 seconds)
+            setTimeout(() => {
+                document.getElementById('egg-hint').classList.remove('text-indigo-300/0');
+                document.getElementById('egg-hint').classList.add('text-indigo-300');
+            }, 5000);
+
+            // Listeners
             ['inp-name', 'inp-age', 'inp-relation'].forEach(id => {
                 document.getElementById(id).addEventListener('input', generateLiveText);
             });
@@ -445,10 +461,10 @@
             const { data, error } = await client.from('wishes').select('*').eq('id', id).single();
             if(error || !data) { alert("Wish not found!"); window.location.href = window.location.pathname; return; }
 
-            generatedLink = window.location.href; // Store link
+            generatedLink = window.location.href; 
 
-            // --- SMART AUDIO SELECTION (Preload) ---
-            let audioFile = 'wish.mp3'; // Default
+            // --- SMART AUDIO SELECTION ---
+            let audioFile = 'wish.mp3'; 
             if (data.type === 'wedding') audioFile = 'wedding.mp3';
             else if (data.type === 'birthday') {
                 audioFile = (data.age && parseInt(data.age) < 13) ? 'birthday-children.mp3' : 'happy-birthday.mp3';
@@ -596,10 +612,8 @@
 
             document.getElementById('screen-loading').classList.remove('hidden-screen');
 
-            // --- 1. GENERATE SECRET ID (8 Chars) ---
             const secretId = Math.random().toString(36).substring(2, 10); 
 
-            // --- 2. SAVE TO SUPABASE ---
             const { error } = await client.from('wishes').insert([{ 
                 id: secretId, 
                 type: wishData.type, 
@@ -618,7 +632,6 @@
                 return;
             }
 
-            // --- 3. CREATE LINK & REDIRECT ---
             generatedLink = `${window.location.origin}${window.location.pathname}?id=${secretId}`;
             
             // Backup to Google Sheet
@@ -633,7 +646,6 @@
             window.location.href = generatedLink; 
         }
 
-        // --- OPEN WISH = PLAY MUSIC ---
         function openWish() {
             document.getElementById('screen-reveal').classList.add('hidden-screen');
             document.getElementById('screen-display').classList.remove('hidden-screen');
@@ -641,8 +653,7 @@
             const audio = document.getElementById('audio-bg');
             audio.volume = 1.0; 
             audio.play().catch(e => {
-                console.log("Audio play failed (browser policy):", e);
-                // Optionally show a small "Play" button if auto-play fails
+                console.log("Audio play failed:", e);
             });
             
             fireConfetti();
@@ -738,6 +749,18 @@
             history.unshift({ id, name, type, date: new Date().toLocaleDateString() });
             localStorage.setItem('wish_history', JSON.stringify(history));
         }
+        
+        // --- NEW: DELETE FROM HISTORY (WEBAPP ONLY) ---
+        function deleteFromHistory(id, event) {
+            event.stopPropagation(); // Stop click from opening the link
+            if(!confirm("Remove from this list?")) return;
+            
+            let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
+            history = history.filter(item => item.id !== id);
+            localStorage.setItem('wish_history', JSON.stringify(history));
+            loadHistory(); // Refresh UI
+        }
+
         function loadHistory() {
             let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
             const list = document.getElementById('history-list');
@@ -750,9 +773,15 @@
                 const fullUrl = `${window.location.origin}${window.location.pathname}?id=${item.id}`;
                 const div = document.createElement('div');
                 div.className = 'bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between shadow-sm hover:shadow-md transition';
+                
+                // Added Delete Button (Trash Icon) next to copy button
                 div.innerHTML = `
                     <div class="flex items-center gap-3"><span class="text-xl bg-gray-50 p-2 rounded-lg">${icon}</span><div><p class="font-bold text-gray-800 text-sm">${item.name}</p><p class="text-[10px] text-gray-400">${item.date}</p></div></div>
-                    <div class="flex gap-2"><button onclick="navigator.clipboard.writeText('${fullUrl}').then(()=>alert('Link Copied!'))" class="bg-gray-100 text-gray-600 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 transition"><i class="fas fa-copy text-xs"></i></button><a href="?id=${item.id}" class="bg-indigo-50 text-indigo-600 text-xs font-bold px-3 py-2 rounded-lg hover:bg-indigo-100 flex items-center">View</a></div>
+                    <div class="flex gap-2">
+                        <button onclick="navigator.clipboard.writeText('${fullUrl}').then(()=>alert('Link Copied!'))" class="bg-gray-100 text-gray-600 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 transition"><i class="fas fa-copy text-xs"></i></button>
+                        <button onclick="deleteFromHistory('${item.id}', event)" class="bg-red-50 text-red-500 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-100 transition"><i class="fas fa-trash text-xs"></i></button>
+                        <a href="?id=${item.id}" class="bg-indigo-50 text-indigo-600 text-xs font-bold px-3 py-2 rounded-lg hover:bg-indigo-100 flex items-center">View</a>
+                    </div>
                 `;
                 list.appendChild(div);
             });
@@ -760,7 +789,27 @@
         function clearHistory() { if(confirm("Clear history list?")) { localStorage.removeItem('wish_history'); location.reload(); } }
 
         let titleTapCount = 0; let tapTimer;
+        
+        // --- NEW: INTERACTIVE TITLE BUMP + COLOR ---
         function triggerEasterEgg() {
+            const title = document.getElementById('app-title');
+            const suffix = document.getElementById('title-suffix');
+            
+            // Random Color Logic
+            const colors = ['text-pink-600', 'text-purple-600', 'text-blue-600', 'text-green-600', 'text-orange-600'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Remove old animation/color
+            title.classList.remove('manual-bump');
+            suffix.className = ""; // Reset class list
+            
+            // Trigger Reflow to restart animation
+            void title.offsetWidth; 
+            
+            // Add new animation & color
+            title.classList.add('manual-bump');
+            suffix.classList.add(randomColor, 'transition-colors', 'duration-300');
+
             titleTapCount++;
             clearTimeout(tapTimer);
             tapTimer = setTimeout(() => { titleTapCount = 0; }, 2000);
