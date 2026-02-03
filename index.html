@@ -144,7 +144,7 @@
 
             <div id="screen-loading" class="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center hidden-screen">
                 <div class="loader mb-4"></div>
-                <p class="text-indigo-600 font-bold tracking-widest text-xs uppercase">Saving Magic...</p>
+                <p class="text-indigo-600 font-bold tracking-widest text-xs uppercase">Generating Unique Link...</p>
             </div>
 
             <div id="matrix-overlay" class="hidden-screen">
@@ -387,15 +387,14 @@
         const SUPABASE_URL = 'https://rhodybetonjerkcsdstj.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJob2R5YmV0b25qZXJrY3Nkc3RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4OTU5MDAsImV4cCI6MjA4NDQ3MTkwMH0.IEO-2spCVUxYFiQW-ARlA4RH57R_DQttQsWW0tGnUMI';
         
-        // Init Supabase
         const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         // --- State ---
         let wishData = { type: '', gender: 'male', image: null, theme: null }; 
         let userModifiedText = false;
-        let generatedLink = ""; // This tracks the SPECIFIC ID URL
+        let generatedLink = ""; 
 
-        // --- FULL THEME LIST (15 Themes) ---
+        // --- FULL THEME LIST ---
         const themes = [
             { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue', mood: 'refreshing' },
             { id: 'theme-pink', img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80', name: 'Pink', mood: 'sweet' },
@@ -421,7 +420,6 @@
 
             setupThemeSelector();
             
-            // Listeners
             ['inp-name', 'inp-age', 'inp-relation'].forEach(id => {
                 document.getElementById(id).addEventListener('input', generateLiveText);
             });
@@ -434,50 +432,37 @@
             document.getElementById('inp-custom-msg').addEventListener('input', () => { userModifiedText = true; });
             document.getElementById('inp-relation').addEventListener('change', generateLiveText);
 
-            // LOAD BY ID FROM SUPABASE
             if (idParam) {
                 document.getElementById('screen-home').classList.add('hidden-screen');
                 document.getElementById('screen-loading').classList.remove('hidden-screen');
                 await loadWishById(idParam);
             } else {
-                // If on homepage, load recent history
                 loadHistory();
             }
         };
 
-        // --- SUPABASE LOAD LOGIC ---
         async function loadWishById(id) {
             const { data, error } = await client.from('wishes').select('*').eq('id', id).single();
-            
-            if(error || !data) {
-                alert("Wish not found! Creating a new one.");
-                window.location.href = window.location.pathname;
-                return;
-            }
+            if(error || !data) { alert("Wish not found!"); window.location.href = window.location.pathname; return; }
 
-            // Set global link for sharing
-            generatedLink = window.location.href;
+            generatedLink = window.location.href; // Store link
 
             document.getElementById('creator-form').classList.add('hidden-screen');
             document.getElementById('screen-loading').classList.add('hidden-screen');
             document.getElementById('screen-reveal').classList.remove('hidden-screen');
 
-            // Populate Data
             document.getElementById('disp-title').innerText = getTitle(data.type);
             document.getElementById('disp-name').innerText = data.name;
             document.getElementById('disp-msg').innerText = data.message;
             
-            // Theme
             const themeObj = themes.find(t => t.id === data.theme) || themes[0];
             document.getElementById('bg-layer').style.backgroundImage = `url(${themeObj.img})`;
 
-            // Image
             const defaultAvatar = data.gender === 'female' 
                 ? 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png' 
                 : 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
             document.getElementById('disp-img').src = data.image_data || defaultAvatar;
 
-            // Age
             if(data.age && data.age > 0) {
                 document.getElementById('disp-age-badge').classList.remove('hidden');
                 document.getElementById('age-text').innerText = data.age;
@@ -494,36 +479,29 @@
             const ageVal = document.getElementById('inp-age').value;
             const relation = document.getElementById('inp-relation').value;
             const type = wishData.type;
-            const themeObj = themes.find(t => t.id === wishData.theme) || themes[0];
-            const mood = themeObj.mood;
-
+            const mood = (themes.find(t => t.id === wishData.theme) || themes[0]).mood;
             let msg = "";
             let ageGroup = (ageVal && parseInt(ageVal) < 13) ? 'child' : 'adult';
 
             if (type === 'birthday') {
-                if (ageGroup === 'child') {
-                     msg = `Happy Birthday little superstar ${name}! 🎈✨ May your day be as colorful and fun as this ${mood} card!`;
-                } else {
+                if (ageGroup === 'child') { msg = `Happy Birthday little star ${name}! 🎈✨ May your day be as fun as this ${mood} card!`; } 
+                else {
                     switch(relation) {
-                        case 'friend': msg = `Happy Birthday ${name}! 🍻 Cheers to another year of being awesome. Hope this ${mood} year brings you everything you want!`; break;
-                        case 'partner': msg = `Happy Birthday my love, ${name}! ❤️ You make my world brighter every day. Wishing you a day as beautiful as you are.`; break;
-                        case 'spouse': msg = `Happy Birthday to my better half, ${name}! 🥂 Growing older with you is my favorite adventure. Love you endlessly!`; break;
-                        case 'family': msg = `Happy Birthday ${name}! 🎂 Wishing you health, happiness, and peace. You mean so much to our family.`; break;
-                        case 'sibling': msg = `Happy Birthday ${name}! 🥳 You're not just family, you're my lifetime best friend. Have a blast!`; break;
-                        case 'colleague': msg = `Happy Birthday ${name}! 🎈 Wishing you a fantastic year ahead and great success in all your projects.`; break;
-                        default: msg = `Happy Birthday ${name}! 🎂 Wishing you a fantastic year filled with ${mood} vibes and success.`;
+                        case 'friend': msg = `Happy Birthday ${name}! 🍻 Cheers to you. Hope this ${mood} year is amazing!`; break;
+                        case 'partner': msg = `Happy Birthday my love, ${name}! ❤️ You make my world complete.`; break;
+                        case 'spouse': msg = `Happy Birthday to my better half, ${name}! 🥂 Love you endlessly!`; break;
+                        case 'family': msg = `Happy Birthday ${name}! 🎂 Wishing you health and happiness.`; break;
+                        default: msg = `Happy Birthday ${name}! 🎂 Wishing you a fantastic year filled with ${mood} vibes.`;
                     }
                 }
             } else if (type === 'wedding') {
-                msg = relation === 'spouse' 
-                    ? `Happy Anniversary my love, ${name}! ❤️ Every moment with you is magic.` 
-                    : `Happy Anniversary ${name}! 💍 Celebrating your beautiful journey. Stay blessed forever.`;
+                msg = relation === 'spouse' ? `Happy Anniversary my love, ${name}! ❤️` : `Happy Anniversary ${name}! 💍 Stay blessed.`;
             } else if (['diwali', 'holi', 'ganesha', 'durga', 'independence'].includes(type)) {
-                if(type === 'diwali') msg = `Happy Diwali ${name}! 🪔 May the lamps of joy illuminate your life.`;
-                if(type === 'holi') msg = `Happy Holi ${name}! 🎨 May your life be as colorful and joyful as this festival.`;
-                if(type === 'ganesha') msg = `Happy Ganesh Chaturthi ${name}! 🐘 Ganpati Bappa Morya!`;
-                if(type === 'durga') msg = `Happy Durga Puja ${name}! 🔱 May Maa Durga bless you with strength.`;
-                if(type === 'independence') msg = `Happy Independence Day ${name}! 🇮🇳 Jai Hind!`;
+                if(type === 'diwali') msg = `Happy Diwali ${name}! 🪔`;
+                if(type === 'holi') msg = `Happy Holi ${name}! 🎨`;
+                if(type === 'ganesha') msg = `Happy Ganesh Chaturthi ${name}! 🐘`;
+                if(type === 'durga') msg = `Happy Durga Puja ${name}! 🔱`;
+                if(type === 'independence') msg = `Happy Independence Day ${name}! 🇮🇳`;
             }
             document.getElementById('inp-custom-msg').value = msg;
         }
@@ -549,20 +527,13 @@
             wishData.type = type;
             document.getElementById('screen-home').classList.add('hidden-screen'); 
             document.getElementById('creator-form').classList.remove('hidden-screen');
-            
             const ageLabel = document.getElementById('label-age');
             const rowDetails = document.getElementById('row-details');
             const genderSelect = document.getElementById('gender-select');
             
             if(type === 'wedding') { ageLabel.innerText = "Years"; rowDetails.style.display = 'flex'; genderSelect.style.display = 'none'; }
-            else if (['diwali','holi','ganesha','durga','independence'].includes(type)) {
-                rowDetails.style.display = 'none'; 
-                genderSelect.style.display = 'none';
-            } else { 
-                ageLabel.innerText = "Age"; 
-                rowDetails.style.display = 'flex'; 
-                genderSelect.style.display = 'block';
-            }
+            else if (['diwali','holi','ganesha','durga','independence'].includes(type)) { rowDetails.style.display = 'none'; genderSelect.style.display = 'none'; } 
+            else { ageLabel.innerText = "Age"; rowDetails.style.display = 'flex'; genderSelect.style.display = 'block'; }
             
             if(type === 'diwali') wishData.theme = 'theme-diwali';
             else if(type === 'holi') wishData.theme = 'theme-holi';
@@ -606,7 +577,6 @@
             reader.readAsDataURL(file);
         }
 
-        // --- SAVE LOGIC (Supabase + Google Sheet) ---
         async function saveAndGenerate() {
             const name = document.getElementById('inp-name').value;
             const age = document.getElementById('inp-age').value || 0;
@@ -614,17 +584,16 @@
             
             if(!name) return alert("Please enter a name!");
             let msg = customMsg.trim() || `Happy ${wishData.type}`;
-            
-            let finalTheme = wishData.theme;
-            if(!finalTheme) {
-                 if(wishData.gender === 'female') finalTheme = 'theme-pink';
-                 else finalTheme = 'theme-blue';
-            }
+            let finalTheme = wishData.theme || (wishData.gender === 'female' ? 'theme-pink' : 'theme-blue');
 
             document.getElementById('screen-loading').classList.remove('hidden-screen');
 
-            // 1. SAVE TO SUPABASE (Getting ID is CRITICAL)
-            const { data, error } = await client.from('wishes').insert([{ 
+            // --- 1. GENERATE SECRET ID (8 Chars) ---
+            const secretId = Math.random().toString(36).substring(2, 10); // e.g. 'x9kp2mNq'
+
+            // --- 2. SAVE TO SUPABASE (With Secret ID) ---
+            const { error } = await client.from('wishes').insert([{ 
+                id: secretId, // Using the Secret ID here!
                 type: wishData.type, 
                 name: name, 
                 message: msg, 
@@ -632,36 +601,28 @@
                 gender: wishData.gender, 
                 age: age, 
                 theme: finalTheme
-            }]).select();
+            }]);
 
             if(error) {
                 console.error(error);
-                alert("Error saving to database! Check connection.");
+                alert("Error saving! Check connection.");
                 document.getElementById('screen-loading').classList.add('hidden-screen');
                 return;
             }
 
-            const newId = data[0].id;
-            generatedLink = `${window.location.origin}${window.location.pathname}?id=${newId}`;
-
-            // 2. SAVE TO GOOGLE SHEET (Backup)
+            // --- 3. CREATE LINK & REDIRECT ---
+            generatedLink = `${window.location.origin}${window.location.pathname}?id=${secretId}`;
+            
+            // Backup to Google Sheet
             const params = new URLSearchParams();
             params.append('type', wishData.type);
             params.append('name', name);
             params.append('message', msg);
             params.append('age', age);
-            
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                body: params,
-                mode: 'no-cors' 
-            }).catch(e => console.log("Google Sheet save failed (Backup only):", e));
+            fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: params, mode: 'no-cors' }).catch(()=>{});
 
-            // 3. UPDATE LOCAL HISTORY
-            addToHistory(newId, name, wishData.type);
-
-            // 4. REDIRECT TO SPECIFIC LINK
-            window.location.href = generatedLink;
+            addToHistory(secretId, name, wishData.type);
+            window.location.href = generatedLink; // Redirect to unique page
         }
 
         function openWish() {
@@ -671,7 +632,6 @@
             fireConfetti();
         }
 
-        // --- Helpers ---
         function getTitle(type) {
             if(type === 'birthday') return "Happy Birthday!";
             if(type === 'wedding') return "Happy Anniversary!";
@@ -692,7 +652,6 @@
             else if(type === 'ganesha') icons = ['🥥', '🌸', '🕉️'];
             else if(type === 'durga') icons = ['🌺', '🔱', '🕉️'];
             else if(type === 'independence') icons = ['🇮🇳', '🎆', '🐯'];
-            
             container.innerHTML = '';
             for(let i=0; i<20; i++) {
                 const el = document.createElement('div');
@@ -715,7 +674,6 @@
             if (type === 'ganesha') emojis = ['🕉️', '🐘', '🌸'];
             if (type === 'durga') emojis = ['🔱', '🦁', '🌺'];
             if (type === 'independence') emojis = ['🇮🇳', '🎡', '🧡'];
-            
             const positions = [ { top: '10%', left: '10%' }, { top: '15%', right: '10%' }, { bottom: '35%', left: '5%' }, { bottom: '40%', right: '5%' } ];
             positions.forEach((pos, index) => {
                 const el = document.createElement('div');
@@ -737,11 +695,8 @@
             else { audio.pause(); icon.className = "fas fa-volume-mute text-xs"; }
         }
 
-        // Sharing - ROBUST CHECK
         function shareWhatsapp() {
-            // Logic: If for some reason link is empty (it shouldn't be), rebuild it
             if(!generatedLink) generatedLink = window.location.href;
-            
             const text = `Hey, I made a special wish for you! ✨ Tap to see: ${generatedLink}`;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
@@ -763,7 +718,6 @@
             });
         }
 
-        // Local History
         function addToHistory(id, name, type) {
             let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
             history.unshift({ id, name, type, date: new Date().toLocaleDateString() });
@@ -790,7 +744,6 @@
         }
         function clearHistory() { if(confirm("Clear history list?")) { localStorage.removeItem('wish_history'); location.reload(); } }
 
-        // Matrix Easter Egg
         let titleTapCount = 0; let tapTimer;
         function triggerEasterEgg() {
             titleTapCount++;
