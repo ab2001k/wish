@@ -381,7 +381,7 @@
         let userModifiedText = false;
         let generatedLink = "";
 
-        // --- RESTORED ALL THEMES (Including Berry & Royal) ---
+        // --- FULL THEME LIST (15 Themes) ---
         const themes = [
             { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue', mood: 'refreshing' },
             { id: 'theme-pink', img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80', name: 'Pink', mood: 'sweet' },
@@ -407,7 +407,7 @@
 
             setupThemeSelector();
             
-            // Auto-Generate Text Listeners
+            // Listeners
             ['inp-name', 'inp-age', 'inp-relation'].forEach(id => {
                 document.getElementById(id).addEventListener('input', generateLiveText);
             });
@@ -428,14 +428,13 @@
             }
         };
 
-        // --- SMART AI LOGIC (6+ Relations) ---
+        // --- SMART AI LOGIC ---
         function generateLiveText() {
             if (userModifiedText) return; 
             const name = document.getElementById('inp-name').value.trim() || 'Dear';
             const ageVal = document.getElementById('inp-age').value;
             const relation = document.getElementById('inp-relation').value;
             const type = wishData.type;
-            const gender = wishData.gender;
             const themeObj = themes.find(t => t.id === wishData.theme) || themes[0];
             const mood = themeObj.mood;
 
@@ -461,7 +460,6 @@
                     ? `Happy Anniversary my love, ${name}! ❤️ Every moment with you is magic.` 
                     : `Happy Anniversary ${name}! 💍 Celebrating your beautiful journey. Stay blessed forever.`;
             } else if (['diwali', 'holi', 'ganesha', 'durga', 'independence'].includes(type)) {
-                // Festivals are general but warm
                 if(type === 'diwali') msg = `Happy Diwali ${name}! 🪔 May the lamps of joy illuminate your life.`;
                 if(type === 'holi') msg = `Happy Holi ${name}! 🎨 May your life be as colorful and joyful as this festival.`;
                 if(type === 'ganesha') msg = `Happy Ganesh Chaturthi ${name}! 🐘 Ganpati Bappa Morya!`;
@@ -506,8 +504,19 @@
                 rowDetails.style.display = 'flex'; 
                 genderSelect.style.display = 'block';
             }
-            // Auto Select Theme
-            wishData.theme = getSmartTheme(type).id; 
+            
+            // AUTO SELECT THEME LOGIC
+            // If user selects festival, pick festival theme. Else pick blue default.
+            if(type === 'diwali') wishData.theme = 'theme-diwali';
+            else if(type === 'holi') wishData.theme = 'theme-holi';
+            else if(type === 'ganesha') wishData.theme = 'theme-ganesha';
+            else if(type === 'durga') wishData.theme = 'theme-durga';
+            else if(type === 'independence') wishData.theme = 'theme-independence';
+            else wishData.theme = 'theme-blue';
+
+            // Highlight the selected theme
+            document.querySelectorAll('.theme-option').forEach(el => el.classList.remove('selected'));
+            
             generateLiveText(); 
         }
 
@@ -538,26 +547,17 @@
             
             if(!name) return alert("Please enter a name!");
             let msg = customMsg.trim() || `Happy ${wishData.type}`;
-            let finalTheme = wishData.theme || 'theme-blue';
             
+            // Auto-Theme Logic: If theme is null, pick a smart default
+            let finalTheme = wishData.theme;
+            if(!finalTheme) {
+                 if(wishData.gender === 'female') finalTheme = 'theme-pink';
+                 else finalTheme = 'theme-blue';
+            }
+
             document.getElementById('screen-loading').classList.remove('hidden-screen');
 
-            // --- FIRE AND FORGET SAVING (FIXED LOGIC) ---
-            // We do NOT await this. We send it and immediately move on.
-            const params = new URLSearchParams();
-            params.append('type', wishData.type);
-            params.append('name', name);
-            params.append('message', msg);
-            params.append('age', age); // Also save age
-            
-            // Send to Google Sheet in background (no-cors prevents network errors in UI)
-            fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                body: params,
-                mode: 'no-cors' 
-            }).catch(e => console.log("Background save failed:", e));
-
-            // --- GENERATE URL & SHOW RESULT IMMEDIATELY ---
+            // --- 1. PREPARE DATA ---
             const payload = {
                 t: wishData.type,
                 n: name,
@@ -567,13 +567,28 @@
                 g: wishData.gender
             };
             
-            const encoded = btoa(JSON.stringify(payload));
-            generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
-
-            // Fake delay for "Magic" effect (User Experience)
+            // --- 2. SHOW RESULT IMMEDIATELY (Optimistic UI) ---
+            // We do not wait for the save to finish. We show the result NOW.
             setTimeout(() => {
                  loadViewMode(payload, wishData.image); 
-            }, 1500);
+            }, 1500); // 1.5s fake loader for effect
+
+            // --- 3. SAVE TO GOOGLE SHEET IN BACKGROUND ---
+            const params = new URLSearchParams();
+            params.append('type', wishData.type);
+            params.append('name', name);
+            params.append('message', msg);
+            params.append('age', age);
+            
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                body: params,
+                mode: 'no-cors' 
+            }).catch(e => console.log("Background save failed:", e));
+
+            // --- 4. GENERATE LINK ---
+            const encoded = btoa(JSON.stringify(payload));
+            generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
         }
 
         function loadFromUrl(encodedData) {
@@ -617,6 +632,9 @@
                  const encoded = btoa(JSON.stringify(data));
                  generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
             }
+            
+            // SILENTLY UPDATE URL
+            window.history.pushState({path: generatedLink}, '', generatedLink);
         }
 
         function openWish() {
@@ -636,15 +654,6 @@
             if(type === 'durga') return "Happy Durga Puja!";
             if(type === 'independence') return "Jai Hind!";
             return "Best Wishes!";
-        }
-
-        function getSmartTheme(type) {
-            if (type === 'diwali') return themes.find(t=>t.id==='theme-diwali');
-            if (type === 'holi') return themes.find(t=>t.id==='theme-holi');
-            if (type === 'ganesha') return themes.find(t=>t.id==='theme-ganesha');
-            if (type === 'durga') return themes.find(t=>t.id==='theme-durga');
-            if (type === 'independence') return themes.find(t=>t.id==='theme-independence');
-            return themes[0];
         }
 
         function setupFloatingIcons(type) {
