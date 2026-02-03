@@ -16,6 +16,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Pacifico&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Great+Vibes&display=swap');
 
         /* RESET & LAYOUT */
         html, body {
@@ -90,14 +91,6 @@
         .btn-click:active { transform: scale(0.95); }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
 
-        /* TITLE BUMP ANIMATION */
-        .manual-bump { animation: manualBump 0.2s ease-out forwards; }
-        @keyframes manualBump {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
-        }
-
         /* MATRIX OVERLAY */
         #matrix-overlay {
             position: fixed; inset: 0; background: black; z-index: 9999;
@@ -132,6 +125,20 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .theme-option.selected { border-color: #6366f1; transform: scale(1.2); box-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
+
+        /* VALENTINE SPECIFIC STYLES */
+        .val-grid-item {
+            aspect-ratio: 1/1; border: 2px solid #fce7f3; border-radius: 12px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s; background: white;
+        }
+        .val-grid-item:hover { transform: translateY(-2px); border-color: #ec4899; }
+        .val-selected { border-color: #db2777 !important; background: #fff1f2; box-shadow: 0 0 10px rgba(236, 72, 153, 0.3); }
+        .val-theme-btn {
+            padding: 8px 16px; border-radius: 20px; font-size: 10px; font-weight: bold;
+            border: 1px solid #e5e7eb; background: white; cursor: pointer; transition: all 0.2s;
+        }
+        .val-theme-btn.active { background: #be185d; color: white; border-color: #be185d; }
 
         /* RESPONSIVE */
         @media (max-height: 800px) {
@@ -219,6 +226,21 @@
                             </button>
                         </div>
                     </div>
+
+                    <div id="valentine-section" class="hidden mt-6">
+                        <button onclick="openValentineModal()" class="btn-click w-full bg-gradient-to-r from-pink-500 to-red-600 p-5 rounded-3xl shadow-xl shadow-pink-200 border-2 border-white flex items-center justify-between group relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-white/20 text-white text-[9px] px-2 py-1 rounded-bl-lg font-bold">LIMITED TIME</div>
+                            <div class="flex items-center gap-4 relative z-10">
+                                <div class="bg-white/20 p-3 rounded-full text-2xl backdrop-blur-sm">💖</div>
+                                <div class="text-left text-white">
+                                    <h3 class="text-lg font-bold">Valentine Wish</h3>
+                                    <p class="text-[10px] opacity-90">Create something special 💘</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-arrow-right text-white opacity-70 group-hover:translate-x-1 transition"></i>
+                        </button>
+                    </div>
+
                 </div>
 
                 <div id="history-section" class="mt-10 hidden-screen">
@@ -242,78 +264,75 @@
                 </div>
 
                 <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 mb-6 space-y-5">
-                    
                     <div>
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Choose Aesthetic</label>
                         <div class="flex gap-4 overflow-x-auto p-2 -mx-2 scrollbar-hide" id="theme-selector"></div>
                     </div>
-
                     <div id="gender-select">
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Gender (Optional)</label>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Gender</label>
                         <div class="flex gap-4">
                             <label class="flex-1 cursor-pointer group">
                                 <input type="radio" name="gender" value="male" class="peer hidden" onchange="updateThemePreview('male')" checked>
-                                <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-600 transition group-hover:border-blue-200">
-                                    <span class="block text-xl mb-1">👨</span>
-                                    <span class="text-xs font-bold uppercase">Male</span>
-                                </div>
+                                <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-600 transition group-hover:border-blue-200"><span class="block text-xl mb-1">👨</span><span class="text-xs font-bold uppercase">Male</span></div>
                             </label>
                             <label class="flex-1 cursor-pointer group">
                                 <input type="radio" name="gender" value="female" class="peer hidden" onchange="updateThemePreview('female')">
-                                <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-pink-50 peer-checked:border-pink-500 peer-checked:text-pink-600 transition group-hover:border-pink-200">
-                                    <span class="block text-xl mb-1">👩</span>
-                                    <span class="text-xs font-bold uppercase">Female</span>
-                                </div>
+                                <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-pink-50 peer-checked:border-pink-500 peer-checked:text-pink-600 transition group-hover:border-pink-200"><span class="block text-xl mb-1">👩</span><span class="text-xs font-bold uppercase">Female</span></div>
                             </label>
                         </div>
                     </div>
-
                     <div class="space-y-4">
-                        <div>
-                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Who is this for?</label>
-                            <input type="text" id="inp-name" placeholder="Name (e.g. Rahul)" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition">
-                        </div>
-                        
+                        <div><label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Who is this for?</label><input type="text" id="inp-name" placeholder="Name" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition"></div>
                         <div class="flex gap-4" id="row-details">
-                            <div class="w-1/3">
-                                <label id="label-age" class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Age</label>
-                                <input type="number" id="inp-age" placeholder="25" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition">
-                            </div>
-                            <div class="w-2/3">
-                                <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Relation</label>
-                                <select id="inp-relation" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition appearance-none">
-                                    <option value="friend">Friend / Bestie</option>
-                                    <option value="partner">Partner (BF/GF)</option>
-                                    <option value="spouse">Spouse (Husband/Wife)</option>
-                                    <option value="family">Family (Parent/Elder)</option>
-                                    <option value="sibling">Sibling (Brother/Sister)</option>
-                                    <option value="colleague">Colleague / Work</option>
-                                </select>
-                            </div>
+                            <div class="w-1/3"><label id="label-age" class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Age</label><input type="number" id="inp-age" placeholder="25" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition"></div>
+                            <div class="w-2/3"><label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Relation</label><select id="inp-relation" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition appearance-none"><option value="friend">Friend</option><option value="partner">Partner</option><option value="spouse">Spouse</option><option value="family">Family</option></select></div>
                         </div>
+                        <div><label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Custom Wish</label><textarea id="inp-custom-msg" rows="3" placeholder="Type here..." class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-gray-700 transition text-sm"></textarea></div>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-2">Add Photo</label>
+                        <div class="flex items-center gap-4 p-2 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
+                            <div class="w-14 h-14 rounded-xl bg-white shadow-sm overflow-hidden relative flex-shrink-0"><img id="preview-thumb" class="w-full h-full object-cover hidden"><i class="fas fa-image absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300"></i></div>
+                            <label class="flex-1 bg-white hover:bg-gray-100 text-gray-700 py-3 rounded-xl text-xs font-bold uppercase tracking-wide cursor-pointer text-center transition shadow-sm border border-gray-200"><span id="photo-label-text">Choose Image</span><input type="file" class="hidden" accept="image/*" onchange="handleImageUpload(event)"></label>
+                        </div>
+                    </div>
+                    <button onclick="saveAndGenerate()" class="btn-click w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-bold shadow-xl shadow-indigo-200 flex justify-center items-center gap-3 text-lg mt-2">Create Magic <i class="fas fa-wand-magic-sparkles"></i></button>
+                </div>
+            </div>
 
+            <div id="valentine-modal" class="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col hidden-screen overflow-y-auto">
+                <div class="flex items-center mb-6">
+                    <button onclick="closeValentineModal()" class="btn-click p-3 rounded-full bg-white text-gray-600 shadow-sm hover:bg-gray-100 transition"><i class="fas fa-arrow-left"></i></button>
+                    <h2 class="text-2xl font-bold ml-4 text-pink-600 font-serif">Valentine Wish 💘</h2>
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl shadow-xl border border-pink-100 mb-6 space-y-6">
+                    
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3 block">Pick a Gift</label>
+                        <div class="grid grid-cols-4 gap-3" id="val-gift-grid">
+                            </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Custom Wish (Auto-Generates)</label>
-                            <textarea id="inp-custom-msg" rows="3" placeholder="Type here to override..." class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-gray-700 transition text-sm"></textarea>
+                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">Partner 1</label>
+                            <input type="text" id="val-name1" placeholder="You" class="w-full p-3 bg-gray-50 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-pink-400 font-semibold text-gray-700 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">Partner 2</label>
+                            <input type="text" id="val-name2" placeholder="Them" class="w-full p-3 bg-gray-50 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-pink-400 font-semibold text-gray-700 text-sm">
                         </div>
                     </div>
 
                     <div>
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-2">Add a Photo (Optional)</label>
-                        <div class="flex items-center gap-4 p-2 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
-                            <div class="w-14 h-14 rounded-xl bg-white shadow-sm overflow-hidden relative flex-shrink-0">
-                                <img id="preview-thumb" class="w-full h-full object-cover hidden">
-                                <i class="fas fa-image absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300"></i>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3 block">Select Mood</label>
+                        <div class="flex flex-wrap gap-2" id="val-theme-list">
                             </div>
-                            <label class="flex-1 bg-white hover:bg-gray-100 text-gray-700 py-3 rounded-xl text-xs font-bold uppercase tracking-wide cursor-pointer text-center transition shadow-sm border border-gray-200">
-                                <span id="photo-label-text">Choose Image</span>
-                                <input type="file" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
-                            </label>
-                        </div>
                     </div>
 
-                    <button onclick="saveAndGenerate()" class="btn-click w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-bold shadow-xl shadow-indigo-200 flex justify-center items-center gap-3 text-lg mt-2">
-                        Create Magic <i class="fas fa-wand-magic-sparkles"></i>
+                    <button onclick="createValentine()" class="btn-click w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-pink-200 flex justify-center items-center gap-2 text-lg mt-2 font-serif">
+                        Generate Wish 💌
                     </button>
                 </div>
             </div>
@@ -343,23 +362,23 @@
                 <div id="capture-area" class="flex-1 flex flex-col items-center justify-center p-6 text-center z-10 overflow-y-auto no-scrollbar relative">
                     <div id="decorative-emojis" class="absolute inset-0 pointer-events-none z-0 overflow-hidden"></div>
                     
-                    <div class="relative mb-6 group z-10">
-                        <div class="absolute inset-0 bg-white/50 rounded-full blur-xl animate-pulse group-hover:blur-2xl transition"></div>
-                        <div class="photo-frame relative w-48 h-48 rounded-full p-2 bg-white/30 backdrop-blur-sm border border-white/60 shadow-2xl animate-[float_6s_infinite] mx-auto">
-                            <img id="disp-img" src="" class="w-full h-full rounded-full object-cover border-4 border-white shadow-inner">
+                    <div id="dynamic-content" class="w-full flex flex-col items-center">
+                        <div class="relative mb-6 group z-10">
+                            <div class="absolute inset-0 bg-white/50 rounded-full blur-xl animate-pulse group-hover:blur-2xl transition"></div>
+                            <div class="photo-frame relative w-48 h-48 rounded-full p-2 bg-white/30 backdrop-blur-sm border border-white/60 shadow-2xl animate-[float_6s_infinite] mx-auto">
+                                <img id="disp-img" src="" class="w-full h-full rounded-full object-cover border-4 border-white shadow-inner">
+                            </div>
+                            <div id="disp-age-badge" class="shiny-badge hidden"><span id="age-text"></span></div>
                         </div>
-                        <div id="disp-age-badge" class="shiny-badge hidden">
-                            <span id="age-text"></span>
+
+                        <h1 id="disp-title" class="relative z-10 text-4xl font-bold text-white mb-2 drop-shadow-lg tracking-tight elegant-font leading-tight"></h1>
+                        <h2 id="disp-name" class="relative z-10 text-3xl text-white/90 mb-6 handwritten drop-shadow-md transform -rotate-2"></h2>
+
+                        <div class="glass-panel p-8 rounded-3xl shadow-2xl w-full max-w-sm relative z-10">
+                            <i class="fas fa-quote-left text-indigo-400/30 text-3xl absolute -top-4 -left-2"></i>
+                            <p id="disp-msg" class="text-gray-800 text-lg font-medium leading-relaxed font-serif italic"></p>
+                            <i class="fas fa-quote-right text-indigo-400/30 text-3xl absolute -bottom-4 -right-2"></i>
                         </div>
-                    </div>
-
-                    <h1 id="disp-title" class="relative z-10 text-4xl font-bold text-white mb-2 drop-shadow-lg tracking-tight elegant-font leading-tight"></h1>
-                    <h2 id="disp-name" class="relative z-10 text-3xl text-white/90 mb-6 handwritten drop-shadow-md transform -rotate-2"></h2>
-
-                    <div class="glass-panel p-8 rounded-3xl shadow-2xl w-full max-w-sm relative z-10">
-                        <i class="fas fa-quote-left text-indigo-400/30 text-3xl absolute -top-4 -left-2"></i>
-                        <p id="disp-msg" class="text-gray-800 text-lg font-medium leading-relaxed font-serif italic"></p>
-                        <i class="fas fa-quote-right text-indigo-400/30 text-3xl absolute -bottom-4 -right-2"></i>
                     </div>
                 </div>
 
@@ -367,22 +386,13 @@
                     <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-4"></div>
                     <div class="grid grid-cols-3 gap-2 mb-2">
                         <button onclick="shareWhatsapp()" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
-                                <i class="fab fa-whatsapp text-lg"></i>
-                            </div>
-                            <span class="text-[10px] font-bold text-gray-500">WhatsApp</span>
+                            <div class="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition"><i class="fab fa-whatsapp text-lg"></i></div><span class="text-[10px] font-bold text-gray-500">WhatsApp</span>
                         </button>
                         <button onclick="downloadImage()" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
-                                <i class="fab fa-instagram text-lg"></i>
-                            </div>
-                            <span class="text-[10px] font-bold text-gray-500">Save Img</span>
+                            <div class="w-10 h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition"><i class="fab fa-instagram text-lg"></i></div><span class="text-[10px] font-bold text-gray-500">Save Img</span>
                         </button>
                         <button onclick="copyLink()" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
-                                <i class="fas fa-link text-lg"></i>
-                            </div>
-                            <span class="text-[10px] font-bold text-gray-500">Copy Link</span>
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition"><i class="fas fa-link text-lg"></i></div><span class="text-[10px] font-bold text-gray-500">Copy Link</span>
                         </button>
                     </div>
                 </div>
@@ -400,10 +410,28 @@
 
         // --- State ---
         let wishData = { type: '', gender: 'male', image: null, theme: null }; 
+        let valData = { gift: 'chocolate', theme: 'ai-romantic' }; // Valentine Default
         let userModifiedText = false;
         let generatedLink = ""; 
 
-        // --- FULL THEME LIST (15 Themes) ---
+        // --- 4️⃣ AI VALENTINE THEMES (Independent) ---
+        const valentineThemes = {
+            'ai-romantic': { name: 'Romantic', bg: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800&q=80', font: 'Playfair Display' },
+            'ai-cute': { name: 'Cute', bg: 'https://images.unsplash.com/photo-1595126730967-33622d99d3aa?w=800&q=80', font: 'Pacifico' },
+            'ai-luxury': { name: 'Luxury', bg: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=800&q=80', font: 'Cinzel' },
+            'ai-dark': { name: 'Dark Love', bg: 'https://images.unsplash.com/photo-1517480447814-17aba81c4c3b?w=800&q=80', font: 'Playfair Display' },
+            'ai-minimal': { name: 'Minimal', bg: 'https://images.unsplash.com/photo-1533038590840-1cde6e668a91?w=800&q=80', font: 'Poppins' }
+        };
+
+        const valGifts = [
+            { id: 'chocolate', icon: '🍫', img: 'https://cdn-icons-png.flaticon.com/512/2533/2533588.png' },
+            { id: 'rose', icon: '🌹', img: 'https://cdn-icons-png.flaticon.com/512/808/808603.png' },
+            { id: 'teddy', icon: '🧸', img: 'https://cdn-icons-png.flaticon.com/512/934/934208.png' },
+            { id: 'ring', icon: '💍', img: 'https://cdn-icons-png.flaticon.com/512/2658/2658142.png' },
+            { id: 'card', icon: '💌', img: 'https://cdn-icons-png.flaticon.com/512/3062/3062634.png' }
+        ];
+
+        // --- STANDARD THEMES ---
         const themes = [
             { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue', mood: 'refreshing' },
             { id: 'theme-pink', img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80', name: 'Pink', mood: 'sweet' },
@@ -427,9 +455,11 @@
             const urlParams = new URLSearchParams(window.location.search);
             const idParam = urlParams.get('id');
 
+            checkValentineDate();
             setupThemeSelector();
+            setupValentineUI(); // Setup the new modal UI
             
-            // Hint Reveal Timeout (5 seconds)
+            // Hint Reveal Timeout
             setTimeout(() => {
                 document.getElementById('egg-hint').classList.remove('text-indigo-300/0');
                 document.getElementById('egg-hint').classList.add('text-indigo-300');
@@ -457,40 +487,185 @@
             }
         };
 
+        // --- VALENTINE LOGIC START ---
+        function checkValentineDate() {
+            const d = new Date();
+            const month = d.getMonth(); // 0 = Jan, 1 = Feb
+            const day = d.getDate();
+            // Show if Jan (0) OR Feb 1-14
+            if (month === 0 || (month === 1 && day <= 14)) {
+                document.getElementById('valentine-section').classList.remove('hidden');
+            }
+        }
+
+        function setupValentineUI() {
+            // Fill Gift Grid
+            const grid = document.getElementById('val-gift-grid');
+            grid.innerHTML = '';
+            valGifts.forEach(g => {
+                const el = document.createElement('div');
+                el.className = `val-grid-item ${g.id === 'chocolate' ? 'val-selected' : ''}`;
+                el.onclick = () => selectValGift(g.id, el);
+                el.innerHTML = `<span class="text-2xl">${g.icon}</span>`;
+                grid.appendChild(el);
+            });
+
+            // Fill Themes
+            const themeList = document.getElementById('val-theme-list');
+            themeList.innerHTML = '';
+            Object.keys(valentineThemes).forEach(key => {
+                const t = valentineThemes[key];
+                const btn = document.createElement('div');
+                btn.className = `val-theme-btn ${key === 'ai-romantic' ? 'active' : ''}`;
+                btn.innerText = t.name;
+                btn.onclick = () => {
+                    document.querySelectorAll('.val-theme-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    valData.theme = key;
+                }
+                themeList.appendChild(btn);
+            });
+        }
+
+        function selectValGift(id, el) {
+            valData.gift = id;
+            document.querySelectorAll('.val-grid-item').forEach(d => d.classList.remove('val-selected'));
+            el.classList.add('val-selected');
+        }
+
+        function openValentineModal() {
+            document.getElementById('screen-home').classList.add('hidden-screen');
+            document.getElementById('valentine-modal').classList.remove('hidden-screen');
+        }
+
+        function closeValentineModal() {
+            document.getElementById('valentine-modal').classList.add('hidden-screen');
+            document.getElementById('screen-home').classList.remove('hidden-screen');
+        }
+
+        async function createValentine() {
+            const p1 = document.getElementById('val-name1').value.trim() || 'You';
+            const p2 = document.getElementById('val-name2').value.trim() || 'My Love';
+            const nameCombined = `${p1} & ${p2}`;
+            
+            // 6️⃣ Message Generator (Offline)
+            let msg = "";
+            const mood = valentineThemes[valData.theme].name;
+            const giftName = valData.gift.charAt(0).toUpperCase() + valData.gift.slice(1);
+            
+            if (valData.theme === 'ai-luxury') {
+                msg = `To ${nameCombined} 💍. A premium ${giftName} for a love that shines brighter than gold. Forever yours.`;
+            } else if (valData.theme === 'ai-cute') {
+                msg = `Hey ${p2}! 🧸 Sending you this ${giftName} and a big hug! You make ${p1} smile every day!`;
+            } else if (valData.theme === 'ai-dark') {
+                msg = `${nameCombined} 🌑. This ${giftName} symbolizes our eternal bond. Deep, mysterious, and forever.`;
+            } else {
+                msg = `To my Valentine, ${p2} 💖. This ${giftName} is a small token of my endless love for you. Love, ${p1}.`;
+            }
+
+            // Get Image Data (PNG URL)
+            const giftObj = valGifts.find(g => g.id === valData.gift);
+            const imgData = giftObj.img;
+
+            document.getElementById('screen-loading').classList.remove('hidden-screen');
+
+            // Save using existing DB
+            const secretId = Math.random().toString(36).substring(2, 10);
+            
+            const { error } = await client.from('wishes').insert([{ 
+                id: secretId, 
+                type: 'valentine', // SPECIAL TYPE
+                name: nameCombined, 
+                message: msg, 
+                image_data: imgData, 
+                theme: valData.theme 
+            }]);
+
+            if(error) { alert("Connection Error"); document.getElementById('screen-loading').classList.add('hidden-screen'); return; }
+
+            // Update Link & Redirect
+            generatedLink = `${window.location.origin}${window.location.pathname}?id=${secretId}`;
+            
+            // Backup to Sheet
+            const params = new URLSearchParams();
+            params.append('type', 'valentine'); params.append('name', nameCombined); params.append('message', msg);
+            fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: params, mode: 'no-cors' }).catch(()=>{});
+
+            addToHistory(secretId, nameCombined, 'valentine');
+            window.location.href = generatedLink; 
+        }
+        // --- VALENTINE LOGIC END ---
+
         async function loadWishById(id) {
             const { data, error } = await client.from('wishes').select('*').eq('id', id).single();
             if(error || !data) { alert("Wish not found!"); window.location.href = window.location.pathname; return; }
 
             generatedLink = window.location.href; 
 
-            // --- SMART AUDIO SELECTION ---
-            let audioFile = 'wish.mp3'; 
-            if (data.type === 'wedding') audioFile = 'wedding.mp3';
-            else if (data.type === 'birthday') {
-                audioFile = (data.age && parseInt(data.age) < 13) ? 'birthday-children.mp3' : 'happy-birthday.mp3';
+            // --- 5️⃣ IMAGE LAYOUT LOGIC ---
+            const container = document.getElementById('dynamic-content');
+            
+            if (data.type === 'valentine') {
+                // Audio
+                document.getElementById('audio-bg').src = 'wish2.mp3';
+                
+                // Get Theme Data
+                const vTheme = valentineThemes[data.theme] || valentineThemes['ai-romantic'];
+                
+                // RENDER NEW LAYOUT (4:5 Portrait Card)
+                document.getElementById('bg-layer').style.backgroundImage = `url(${vTheme.bg})`;
+                
+                // Inject specific HTML structure for Valentine
+                container.innerHTML = `
+                    <div class="glass-panel w-full max-w-sm aspect-[4/5] flex flex-col items-center justify-between p-6 rounded-3xl relative overflow-hidden border border-white/40 shadow-2xl">
+                        <div class="relative w-full flex-1 flex items-center justify-center animate-[float_4s_infinite]">
+                            <img src="${data.image_data}" class="w-48 h-48 object-contain drop-shadow-2xl filter brightness-110">
+                        </div>
+                        
+                        <div class="w-full text-center z-10 mt-4 bg-white/40 backdrop-blur-md p-4 rounded-xl shadow-sm border border-white/50">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-2" style="font-family: '${vTheme.font}', serif;">${data.name}</h2>
+                            <p class="text-gray-800 text-sm font-medium leading-relaxed italic">"${data.message}"</p>
+                        </div>
+                        
+                        <div class="absolute bottom-2 text-[8px] text-gray-500 uppercase tracking-widest opacity-60">Valentine Special</div>
+                    </div>
+                `;
+            } else {
+                // STANDARD LOAD
+                let audioFile = 'wish.mp3'; 
+                if (data.type === 'wedding') audioFile = 'wedding.mp3';
+                else if (data.type === 'birthday') audioFile = (data.age && parseInt(data.age) < 13) ? 'birthday-children.mp3' : 'happy-birthday.mp3';
+                document.getElementById('audio-bg').src = audioFile;
+
+                const themeObj = themes.find(t => t.id === data.theme) || themes[0];
+                document.getElementById('bg-layer').style.backgroundImage = `url(${themeObj.img})`;
+                
+                // Standard Layout
+                const defaultAvatar = data.gender === 'female' ? 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png' : 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
+                const imgSrc = data.image_data || defaultAvatar;
+                const badgeHtml = (data.age && data.age > 0) ? `<div id="disp-age-badge" class="shiny-badge"><span id="age-text">${data.age}</span></div>` : '';
+
+                container.innerHTML = `
+                    <div class="relative mb-6 group z-10">
+                        <div class="absolute inset-0 bg-white/50 rounded-full blur-xl animate-pulse group-hover:blur-2xl transition"></div>
+                        <div class="photo-frame relative w-48 h-48 rounded-full p-2 bg-white/30 backdrop-blur-sm border border-white/60 shadow-2xl animate-[float_6s_infinite] mx-auto">
+                            <img id="disp-img" src="${imgSrc}" class="w-full h-full rounded-full object-cover border-4 border-white shadow-inner">
+                        </div>
+                        ${badgeHtml}
+                    </div>
+                    <h1 id="disp-title" class="relative z-10 text-4xl font-bold text-white mb-2 drop-shadow-lg tracking-tight elegant-font leading-tight">${getTitle(data.type)}</h1>
+                    <h2 id="disp-name" class="relative z-10 text-3xl text-white/90 mb-6 handwritten drop-shadow-md transform -rotate-2">${data.name}</h2>
+                    <div class="glass-panel p-8 rounded-3xl shadow-2xl w-full max-w-sm relative z-10">
+                        <i class="fas fa-quote-left text-indigo-400/30 text-3xl absolute -top-4 -left-2"></i>
+                        <p id="disp-msg" class="text-gray-800 text-lg font-medium leading-relaxed font-serif italic">${data.message}</p>
+                        <i class="fas fa-quote-right text-indigo-400/30 text-3xl absolute -bottom-4 -right-2"></i>
+                    </div>
+                `;
             }
-            document.getElementById('audio-bg').src = audioFile;
 
             document.getElementById('creator-form').classList.add('hidden-screen');
             document.getElementById('screen-loading').classList.add('hidden-screen');
             document.getElementById('screen-reveal').classList.remove('hidden-screen');
-
-            document.getElementById('disp-title').innerText = getTitle(data.type);
-            document.getElementById('disp-name').innerText = data.name;
-            document.getElementById('disp-msg').innerText = data.message;
-            
-            const themeObj = themes.find(t => t.id === data.theme) || themes[0];
-            document.getElementById('bg-layer').style.backgroundImage = `url(${themeObj.img})`;
-
-            const defaultAvatar = data.gender === 'female' 
-                ? 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png' 
-                : 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
-            document.getElementById('disp-img').src = data.image_data || defaultAvatar;
-
-            if(data.age && data.age > 0) {
-                document.getElementById('disp-age-badge').classList.remove('hidden');
-                document.getElementById('age-text').innerText = data.age;
-            }
 
             setupFloatingIcons(data.type);
             setupDecorativeEmojis(data.type);
@@ -634,7 +809,6 @@
 
             generatedLink = `${window.location.origin}${window.location.pathname}?id=${secretId}`;
             
-            // Backup to Google Sheet
             const params = new URLSearchParams();
             params.append('type', wishData.type);
             params.append('name', name);
@@ -667,6 +841,7 @@
             if(type === 'ganesha') return "Happy Ganesh Chaturthi!";
             if(type === 'durga') return "Happy Durga Puja!";
             if(type === 'independence') return "Jai Hind!";
+            if(type === 'valentine') return "Valentine Wish";
             return "Best Wishes!";
         }
 
@@ -679,6 +854,8 @@
             else if(type === 'ganesha') icons = ['🥥', '🌸', '🕉️'];
             else if(type === 'durga') icons = ['🌺', '🔱', '🕉️'];
             else if(type === 'independence') icons = ['🇮🇳', '🎆', '🐯'];
+            else if(type === 'valentine') icons = ['💘', '🌹', '🧸', '🍫'];
+            
             container.innerHTML = '';
             for(let i=0; i<20; i++) {
                 const el = document.createElement('div');
@@ -701,6 +878,8 @@
             if (type === 'ganesha') emojis = ['🕉️', '🐘', '🌸'];
             if (type === 'durga') emojis = ['🔱', '🦁', '🌺'];
             if (type === 'independence') emojis = ['🇮🇳', '🎡', '🧡'];
+            if (type === 'valentine') emojis = ['💝', '💌', '🌹'];
+            
             const positions = [ { top: '10%', left: '10%' }, { top: '15%', right: '10%' }, { bottom: '35%', left: '5%' }, { bottom: '40%', right: '5%' } ];
             positions.forEach((pos, index) => {
                 const el = document.createElement('div');
@@ -750,9 +929,9 @@
             localStorage.setItem('wish_history', JSON.stringify(history));
         }
         
-        // --- NEW: DELETE FROM HISTORY (WEBAPP ONLY) ---
+        // --- DELETE FROM HISTORY ---
         function deleteFromHistory(id, event) {
-            event.stopPropagation(); // Stop click from opening the link
+            event.stopPropagation(); // Stop click from opening link
             if(!confirm("Remove from this list?")) return;
             
             let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
@@ -769,12 +948,11 @@
             section.classList.remove('hidden-screen');
             list.innerHTML = '';
             history.forEach(item => {
-                const icon = item.type === 'birthday' ? '🎂' : '✨';
+                const icon = item.type === 'birthday' ? '🎂' : (item.type === 'valentine' ? '💘' : '✨');
                 const fullUrl = `${window.location.origin}${window.location.pathname}?id=${item.id}`;
                 const div = document.createElement('div');
                 div.className = 'bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between shadow-sm hover:shadow-md transition';
                 
-                // Added Delete Button (Trash Icon) next to copy button
                 div.innerHTML = `
                     <div class="flex items-center gap-3"><span class="text-xl bg-gray-50 p-2 rounded-lg">${icon}</span><div><p class="font-bold text-gray-800 text-sm">${item.name}</p><p class="text-[10px] text-gray-400">${item.date}</p></div></div>
                     <div class="flex gap-2">
@@ -790,23 +968,19 @@
 
         let titleTapCount = 0; let tapTimer;
         
-        // --- NEW: INTERACTIVE TITLE BUMP + COLOR ---
+        // --- INTERACTIVE TITLE ---
         function triggerEasterEgg() {
             const title = document.getElementById('app-title');
             const suffix = document.getElementById('title-suffix');
             
-            // Random Color Logic
             const colors = ['text-pink-600', 'text-purple-600', 'text-blue-600', 'text-green-600', 'text-orange-600'];
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
             
-            // Remove old animation/color
             title.classList.remove('manual-bump');
-            suffix.className = ""; // Reset class list
+            suffix.className = ""; 
             
-            // Trigger Reflow to restart animation
             void title.offsetWidth; 
             
-            // Add new animation & color
             title.classList.add('manual-bump');
             suffix.classList.add(randomColor, 'transition-colors', 'duration-300');
 
