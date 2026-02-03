@@ -140,11 +140,11 @@
     <div id="app-wrapper">
         <div id="app-container" class="bg-gray-50/90 backdrop-blur w-full h-[100dvh] sm:max-w-md sm:h-[850px] sm:rounded-3xl shadow-2xl overflow-hidden relative flex flex-col">
             
-            <audio id="audio-bg" loop></audio>
+            <audio id="audio-bg" loop preload="auto"></audio>
 
             <div id="screen-loading" class="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center hidden-screen">
                 <div class="loader mb-4"></div>
-                <p class="text-indigo-600 font-bold tracking-widest text-xs uppercase">Generating Unique Link...</p>
+                <p class="text-indigo-600 font-bold tracking-widest text-xs uppercase">Saving Magic...</p>
             </div>
 
             <div id="matrix-overlay" class="hidden-screen">
@@ -394,7 +394,7 @@
         let userModifiedText = false;
         let generatedLink = ""; 
 
-        // --- FULL THEME LIST ---
+        // --- FULL THEME LIST (15 Themes) ---
         const themes = [
             { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue', mood: 'refreshing' },
             { id: 'theme-pink', img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80', name: 'Pink', mood: 'sweet' },
@@ -446,6 +446,14 @@
             if(error || !data) { alert("Wish not found!"); window.location.href = window.location.pathname; return; }
 
             generatedLink = window.location.href; // Store link
+
+            // --- SMART AUDIO SELECTION (Preload) ---
+            let audioFile = 'wish.mp3'; // Default
+            if (data.type === 'wedding') audioFile = 'wedding.mp3';
+            else if (data.type === 'birthday') {
+                audioFile = (data.age && parseInt(data.age) < 13) ? 'birthday-children.mp3' : 'happy-birthday.mp3';
+            }
+            document.getElementById('audio-bg').src = audioFile;
 
             document.getElementById('creator-form').classList.add('hidden-screen');
             document.getElementById('screen-loading').classList.add('hidden-screen');
@@ -589,11 +597,11 @@
             document.getElementById('screen-loading').classList.remove('hidden-screen');
 
             // --- 1. GENERATE SECRET ID (8 Chars) ---
-            const secretId = Math.random().toString(36).substring(2, 10); // e.g. 'x9kp2mNq'
+            const secretId = Math.random().toString(36).substring(2, 10); 
 
-            // --- 2. SAVE TO SUPABASE (With Secret ID) ---
+            // --- 2. SAVE TO SUPABASE ---
             const { error } = await client.from('wishes').insert([{ 
-                id: secretId, // Using the Secret ID here!
+                id: secretId, 
                 type: wishData.type, 
                 name: name, 
                 message: msg, 
@@ -622,13 +630,21 @@
             fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: params, mode: 'no-cors' }).catch(()=>{});
 
             addToHistory(secretId, name, wishData.type);
-            window.location.href = generatedLink; // Redirect to unique page
+            window.location.href = generatedLink; 
         }
 
+        // --- OPEN WISH = PLAY MUSIC ---
         function openWish() {
             document.getElementById('screen-reveal').classList.add('hidden-screen');
             document.getElementById('screen-display').classList.remove('hidden-screen');
-            document.getElementById('audio-bg').play().catch(e => console.log("Tap for audio"));
+            
+            const audio = document.getElementById('audio-bg');
+            audio.volume = 1.0; 
+            audio.play().catch(e => {
+                console.log("Audio play failed (browser policy):", e);
+                // Optionally show a small "Play" button if auto-play fails
+            });
+            
             fireConfetti();
         }
 
@@ -690,7 +706,6 @@
         function toggleAudio() {
             const audio = document.getElementById('audio-bg');
             const icon = document.getElementById('icon-audio');
-            audio.src = 'happy-birthday.mp3'; 
             if(audio.paused) { audio.play().catch(()=>{}); icon.className = "fas fa-volume-up text-xs"; } 
             else { audio.pause(); icon.className = "fas fa-volume-mute text-xs"; }
         }
