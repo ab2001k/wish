@@ -52,7 +52,7 @@
             transform: scale(1.1); 
         }
 
-        /* PREMIUM CARD LAYOUT */
+        /* PREMIUM CARD STYLES */
         .premium-card {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
@@ -66,6 +66,7 @@
         .border-gold { border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
         .border-silver { border: 2px solid #c0c0c0; box-shadow: 0 0 15px rgba(192, 192, 192, 0.5); }
         
+        /* SHINY AGE BADGE */
         .shiny-badge {
             position: absolute; bottom: 0; right: 0; width: 3.5rem; height: 3.5rem;
             background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
@@ -81,47 +82,47 @@
         .gift-box-anim:active { transform: scale(0.95); }
         @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } }
         
-        /* FLOATING ICONS (CSS FontAwesome) */
-        .floating-icon {
-            position: absolute; color: rgba(255,255,255,0.6);
-            animation: floatUp 6s infinite ease-in-out;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        @keyframes floatUp { 
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 
-            20% { opacity: 0.8; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; } 
-        }
-
-        /* BUBBLES */
+        /* FLOATING BUBBLES IN BUTTON */
         .bubble {
             position: absolute; bottom: -10px; background: rgba(255,255,255,0.3);
-            border-radius: 50%; animation: floatBubble 3s infinite linear;
+            border-radius: 50%; animation: floatUp 3s infinite linear;
         }
-        @keyframes floatBubble { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-50px); opacity: 0; } }
+        @keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-50px); opacity: 0; } }
 
         .btn-click:active { transform: scale(0.95); }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
-
-        /* TITLE BUMP */
-        .manual-bump { animation: manualBump 0.2s ease-out forwards; }
-        @keyframes manualBump { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
 
         /* MATRIX OVERLAY */
         #matrix-overlay { position: fixed; inset: 0; background: black; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'VT323', monospace; }
         canvas#matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
         .matrix-content { z-index: 50; text-align: center; width: 100%; position: relative; }
         .hacked-title { color: #0f0; font-size: 4rem; margin-bottom: 2rem; text-shadow: 0 0 10px #0f0; }
-        #matrix-controls { opacity: 0; transition: opacity 1.5s ease-in; pointer-events: auto; }
+        
         .matrix-btn { background: black; color: #0f0; border: 2px solid #0f0; padding: 15px 30px; font-size: 1.5rem; text-transform: uppercase; animation: blinkMatrix 1s infinite steps(2, start); cursor: pointer; display: inline-block; margin-top: 20px; }
         .matrix-btn-back { background: black; color: white; border: 2px solid white; padding: 10px 20px; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 10px white; cursor: pointer; margin-top: 20px; display: inline-block; transition: all 0.3s; }
         @keyframes blinkMatrix { 0%, 100% { opacity: 1; box-shadow: 0 0 15px #0f0; } 50% { opacity: 0.8; } }
 
-        /* THEME SELECTOR */
-        .theme-option { width: 50px; height: 50px; border-radius: 50%; cursor: pointer; border: 3px solid white; transition: transform 0.2s; background-size: cover; background-position: center; }
-        .theme-option.selected { border-color: #6366f1; transform: scale(1.2); box-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
+        /* THEME SELECTOR - FIXED */
+        .theme-option {
+            width: 50px; 
+            height: 50px; 
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #e5e7eb; /* Soft gray border to see against white */
+            transition: transform 0.2s, border-color 0.2s;
+            flex-shrink: 0; /* CRITICAL FIX: Prevents squishing */
+            background-size: cover;
+            background-position: center;
+            background-color: #f3f4f6; /* Fallback color */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .theme-option.selected {
+            border-color: #6366f1; /* Indigo when selected */
+            transform: scale(1.15);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+        }
 
-        /* VALENTINE GRID */
+        /* VALENTINE STYLES */
         .val-grid-item { aspect-ratio: 1/1; border: 2px solid #fce7f3; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; background: white; }
         .val-grid-item:hover { transform: translateY(-2px); border-color: #ec4899; }
         .val-selected { border-color: #db2777 !important; background: #fff1f2; box-shadow: 0 0 10px rgba(236, 72, 153, 0.3); }
@@ -235,7 +236,10 @@
                     <h2 class="text-2xl font-bold ml-4 text-gray-800">Customize Wish</h2>
                 </div>
                 <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 mb-6 space-y-5">
-                    <div><label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Choose Aesthetic</label><div class="flex gap-4 overflow-x-auto p-2 -mx-2 scrollbar-hide" id="theme-selector"></div></div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Choose Aesthetic</label>
+                        <div class="flex gap-4 overflow-x-auto p-2 -mx-2 scrollbar-hide" id="theme-selector"></div>
+                    </div>
                     <div id="gender-select"><label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Gender</label><div class="flex gap-4"><label class="flex-1 cursor-pointer group"><input type="radio" name="gender" value="male" class="peer hidden" onchange="updateThemePreview('male')" checked><div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-600 transition group-hover:border-blue-200"><span class="block text-xl mb-1">👨</span><span class="text-xs font-bold uppercase">Male</span></div></label><label class="flex-1 cursor-pointer group"><input type="radio" name="gender" value="female" class="peer hidden" onchange="updateThemePreview('female')"><div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-pink-50 peer-checked:border-pink-500 peer-checked:text-pink-600 transition group-hover:border-pink-200"><span class="block text-xl mb-1">👩</span><span class="text-xs font-bold uppercase">Female</span></div></label></div></div>
                     <div class="space-y-4">
                         <div><label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Who is this for?</label><input type="text" id="inp-name" placeholder="Name" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition"></div>
@@ -337,6 +341,7 @@
             { id: 'ring', icon: '💍', img: 'https://cdn-icons-png.flaticon.com/512/2658/2658142.png', msg: "A ring to promise my forever to you." },
             { id: 'card', icon: '💌', img: 'https://cdn-icons-png.flaticon.com/512/3062/3062634.png', msg: "My heart written on paper, just for you." }
         ];
+        // FULL THEME LIST (15+ Items)
         const themes = [
             { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue', mood: 'refreshing' },
             { id: 'theme-pink', img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80', name: 'Pink', mood: 'sweet' },
@@ -403,10 +408,11 @@
             if(userModifiedText) return; // Respect manual edit
             const p1 = document.getElementById('val-name1').value.trim() || 'You';
             const p2 = document.getElementById('val-name2').value.trim() || 'Them';
+            const giftName = valData.gift.charAt(0).toUpperCase() + valData.gift.slice(1);
+            let msg = "";
             const giftObj = valGifts.find(g => g.id === valData.gift);
             
             // SMART MOOD WRITER
-            let msg = "";
             if (valData.theme === 'ai-luxury') msg = `To ${p2} 💍. A premium ${valData.gift} for a love more precious than gold. Forever yours, ${p1}.`;
             else if (valData.theme === 'ai-cute') msg = `Hey ${p2}! 🧸 Sending you this ${valData.gift} and a gigantic hug!`;
             else if (valData.theme === 'ai-dark') msg = `${p1} & ${p2} 🌑. This ${valData.gift} is a symbol of our eternal, unbreakable bond.`;
