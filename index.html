@@ -9,21 +9,18 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Typography */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Pacifico&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap'); /* For Matrix Mode */
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
-        /* GLOBAL RESET & LAYOUT */
+        /* RESET & LAYOUT */
         html, body {
             height: 100%; width: 100%; margin: 0; padding: 0;
             overflow: hidden; background-color: #000;
             font-family: 'Poppins', sans-serif;
-            -webkit-user-select: none; -ms-user-select: none; user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
         
@@ -43,22 +40,14 @@
 
         .handwritten { font-family: 'Pacifico', cursive; }
         .elegant-font { font-family: 'Playfair Display', serif; }
-        
-        /* Loading Spinner */
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #6366f1; border-radius: 50%; width: 45px; height: 45px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Animations */
-        .gift-box-anim { animation: shake 2.5s infinite ease-in-out; cursor: pointer; transition: transform 0.2s; }
-        .gift-box-anim:active { transform: scale(0.95); }
-        @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
 
         .hidden-screen { display: none !important; }
         .fade-in { animation: fadeIn 0.6s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- BACKGROUND STYLES --- */
+        /* GLASS & THEME */
         #bg-layer {
             position: absolute; inset: 0; z-index: 0;
             background-size: cover; background-position: center;
@@ -66,14 +55,13 @@
             transform: scale(1.02); 
         }
 
-        /* Glassmorphism */
         .glass-panel {
             background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }
-
+        
         /* SHINY AGE BADGE */
         .shiny-badge {
             position: absolute; bottom: 0; right: 0; width: 3.5rem; height: 3.5rem;
@@ -86,21 +74,22 @@
             line-height: 1; padding-bottom: 2px;
         }
 
-        /* DECORATIVE EMOJIS */
+        /* ANIMATIONS */
+        .gift-box-anim { animation: shake 2.5s infinite ease-in-out; cursor: pointer; }
+        .gift-box-anim:active { transform: scale(0.95); }
+        @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+
         .deco-emoji {
             position: absolute; font-size: 2.5rem;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
             z-index: 5; animation: float 4s ease-in-out infinite;
         }
 
-        /* Button Click Effect */
         .btn-click:active { transform: scale(0.95); }
-
-        /* Scrollbar Hide */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* MATRIX MODE STYLES */
+        /* MATRIX OVERLAY */
         #matrix-overlay {
             position: fixed; inset: 0; background: black; z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -109,24 +98,22 @@
         canvas#matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
         .matrix-content { z-index: 50; text-align: center; width: 100%; position: relative; }
         .hacked-title { color: #0f0; font-size: 4rem; margin-bottom: 2rem; text-shadow: 0 0 10px #0f0; animation: zoomIn 5s infinite alternate; }
-        #matrix-controls { opacity: 0; transition: opacity 1.5s ease-in; display: flex; flex-direction: column; align-items: center; pointer-events: auto; }
-        @keyframes zoomIn { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
+        #matrix-controls { opacity: 0; transition: opacity 1.5s ease-in; pointer-events: auto; }
         
         .matrix-btn {
             background: black; color: #0f0; border: 2px solid #0f0; padding: 15px 30px; font-size: 1.5rem; 
             text-transform: uppercase; letter-spacing: 3px; box-shadow: 0 0 15px #0f0;
             animation: blinkMatrix 1s infinite steps(2, start); cursor: pointer; text-decoration: none; 
-            display: inline-block; margin-top: 20px; min-width: 250px;
+            display: inline-block; margin-top: 20px;
         }
         .matrix-btn-back {
             background: black; color: white; border: 2px solid white; padding: 10px 20px; font-size: 1.2rem;
             text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 10px white; cursor: pointer;
-            margin-top: 20px; display: inline-block; min-width: 200px; transition: all 0.3s;
+            margin-top: 20px; display: inline-block; transition: all 0.3s;
         }
-        .matrix-btn-back:hover { background: #222; }
         @keyframes blinkMatrix { 0%, 100% { opacity: 1; box-shadow: 0 0 15px #0f0; } 50% { opacity: 0.8; box-shadow: 0 0 5px #0f0; } }
 
-        /* THEME SELECTOR STYLES */
+        /* THEME SELECTOR */
         .theme-option {
             width: 50px; height: 50px; border-radius: 50%;
             cursor: pointer; border: 3px solid white;
@@ -135,67 +122,15 @@
             background-size: cover; background-position: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        .theme-option:hover { transform: scale(1.1); }
         .theme-option.selected { border-color: #6366f1; transform: scale(1.2); box-shadow: 0 0 15px rgba(99, 102, 241, 0.6); }
 
-        /* --- GHOST CURSOR ANIMATIONS --- */
-        .ghost-cursor {
-            position: absolute; 
-            width: 28px; height: 28px; z-index: 100;
-            pointer-events: none; 
-            filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.4));
-            opacity: 0; transform-origin: top left;
-            display: none; 
-        }
-
-        .anim-move-click { display: block !important; animation: mouseSequence 4.5s ease-in-out forwards; }
-        .anim-text-bump { animation: titleBump 4.5s ease-in-out forwards; }
-        
-        .manual-bump { animation: manualBump 0.2s ease-out forwards !important; }
-        @keyframes manualBump {
-            0% { transform: scale(1); color: #1f2937; }
-            50% { transform: scale(0.9); color: #7c3aed; }
-            100% { transform: scale(1); color: #1f2937; }
-        }
-
-        .click-ripple {
-            position: fixed; width: 20px; height: 20px; border-radius: 50%;
-            border: 2px solid rgba(59, 130, 246, 0.8); background: rgba(59, 130, 246, 0.2);
-            transform: translate(-50%, -50%) scale(0); pointer-events: none; z-index: 99;
-            animation: rippleEffect 0.5s ease-out forwards;
-        }
-        @keyframes rippleEffect {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
-        }
-
-        @keyframes mouseSequence {
-            0% { left: 150%; top: 150%; opacity: 1; } 
-            20% { left: 48%; top: 55%; opacity: 1; } 
-            25% { transform: translate(1px, 1px); } 30% { transform: translate(0, 0); }
-            40% { transform: translate(1px, 1px); } 45% { transform: translate(0, 0); }
-            55% { transform: translate(1px, 1px); } 60% { transform: translate(0, 0); }
-            70% { transform: translate(1px, 1px); } 75% { transform: translate(0, 0); }
-            85% { left: 48%; top: 55%; opacity: 1; }
-            100% { left: -100%; top: -100%; opacity: 0; }
-        }
-
-        @keyframes titleBump {
-            0%, 23% { transform: scale(1); color: #1f2937; } 
-            25% { transform: scale(0.9); color: #4f46e5; } 30% { transform: scale(1); color: #1f2937; }
-            40% { transform: scale(0.9); color: #4f46e5; } 45% { transform: scale(1); color: #1f2937; }
-            55% { transform: scale(0.9); color: #4f46e5; } 60% { transform: scale(1); color: #1f2937; }
-            70% { transform: scale(0.9); color: #4f46e5; } 75% { transform: scale(1); color: #1f2937; }
-            100% { transform: scale(1); color: #1f2937; }
-        }
-
+        /* RESPONSIVE */
         @media (max-height: 800px) {
-            #capture-area { padding-top: 1rem !important; padding-bottom: 0.5rem !important; } 
+            #capture-area { padding-top: 1rem !important; } 
             .photo-frame { width: 8rem !important; height: 8rem !important; } 
-            #disp-title { font-size: 1.75rem !important; margin-bottom: 0.25rem !important; }
-            #disp-name { font-size: 1.5rem !important; margin-bottom: 0.5rem !important; }
+            #disp-title { font-size: 1.75rem !important; }
+            #disp-name { font-size: 1.5rem !important; }
             .glass-panel { padding: 1rem !important; }
-            #share-sheet { padding: 0.75rem !important; }
         }
     </style>
 </head>
@@ -205,11 +140,10 @@
         <div id="app-container" class="bg-gray-50/90 backdrop-blur w-full h-[100dvh] sm:max-w-md sm:h-[850px] sm:rounded-3xl shadow-2xl overflow-hidden relative flex flex-col">
             
             <audio id="audio-bg" loop></audio>
-            <audio id="audio-matrix" loop src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"></audio>
 
             <div id="screen-loading" class="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center hidden-screen">
                 <div class="loader mb-4"></div>
-                <p class="text-indigo-600 font-bold tracking-widest text-xs uppercase">Creating Magic...</p>
+                <p class="text-indigo-600 font-bold tracking-widest text-xs uppercase">Saving & Creating...</p>
             </div>
 
             <div id="matrix-overlay" class="hidden-screen">
@@ -226,17 +160,14 @@
 
             <div id="screen-home" class="flex-1 flex flex-col p-6 fade-in relative overflow-y-auto bg-white/95 scrollbar-hide">
                 <div class="text-center mb-6 mt-6 select-none relative">
-                    <div class="relative inline-block">
-                        <h1 id="app-title" onclick="triggerEasterEgg()" class="text-5xl font-extrabold text-gray-800 tracking-tighter cursor-pointer select-none transition origin-center">
-                            Wish<span class="text-indigo-600">Maker</span>
-                        </h1>
-                        <img id="ghost-cursor" class="ghost-cursor" src="data:image/svg+xml,%3Csvg width='35' height='35' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.5 3.21429V20.3571L10.5 15.3571H17.6429L5.5 3.21429Z' fill='white' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E" alt="cursor">
-                    </div>
+                    <h1 id="app-title" onclick="triggerEasterEgg()" class="text-5xl font-extrabold text-gray-800 tracking-tighter cursor-pointer select-none transition origin-center">
+                        Wish<span class="text-indigo-600">Maker</span>
+                    </h1>
                     <p class="text-xs text-gray-400 mt-2 uppercase tracking-[0.2em]">Celebrate Moments</p>
                 </div>
 
                 <div class="space-y-4">
-                    <button onclick="playClick(); selectType('birthday')" id="btn-birthday" class="btn-click w-full bg-white p-5 rounded-3xl shadow-lg border border-gray-100 hover:border-pink-300 hover:shadow-xl transition flex items-center gap-5 group relative overflow-hidden">
+                    <button onclick="selectType('birthday')" class="btn-click w-full bg-white p-5 rounded-3xl shadow-lg border border-gray-100 hover:border-pink-300 transition flex items-center gap-5 group relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-r from-pink-50 to-white opacity-0 group-hover:opacity-100 transition duration-500"></div>
                         <div class="bg-pink-100 p-3 rounded-2xl text-3xl group-hover:rotate-12 transition relative z-10">🎂</div>
                         <div class="text-left relative z-10">
@@ -245,7 +176,7 @@
                         </div>
                     </button>
 
-                    <button onclick="playClick(); selectType('wedding')" id="btn-wedding" class="btn-click w-full bg-white p-5 rounded-3xl shadow-lg border border-gray-100 hover:border-purple-300 hover:shadow-xl transition flex items-center gap-5 group relative overflow-hidden">
+                    <button onclick="selectType('wedding')" class="btn-click w-full bg-white p-5 rounded-3xl shadow-lg border border-gray-100 hover:border-purple-300 transition flex items-center gap-5 group relative overflow-hidden">
                         <div class="absolute inset-0 bg-gradient-to-r from-purple-50 to-white opacity-0 group-hover:opacity-100 transition duration-500"></div>
                         <div class="bg-purple-100 p-3 rounded-2xl text-3xl group-hover:rotate-12 transition relative z-10">💍</div>
                         <div class="text-left relative z-10">
@@ -262,31 +193,23 @@
                         </div>
                         
                         <div class="grid grid-cols-2 gap-3">
-                            <button onclick="playClick(); selectType('diwali')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-orange-100 hover:border-orange-400 flex flex-col items-center gap-2">
+                            <button onclick="selectType('diwali')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-orange-100 hover:border-orange-400 flex flex-col items-center gap-2">
                                 <span class="text-2xl">🪔</span> <span class="text-xs font-bold text-gray-700">Diwali</span>
                             </button>
-                            <button onclick="playClick(); selectType('holi')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-pink-100 hover:border-pink-400 flex flex-col items-center gap-2">
+                            <button onclick="selectType('holi')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-pink-100 hover:border-pink-400 flex flex-col items-center gap-2">
                                 <span class="text-2xl">🎨</span> <span class="text-xs font-bold text-gray-700">Holi</span>
                             </button>
-                            <button onclick="playClick(); selectType('ganesha')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-yellow-100 hover:border-yellow-400 flex flex-col items-center gap-2">
+                            <button onclick="selectType('ganesha')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-yellow-100 hover:border-yellow-400 flex flex-col items-center gap-2">
                                 <span class="text-2xl">🐘</span> <span class="text-xs font-bold text-gray-700">Ganesha</span>
                             </button>
-                            <button onclick="playClick(); selectType('durga')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-red-100 hover:border-red-400 flex flex-col items-center gap-2">
+                            <button onclick="selectType('durga')" class="btn-click bg-white p-3 rounded-2xl shadow-sm border border-red-100 hover:border-red-400 flex flex-col items-center gap-2">
                                 <span class="text-2xl">🔱</span> <span class="text-xs font-bold text-gray-700">Durga Puja</span>
                             </button>
-                            <button onclick="playClick(); selectType('independence')" class="col-span-2 btn-click bg-white p-3 rounded-2xl shadow-sm border border-blue-100 hover:border-blue-400 flex items-center justify-center gap-3">
+                            <button onclick="selectType('independence')" class="col-span-2 btn-click bg-white p-3 rounded-2xl shadow-sm border border-blue-100 hover:border-blue-400 flex items-center justify-center gap-3">
                                 <span class="text-2xl">🇮🇳</span> <span class="text-xs font-bold text-gray-700">Independence Day</span>
                             </button>
                         </div>
                     </div>
-                </div>
-
-                <div id="history-section" class="mt-10 hidden-screen">
-                    <div class="flex items-center justify-between mb-4 px-2">
-                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Your Creations</h3>
-                        <span class="text-xs text-indigo-500 font-bold cursor-pointer hover:underline" onclick="clearHistory()">Clear All</span>
-                    </div>
-                    <div id="history-list" class="space-y-3 pb-20"></div>
                 </div>
 
                 <div class="mt-auto pt-8 pb-4 text-center">
@@ -296,7 +219,7 @@
 
             <div id="creator-form" class="fixed inset-0 bg-white/95 z-50 p-6 flex flex-col hidden-screen overflow-y-auto">
                 <div class="flex items-center mb-6">
-                    <button onclick="playClick(); closeForm()" class="btn-click p-3 rounded-full bg-white text-gray-600 shadow-sm hover:bg-gray-100 transition"><i class="fas fa-arrow-left"></i></button>
+                    <button onclick="closeForm()" class="btn-click p-3 rounded-full bg-white text-gray-600 shadow-sm hover:bg-gray-100 transition"><i class="fas fa-arrow-left"></i></button>
                     <h2 class="text-2xl font-bold ml-4 text-gray-800">Customize Wish</h2>
                 </div>
 
@@ -307,17 +230,17 @@
                         <div class="flex gap-4 overflow-x-auto p-2 -mx-2 scrollbar-hide" id="theme-selector"></div>
                     </div>
 
-                    <div>
+                    <div id="gender-select">
                         <label class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2 block">Gender (Optional)</label>
                         <div class="flex gap-4">
-                            <label class="flex-1 cursor-pointer group" onclick="playClick()">
+                            <label class="flex-1 cursor-pointer group">
                                 <input type="radio" name="gender" value="male" class="peer hidden" onchange="updateThemePreview('male')" checked>
                                 <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-600 transition group-hover:border-blue-200">
                                     <span class="block text-xl mb-1">👨</span>
                                     <span class="text-xs font-bold uppercase">Male</span>
                                 </div>
                             </label>
-                            <label class="flex-1 cursor-pointer group" onclick="playClick()">
+                            <label class="flex-1 cursor-pointer group">
                                 <input type="radio" name="gender" value="female" class="peer hidden" onchange="updateThemePreview('female')">
                                 <div class="py-3 px-4 rounded-xl border-2 border-gray-100 text-center peer-checked:bg-pink-50 peer-checked:border-pink-500 peer-checked:text-pink-600 transition group-hover:border-pink-200">
                                     <span class="block text-xl mb-1">👩</span>
@@ -329,7 +252,7 @@
 
                     <div class="space-y-4">
                         <div>
-                            <label id="label-name" class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Who is this for?</label>
+                            <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Who is this for?</label>
                             <input type="text" id="inp-name" placeholder="Name (e.g. Rahul)" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition">
                         </div>
                         
@@ -342,9 +265,11 @@
                                 <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">Relation</label>
                                 <select id="inp-relation" class="w-full p-4 bg-gray-50 rounded-2xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 font-semibold text-gray-700 transition appearance-none">
                                     <option value="friend">Friend / Bestie</option>
-                                    <option value="family">Family Member</option>
-                                    <option value="partner">Partner</option>
-                                    <option value="colleague">Colleague</option>
+                                    <option value="partner">Partner (BF/GF)</option>
+                                    <option value="spouse">Spouse (Husband/Wife)</option>
+                                    <option value="family">Family (Parent/Elder)</option>
+                                    <option value="sibling">Sibling (Brother/Sister)</option>
+                                    <option value="colleague">Colleague / Work</option>
                                 </select>
                             </div>
                         </div>
@@ -356,20 +281,20 @@
                     </div>
 
                     <div>
-                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-2">Add a Photo</label>
+                        <label class="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-2">Add a Photo (Optional)</label>
                         <div class="flex items-center gap-4 p-2 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
                             <div class="w-14 h-14 rounded-xl bg-white shadow-sm overflow-hidden relative flex-shrink-0">
                                 <img id="preview-thumb" class="w-full h-full object-cover hidden">
                                 <i class="fas fa-image absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300"></i>
                             </div>
-                            <label onclick="playClick()" class="flex-1 bg-white hover:bg-gray-100 text-gray-700 py-3 rounded-xl text-xs font-bold uppercase tracking-wide cursor-pointer text-center transition shadow-sm border border-gray-200">
+                            <label class="flex-1 bg-white hover:bg-gray-100 text-gray-700 py-3 rounded-xl text-xs font-bold uppercase tracking-wide cursor-pointer text-center transition shadow-sm border border-gray-200">
                                 <span id="photo-label-text">Choose Image</span>
                                 <input type="file" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
                             </label>
                         </div>
                     </div>
 
-                    <button onclick="playClick(); saveAndGenerate()" class="btn-click w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-bold shadow-xl shadow-indigo-200 flex justify-center items-center gap-3 text-lg mt-2">
+                    <button onclick="saveAndGenerate()" class="btn-click w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-5 rounded-2xl font-bold shadow-xl shadow-indigo-200 flex justify-center items-center gap-3 text-lg mt-2">
                         Create Magic <i class="fas fa-wand-magic-sparkles"></i>
                     </button>
                 </div>
@@ -377,43 +302,34 @@
 
             <div id="screen-reveal" class="flex-1 hidden-screen flex flex-col items-center justify-center bg-gray-900 text-white relative overflow-hidden">
                 <div id="reveal-icons" class="absolute inset-0 pointer-events-none opacity-50"></div> 
-                
                 <div class="relative z-10 text-center px-6">
                     <p class="text-indigo-300 font-bold uppercase tracking-widest text-xs mb-4">You have a message</p>
                     <h2 class="text-4xl font-extrabold mb-12 animate-pulse leading-tight elegant-font">A Special Surprise<br>is waiting...</h2>
-                    <div class="gift-box-anim text-[8rem] filter drop-shadow-2xl" onclick="playClick(); openWish()">🎁</div>
+                    <div class="gift-box-anim text-[8rem] filter drop-shadow-2xl" onclick="openWish()">🎁</div>
                     <p class="mt-12 text-xs uppercase tracking-[0.3em] text-gray-400 font-bold animate-bounce">Tap to Open</p>
                 </div>
             </div>
 
             <div id="screen-display" class="flex-1 hidden-screen flex flex-col relative overflow-hidden transition-all duration-1000">
-                
                 <div id="bg-layer"></div>
-
+                
                 <div id="top-controls" class="absolute top-4 w-full px-4 flex justify-between z-30">
-                    <button onclick="playClick(); window.location.href = window.location.pathname" class="bg-white/30 backdrop-blur-md p-2 px-4 rounded-full text-gray-800 text-xs font-bold shadow-sm border border-white/40 hover:bg-white/50 transition">
+                    <button onclick="window.location.href = window.location.pathname" class="bg-white/30 backdrop-blur-md p-2 px-4 rounded-full text-gray-800 text-xs font-bold shadow-sm border border-white/40 hover:bg-white/50 transition">
                         <i class="fas fa-home mr-1"></i> Home
                     </button>
-                    <div class="flex gap-2">
-                        <button id="btn-delete" onclick="playClick(); deleteWish()" class="hidden bg-red-500/80 backdrop-blur p-2 w-8 h-8 rounded-full shadow-lg text-white transition hover:scale-110">
-                            <i class="fas fa-trash text-xs"></i>
-                        </button>
-                        <button onclick="toggleAudio()" class="bg-white/30 backdrop-blur-md p-2 w-8 h-8 rounded-full text-gray-800 border border-white/40 shadow-sm transition">
-                            <i id="icon-audio" class="fas fa-volume-up text-xs"></i>
-                        </button>
-                    </div>
+                    <button onclick="toggleAudio()" class="bg-white/30 backdrop-blur-md p-2 w-8 h-8 rounded-full text-gray-800 border border-white/40 shadow-sm transition">
+                        <i id="icon-audio" class="fas fa-volume-up text-xs"></i>
+                    </button>
                 </div>
 
                 <div id="capture-area" class="flex-1 flex flex-col items-center justify-center p-6 text-center z-10 overflow-y-auto no-scrollbar relative">
-                    
                     <div id="decorative-emojis" class="absolute inset-0 pointer-events-none z-0 overflow-hidden"></div>
-
+                    
                     <div class="relative mb-6 group z-10">
                         <div class="absolute inset-0 bg-white/50 rounded-full blur-xl animate-pulse group-hover:blur-2xl transition"></div>
                         <div class="photo-frame relative w-48 h-48 rounded-full p-2 bg-white/30 backdrop-blur-sm border border-white/60 shadow-2xl animate-[float_6s_infinite] mx-auto">
                             <img id="disp-img" src="" class="w-full h-full rounded-full object-cover border-4 border-white shadow-inner">
                         </div>
-                        
                         <div id="disp-age-badge" class="shiny-badge hidden">
                             <span id="age-text"></span>
                         </div>
@@ -426,32 +342,25 @@
                         <i class="fas fa-quote-left text-indigo-400/30 text-3xl absolute -top-4 -left-2"></i>
                         <p id="disp-msg" class="text-gray-800 text-lg font-medium leading-relaxed font-serif italic"></p>
                         <i class="fas fa-quote-right text-indigo-400/30 text-3xl absolute -bottom-4 -right-2"></i>
-                        
-                        <div id="watermark" class="hidden mt-4 pt-4 border-t border-gray-200 text-center">
-                             <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">WishMaker App</p>
-                        </div>
                     </div>
                 </div>
 
                 <div id="share-sheet" class="bg-white p-5 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] z-20 relative transform transition w-full mt-auto">
                     <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-4"></div>
-                    
                     <div class="grid grid-cols-3 gap-2 mb-2">
-                        <button onclick="playClick(); shareWhatsapp()" class="flex flex-col items-center gap-1 group">
+                        <button onclick="shareWhatsapp()" class="flex flex-col items-center gap-1 group">
                             <div class="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
                                 <i class="fab fa-whatsapp text-lg"></i>
                             </div>
                             <span class="text-[10px] font-bold text-gray-500">WhatsApp</span>
                         </button>
-                        
-                        <button onclick="playClick(); downloadImage()" class="flex flex-col items-center gap-1 group">
+                        <button onclick="downloadImage()" class="flex flex-col items-center gap-1 group">
                             <div class="w-10 h-10 bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
                                 <i class="fab fa-instagram text-lg"></i>
                             </div>
                             <span class="text-[10px] font-bold text-gray-500">Save Img</span>
                         </button>
-
-                        <button onclick="playClick(); copyLink()" class="flex flex-col items-center gap-1 group">
+                        <button onclick="copyLink()" class="flex flex-col items-center gap-1 group">
                             <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg group-active:scale-95 transition">
                                 <i class="fas fa-link text-lg"></i>
                             </div>
@@ -464,25 +373,15 @@
     </div>
 
     <script>
-        // ==========================================
-        // 1. CONFIGURATION & STATE
-        // ==========================================
-        
-        // *** IMPORTNAT: PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ***
+        // *** YOUR DEPLOYED WEB APP URL (Hardcoded as requested) ***
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3Jd86OmAT6Q0ywpzSpNFvYGjqro7VeKlvV9sf0tlux_YiCF6bnSWlIA3rQJAS8Zid2Q/exec"; 
         
-        const popAudio = new Audio("data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU"); 
-        function playClick() { }
-
-        // KEEPING SUPABASE FOR LINK SHARING FUNCTIONALITY (DB)
-        const SUPABASE_URL = 'https://rhodybetonjerkcsdstj.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJob2R5YmV0b25qZXJrY3Nkc3RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4OTU5MDAsImV4cCI6MjA4NDQ3MTkwMH0.IEO-2spCVUxYFiQW-ARlA4RH57R_DQttQsWW0tGnUMI';
-        const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        let currentWishId = null;
+        // --- State ---
         let wishData = { type: '', gender: 'male', image: null, theme: null }; 
         let userModifiedText = false;
+        let generatedLink = "";
 
+        // --- RESTORED ALL THEMES (Including Berry & Royal) ---
         const themes = [
             { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue', mood: 'refreshing' },
             { id: 'theme-pink', img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80', name: 'Pink', mood: 'sweet' },
@@ -495,18 +394,20 @@
             { id: 'theme-berry', img: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80', name: 'Love', mood: 'lovely' },
             { id: 'theme-royal', img: 'https://images.unsplash.com/photo-1535868463750-c78d9543614f?auto=format&fit=crop&w=800&q=80', name: 'Classic', mood: 'timeless' },
             { id: 'theme-holi', img: 'https://images.unsplash.com/photo-1552084117-5633b4c1945f?auto=format&fit=crop&w=800&q=80', name: 'Holi', mood: 'colorful' },
-            { id: 'theme-diwali', img: 'https://images.unsplash.com/photo-1571556270929-e3144d2847be?auto=format&fit=crop&w=800&q=80', name: 'Diwali', mood: 'bright' }
+            { id: 'theme-diwali', img: 'https://images.unsplash.com/photo-1571556270929-e3144d2847be?auto=format&fit=crop&w=800&q=80', name: 'Diwali', mood: 'bright' },
+            { id: 'theme-ganesha', img: 'https://images.unsplash.com/photo-1566438480900-0609be27a4be?auto=format&fit=crop&w=800&q=80', name: 'Ganesha', mood: 'divine' },
+            { id: 'theme-durga', img: 'https://images.unsplash.com/photo-1570158659160-c9586419c8d5?auto=format&fit=crop&w=800&q=80', name: 'Durga', mood: 'powerful' },
+            { id: 'theme-independence', img: 'https://images.unsplash.com/photo-1532375810709-75b1da00537c?auto=format&fit=crop&w=800&q=80', name: 'India', mood: 'proud' }
         ];
 
-        // ==========================================
-        // 2. INITIALIZATION
-        // ==========================================
-        window.onload = async () => {
+        // --- Init ---
+        window.onload = () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
+            const dataParam = urlParams.get('data');
 
             setupThemeSelector();
             
+            // Auto-Generate Text Listeners
             ['inp-name', 'inp-age', 'inp-relation'].forEach(id => {
                 document.getElementById(id).addEventListener('input', generateLiveText);
             });
@@ -516,162 +417,58 @@
                     generateLiveText();
                 });
             });
-            document.getElementById('inp-custom-msg').addEventListener('input', () => {
-                userModifiedText = true;
-            });
+            document.getElementById('inp-custom-msg').addEventListener('input', () => { userModifiedText = true; });
+            document.getElementById('inp-relation').addEventListener('change', generateLiveText);
 
-            if (id) {
+            if (dataParam) {
+                // VIEW MODE
                 document.getElementById('screen-home').classList.add('hidden-screen');
                 document.getElementById('screen-loading').classList.remove('hidden-screen');
-                await fetchAndLoadWish(id);
-            } else {
-                setTimeout(() => { startGhostLoop(); }, 10000);
-                loadHistory(); 
+                loadFromUrl(dataParam);
             }
         };
 
-        // DYNAMIC WISH LOGIC
+        // --- SMART AI LOGIC (6+ Relations) ---
         function generateLiveText() {
             if (userModifiedText) return; 
-
             const name = document.getElementById('inp-name').value.trim() || 'Dear';
             const ageVal = document.getElementById('inp-age').value;
             const relation = document.getElementById('inp-relation').value;
             const type = wishData.type;
+            const gender = wishData.gender;
             const themeObj = themes.find(t => t.id === wishData.theme) || themes[0];
             const mood = themeObj.mood;
 
             let msg = "";
-            let ageGroup = 'adult';
-            if (ageVal && parseInt(ageVal) < 13) ageGroup = 'child';
+            let ageGroup = (ageVal && parseInt(ageVal) < 13) ? 'child' : 'adult';
 
-            // FESTIVAL & EVENT LOGIC
             if (type === 'birthday') {
-                if (ageGroup === 'child') msg = `Happy Birthday little star ${name}! 🎈✨ May your day be as colorful as this ${mood} card!`;
-                else msg = `Happy Birthday ${name}! 🎂 Wishing you a fantastic year filled with ${mood} vibes and success.`;
-            } else if (type === 'wedding') {
-                msg = `Happy Anniversary ${name}! 💍 Celebrating your beautiful journey. Stay blessed and happy forever.`;
-            } else if (type === 'diwali') {
-                msg = `Happy Diwali ${name}! 🪔 May the lamps of joy illuminate your life with good health and wealth.`;
-            } else if (type === 'holi') {
-                msg = `Happy Holi ${name}! 🎨 May your life be as colorful and joyful as this festival. Have a blast!`;
-            } else if (type === 'ganesha') {
-                msg = `Happy Ganesh Chaturthi ${name}! 🐘 May Lord Ganesha remove all obstacles and bless you.`;
-            } else if (type === 'durga') {
-                msg = `Happy Durga Puja ${name}! 🔱 May Maa Durga empower you with strength and happiness.`;
-            } else if (type === 'independence') {
-                msg = `Happy Independence Day ${name}! 🇮🇳 Saluting the spirit of India. Jai Hind!`;
-            }
-
-            document.getElementById('inp-custom-msg').value = msg;
-        }
-        
-        function startGhostLoop() {
-            function runSequence() {
-                const cursor = document.getElementById('ghost-cursor');
-                const title = document.getElementById('app-title');
-                const homeScreen = document.getElementById('screen-home');
-                const matrixOverlay = document.getElementById('matrix-overlay');
-                const creatorForm = document.getElementById('creator-form');
-                
-                if(cursor && title && 
-                   !homeScreen.classList.contains('hidden-screen') && 
-                   matrixOverlay.classList.contains('hidden-screen') &&
-                   creatorForm.classList.contains('hidden-screen')) {
-                    
-                    cursor.classList.remove('anim-move-click');
-                    title.classList.remove('anim-text-bump');
-                    void cursor.offsetWidth; 
-                    cursor.style.display = 'block';
-                    cursor.classList.add('anim-move-click');
-                    title.classList.add('anim-text-bump');
-                    spawnRipples();
+                if (ageGroup === 'child') {
+                     msg = `Happy Birthday little superstar ${name}! 🎈✨ May your day be as colorful and fun as this ${mood} card!`;
                 } else {
-                    cursor.style.display = 'none';
+                    switch(relation) {
+                        case 'friend': msg = `Happy Birthday ${name}! 🍻 Cheers to another year of being awesome. Hope this ${mood} year brings you everything you want!`; break;
+                        case 'partner': msg = `Happy Birthday my love, ${name}! ❤️ You make my world brighter every day. Wishing you a day as beautiful as you are.`; break;
+                        case 'spouse': msg = `Happy Birthday to my better half, ${name}! 🥂 Growing older with you is my favorite adventure. Love you endlessly!`; break;
+                        case 'family': msg = `Happy Birthday ${name}! 🎂 Wishing you health, happiness, and peace. You mean so much to our family.`; break;
+                        case 'sibling': msg = `Happy Birthday ${name}! 🥳 You're not just family, you're my lifetime best friend. Have a blast!`; break;
+                        case 'colleague': msg = `Happy Birthday ${name}! 🎈 Wishing you a fantastic year ahead and great success in all your projects.`; break;
+                        default: msg = `Happy Birthday ${name}! 🎂 Wishing you a fantastic year filled with ${mood} vibes and success.`;
+                    }
                 }
+            } else if (type === 'wedding') {
+                msg = relation === 'spouse' 
+                    ? `Happy Anniversary my love, ${name}! ❤️ Every moment with you is magic.` 
+                    : `Happy Anniversary ${name}! 💍 Celebrating your beautiful journey. Stay blessed forever.`;
+            } else if (['diwali', 'holi', 'ganesha', 'durga', 'independence'].includes(type)) {
+                // Festivals are general but warm
+                if(type === 'diwali') msg = `Happy Diwali ${name}! 🪔 May the lamps of joy illuminate your life.`;
+                if(type === 'holi') msg = `Happy Holi ${name}! 🎨 May your life be as colorful and joyful as this festival.`;
+                if(type === 'ganesha') msg = `Happy Ganesh Chaturthi ${name}! 🐘 Ganpati Bappa Morya!`;
+                if(type === 'durga') msg = `Happy Durga Puja ${name}! 🔱 May Maa Durga bless you with strength.`;
+                if(type === 'independence') msg = `Happy Independence Day ${name}! 🇮🇳 Jai Hind!`;
             }
-            runSequence();
-            setInterval(runSequence, 10000);
-        }
-
-        function spawnRipples() {
-            setTimeout(() => createRipple(), 1125);
-            setTimeout(() => createRipple(), 1800);
-            setTimeout(() => createRipple(), 2475);
-            setTimeout(() => createRipple(), 3150);
-        }
-
-        function createRipple() {
-            const title = document.getElementById('app-title');
-            if(!title) return;
-            const targetSpan = title.querySelector('span');
-            let x, y;
-            if (targetSpan) {
-                const rect = targetSpan.getBoundingClientRect();
-                x = rect.left + 8;
-                y = rect.top + (rect.height / 2);
-            } else {
-                const rect = title.getBoundingClientRect();
-                x = rect.left + rect.width / 2;
-                y = rect.top + rect.height / 2;
-            }
-            const ripple = document.createElement('div');
-            ripple.className = 'click-ripple';
-            ripple.style.left = `${x}px`;
-            ripple.style.top = `${y}px`;
-            document.body.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 600);
-        }
-
-        let titleTapCount = 0; let tapTimer;
-
-        function triggerEasterEgg() {
-            const title = document.getElementById('app-title');
-            title.classList.remove('anim-text-bump');
-            title.classList.remove('manual-bump');
-            void title.offsetWidth; 
-            title.classList.add('manual-bump');
-
-            titleTapCount++;
-            clearTimeout(tapTimer);
-            tapTimer = setTimeout(() => { titleTapCount = 0; }, 2000);
-
-            if (titleTapCount === 4) {
-                activateMatrix();
-                titleTapCount = 0;
-            }
-        }
-
-        function activateMatrix() {
-            document.getElementById('matrix-overlay').classList.remove('hidden-screen');
-            document.getElementById('ghost-cursor').style.display = 'none'; 
-            document.getElementById('matrix-controls').style.opacity = '0'; 
-            startMatrixRain();
-            setTimeout(() => { document.getElementById('matrix-controls').style.opacity = '1'; }, 4000);
-        }
-
-        function exitMatrix() { 
-             document.getElementById('matrix-overlay').classList.add('hidden-screen');
-        }
-
-        function startMatrixRain() {
-            const canvas = document.getElementById('matrix-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            const katakana = '01'; const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; const nums = '0123456789'; const alphabet = katakana + latin + nums;
-            const fontSize = 16; const columns = canvas.width / fontSize; const rainDrops = [];
-            for (let x = 0; x < columns; x++) { rainDrops[x] = 1; }
-            const draw = () => {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#0F0'; ctx.font = fontSize + 'px monospace';
-                for (let i = 0; i < rainDrops.length; i++) {
-                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                    ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) { rainDrops[i] = 0; }
-                    rainDrops[i]++;
-                }
-            }; setInterval(draw, 30);
+            document.getElementById('inp-custom-msg').value = msg;
         }
 
         function setupThemeSelector() {
@@ -685,7 +482,6 @@
                     document.querySelectorAll('.theme-option').forEach(el => el.classList.remove('selected'));
                     div.classList.add('selected');
                     wishData.theme = t.id; 
-                    playClick();
                     generateLiveText(); 
                 };
                 container.appendChild(div);
@@ -696,20 +492,22 @@
             wishData.type = type;
             document.getElementById('screen-home').classList.add('hidden-screen'); 
             document.getElementById('creator-form').classList.remove('hidden-screen');
-            document.getElementById('ghost-cursor').style.display = 'none';
             
             const ageLabel = document.getElementById('label-age');
             const rowDetails = document.getElementById('row-details');
+            const genderSelect = document.getElementById('gender-select');
             
-            // Adjust UI based on type
-            if(type === 'wedding') { ageLabel.innerText = "Years"; rowDetails.style.display = 'flex'; }
+            if(type === 'wedding') { ageLabel.innerText = "Years"; rowDetails.style.display = 'flex'; genderSelect.style.display = 'none'; }
             else if (['diwali','holi','ganesha','durga','independence'].includes(type)) {
-                rowDetails.style.display = 'none'; // Hide age/relation for festivals
+                rowDetails.style.display = 'none'; 
+                genderSelect.style.display = 'none';
             } else { 
                 ageLabel.innerText = "Age"; 
                 rowDetails.style.display = 'flex'; 
+                genderSelect.style.display = 'block';
             }
-            
+            // Auto Select Theme
+            wishData.theme = getSmartTheme(type).id; 
             generateLiveText(); 
         }
 
@@ -725,21 +523,10 @@
             if(!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 500; 
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    wishData.image = canvas.toDataURL('image/jpeg', 0.7);
-                    document.getElementById('preview-thumb').src = wishData.image;
-                    document.getElementById('preview-thumb').classList.remove('hidden');
-                    document.getElementById('photo-label-text').innerText = "Changed";
-                };
+                wishData.image = e.target.result;
+                document.getElementById('preview-thumb').src = wishData.image;
+                document.getElementById('preview-thumb').classList.remove('hidden');
+                document.getElementById('photo-label-text').innerText = "Changed";
             };
             reader.readAsDataURL(file);
         }
@@ -750,110 +537,86 @@
             const customMsg = document.getElementById('inp-custom-msg').value;
             
             if(!name) return alert("Please enter a name!");
-            
-            let msg = customMsg.trim();
-            if(!msg) msg = `Happy ${wishData.type}`;
-            
-            let finalTheme = wishData.theme;
-            if(!finalTheme) { finalTheme = getSmartTheme(wishData.type, age, wishData.gender); }
+            let msg = customMsg.trim() || `Happy ${wishData.type}`;
+            let finalTheme = wishData.theme || 'theme-blue';
             
             document.getElementById('screen-loading').classList.remove('hidden-screen');
 
-            // 1. SAVE TO GOOGLE SHEET (If configured)
-            // We use no-cors to prevent errors, even though we can't read the response.
-            if(GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.startsWith('http')) {
-                try {
-                    const formData = new FormData();
-                    formData.append('type', wishData.type);
-                    formData.append('name', name);
-                    formData.append('message', msg);
-                    formData.append('date', new Date().toLocaleString());
-                    
-                    fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        body: formData,
-                        mode: 'no-cors' 
-                    }).then(() => console.log("Sent to Google Sheet"));
-                } catch (e) { console.error("Sheet Error", e); }
-            }
+            // --- FIRE AND FORGET SAVING (FIXED LOGIC) ---
+            // We do NOT await this. We send it and immediately move on.
+            const params = new URLSearchParams();
+            params.append('type', wishData.type);
+            params.append('name', name);
+            params.append('message', msg);
+            params.append('age', age); // Also save age
+            
+            // Send to Google Sheet in background (no-cors prevents network errors in UI)
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                body: params,
+                mode: 'no-cors' 
+            }).catch(e => console.log("Background save failed:", e));
 
-            // 2. SAVE TO SUPABASE (For Link Generation)
-            const { data, error } = await client.from('wishes').insert([{ 
-                type: wishData.type, name: name, message: msg, 
-                image_data: wishData.image, 
-                gender: wishData.gender, age: age, theme: finalTheme
-            }]).select();
-
-            if(error) {
-                console.error(error);
-                alert("Error saving! Check connection.");
-                document.getElementById('screen-loading').classList.add('hidden-screen');
-                return;
-            }
-
-            const newId = data[0].id;
-            addToHistory(newId, name, wishData.type);
-            window.location.href = `?id=${newId}`;
-        }
-
-        function getSmartTheme(type, age, gender) {
-            const pools = {
-                wedding: ['theme-gold', 'theme-berry', 'theme-royal', 'theme-purple'],
-                child_male: ['theme-blue', 'theme-mint', 'theme-ocean'],
-                child_female: ['theme-pink', 'theme-purple', 'theme-sunset'],
-                diwali: ['theme-diwali', 'theme-gold', 'theme-sunset'],
-                holi: ['theme-holi', 'theme-pink', 'theme-blue'],
-                ganesha: ['theme-gold', 'theme-orange'],
-                durga: ['theme-red', 'theme-gold'],
-                independence: ['theme-mint', 'theme-blue'],
-                default: ['theme-blue', 'theme-mint', 'theme-sunset']
+            // --- GENERATE URL & SHOW RESULT IMMEDIATELY ---
+            const payload = {
+                t: wishData.type,
+                n: name,
+                m: msg,
+                th: finalTheme,
+                a: age,
+                g: wishData.gender
             };
             
-            if (type === 'diwali') return pools.diwali[0];
-            if (type === 'holi') return pools.holi[0];
-            if (type === 'wedding') return pools.wedding[0];
-            
-            return pools.default[0];
+            const encoded = btoa(JSON.stringify(payload));
+            generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
+
+            // Fake delay for "Magic" effect (User Experience)
+            setTimeout(() => {
+                 loadViewMode(payload, wishData.image); 
+            }, 1500);
         }
 
-        async function fetchAndLoadWish(id) {
-            currentWishId = id;
-            const { data, error } = await client.from('wishes').select('*').eq('id', id).single();
-            if(error || !data) { removeFromHistory(id); alert("Wish not found!"); window.location.href = window.location.pathname; return; }
-            
-            const defaultAvatar = data.gender === 'female' ? 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png' : 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
-            document.getElementById('disp-img').src = data.image_data || defaultAvatar;
-            
-            // Set Title based on Type
-            let title = "Best Wishes!";
-            if(data.type === 'birthday') title = "Happy Birthday!";
-            else if(data.type === 'wedding') title = "Happy Anniversary!";
-            else if(data.type === 'diwali') title = "Happy Diwali!";
-            else if(data.type === 'holi') title = "Happy Holi!";
-            else if(data.type === 'ganesha') title = "Happy Ganesh Chaturthi!";
-            else if(data.type === 'durga') title = "Happy Durga Puja!";
-            else if(data.type === 'independence') title = "Jai Hind!";
-            
-            document.getElementById('disp-title').innerText = title;
-            document.getElementById('disp-name').innerText = data.name;
-            document.getElementById('disp-msg').innerText = data.message;
-            
-            const themeObj = themes.find(t => t.id === data.theme) || themes[0];
-            document.getElementById('bg-layer').style.backgroundImage = `url(${themeObj.img})`;
-
-            if(data.age && data.age > 0) {
-                const badge = document.getElementById('disp-age-badge');
-                document.getElementById('age-text').innerText = data.age;
-                badge.classList.remove('hidden');
+        function loadFromUrl(encodedData) {
+            try {
+                const payload = JSON.parse(atob(encodedData));
+                loadViewMode(payload, null);
+            } catch(e) {
+                alert("Invalid Link!");
+                window.location.href = window.location.pathname;
             }
-            let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
-            if(history.some(item => item.id === id)) { document.getElementById('btn-delete').classList.remove('hidden'); }
-            
-            document.getElementById('audio-bg').src = 'happy-birthday.mp3'; // You can add logic to switch MP3 based on type
-            setupFloatingIcons(data.age, data.gender, data.type);
-            setupDecorativeEmojis(data.type, data.gender); 
+        }
+
+        function loadViewMode(data, localImage) {
+            document.getElementById('creator-form').classList.add('hidden-screen');
             document.getElementById('screen-loading').classList.add('hidden-screen');
             document.getElementById('screen-reveal').classList.remove('hidden-screen');
+
+            document.getElementById('disp-title').innerText = getTitle(data.t);
+            document.getElementById('disp-name').innerText = data.n;
+            document.getElementById('disp-msg').innerText = data.m;
+            
+            const themeObj = themes.find(t => t.id === data.th) || themes[0];
+            document.getElementById('bg-layer').style.backgroundImage = `url(${themeObj.img})`;
+
+            const defaultAvatar = data.g === 'female' 
+                ? 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png' 
+                : 'https://cdn-icons-png.flaticon.com/512/4140/4140037.png';
+            document.getElementById('disp-img').src = localImage || defaultAvatar;
+
+            // SHOW AGE BADGE IF AGE EXISTS
+            if(data.a && data.a > 0) {
+                const badge = document.getElementById('disp-age-badge');
+                badge.classList.remove('hidden');
+                document.getElementById('age-text').innerText = data.a;
+            }
+
+            setupFloatingIcons(data.t);
+            setupDecorativeEmojis(data.t);
+            
+            if(!generatedLink) {
+                 const encoded = btoa(JSON.stringify(data));
+                 generatedLink = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
+            }
         }
 
         function openWish() {
@@ -863,95 +626,36 @@
             fireConfetti();
         }
 
-        function setupDecorativeEmojis(type, gender) {
-            const container = document.getElementById('decorative-emojis');
-            container.innerHTML = '';
-            let emojis = ['✨', '🎈', '🎉'];
-            if (type === 'birthday') { emojis = gender === 'female' ? ['🦋', '🌸', '🧁', '✨'] : ['🔥', '🚀', '🎸', '⚡']; } 
-            else if (type === 'diwali') { emojis = ['🪔', '✨', '🎇']; }
-            else if (type === 'holi') { emojis = ['🎨', '💧', '🌈']; }
-            
-            const positions = [ { top: '10%', left: '10%' }, { top: '15%', right: '10%' }, { bottom: '35%', left: '5%' }, { bottom: '40%', right: '5%' } ];
-            positions.forEach((pos, index) => {
-                const el = document.createElement('div');
-                el.className = 'deco-emoji';
-                el.innerText = emojis[index % emojis.length];
-                Object.assign(el.style, pos);
-                el.style.animationDelay = `${index * 0.5}s`;
-                container.appendChild(el);
-            });
+        // --- Helpers ---
+        function getTitle(type) {
+            if(type === 'birthday') return "Happy Birthday!";
+            if(type === 'wedding') return "Happy Anniversary!";
+            if(type === 'diwali') return "Happy Diwali!";
+            if(type === 'holi') return "Happy Holi!";
+            if(type === 'ganesha') return "Happy Ganesh Chaturthi!";
+            if(type === 'durga') return "Happy Durga Puja!";
+            if(type === 'independence') return "Jai Hind!";
+            return "Best Wishes!";
         }
 
-        function downloadImage() {
-            const screen = document.getElementById('screen-display');
-            const topControls = document.getElementById('top-controls');
-            const shareSheet = document.getElementById('share-sheet');
-            const watermark = document.getElementById('watermark');
-            topControls.style.display = 'none'; shareSheet.style.display = 'none'; watermark.style.display = 'block'; 
-            html2canvas(screen, { scale: 3, useCORS: true, allowTaint: true, backgroundColor: null, width: screen.offsetWidth, height: screen.offsetHeight }).then(canvas => {
-                topControls.style.display = 'flex'; shareSheet.style.display = 'block'; watermark.style.display = 'none';
-                const link = document.createElement('a');
-                link.download = `Wish_${document.getElementById('disp-name').innerText}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                alert("Image Saved! 📸");
-            });
+        function getSmartTheme(type) {
+            if (type === 'diwali') return themes.find(t=>t.id==='theme-diwali');
+            if (type === 'holi') return themes.find(t=>t.id==='theme-holi');
+            if (type === 'ganesha') return themes.find(t=>t.id==='theme-ganesha');
+            if (type === 'durga') return themes.find(t=>t.id==='theme-durga');
+            if (type === 'independence') return themes.find(t=>t.id==='theme-independence');
+            return themes[0];
         }
 
-        function shareWhatsapp() {
-            const name = document.getElementById('disp-name').innerText;
-            const text = `Hey ${name}, I made a special wish for you! ✨ Tap to see: ${window.location.href}`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-        }
-
-        function copyLink() {
-            navigator.clipboard.writeText(window.location.href).then(() => alert("Wish + Link Copied! 📋"));
-        }
-
-        function deleteWish() {
-            if(!confirm("Delete forever?")) return;
-            client.from('wishes').delete().eq('id', currentWishId).then(() => {
-                removeFromHistory(currentWishId);
-                window.location.href = window.location.pathname;
-            });
-        }
-
-        function addToHistory(id, name, type) {
-            let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
-            history.unshift({ id, name, type, date: new Date().toLocaleDateString() });
-            localStorage.setItem('wish_history', JSON.stringify(history));
-        }
-        function loadHistory() {
-            let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
-            const list = document.getElementById('history-list');
-            const section = document.getElementById('history-section');
-            if (history.length === 0) { section.classList.add('hidden-screen'); return; }
-            section.classList.remove('hidden-screen');
-            list.innerHTML = '';
-            history.forEach(item => {
-                const icon = item.type === 'birthday' ? '🎂' : '✨';
-                const fullUrl = `${window.location.origin}${window.location.pathname}?id=${item.id}`;
-                const div = document.createElement('div');
-                div.className = 'bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between shadow-sm hover:shadow-md transition';
-                div.innerHTML = `
-                    <div class="flex items-center gap-3"><span class="text-xl bg-gray-50 p-2 rounded-lg">${icon}</span><div><p class="font-bold text-gray-800 text-sm">${item.name}</p><p class="text-[10px] text-gray-400">${item.date}</p></div></div>
-                    <div class="flex gap-2"><button onclick="navigator.clipboard.writeText('${fullUrl}').then(()=>alert('Link Copied!'))" class="bg-gray-100 text-gray-600 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-200 transition"><i class="fas fa-copy text-xs"></i></button><a href="?id=${item.id}" class="bg-indigo-50 text-indigo-600 text-xs font-bold px-3 py-2 rounded-lg hover:bg-indigo-100 flex items-center">View</a></div>
-                `;
-                list.appendChild(div);
-            });
-        }
-        function removeFromHistory(id) {
-            let history = JSON.parse(localStorage.getItem('wish_history') || '[]');
-            history = history.filter(item => item.id !== id);
-            localStorage.setItem('wish_history', JSON.stringify(history));
-        }
-        function clearHistory() { if(confirm("Clear history list?")) { localStorage.removeItem('wish_history'); location.reload(); } }
-
-        function setupFloatingIcons(age, gender, type) {
+        function setupFloatingIcons(type) {
             const container = document.getElementById('reveal-icons');
             let icons = ['✨', '🎁']; 
             if(type === 'birthday') icons = ['🎈', '🎂', '🥳'];
             else if(type === 'diwali') icons = ['🪔', '✨', '🎇'];
+            else if(type === 'holi') icons = ['🎨', '💧', '🌈'];
+            else if(type === 'ganesha') icons = ['🥥', '🌸', '🕉️'];
+            else if(type === 'durga') icons = ['🌺', '🔱', '🕉️'];
+            else if(type === 'independence') icons = ['🇮🇳', '🎆', '🐯'];
             
             container.innerHTML = '';
             for(let i=0; i<20; i++) {
@@ -965,14 +669,90 @@
                 container.appendChild(el);
             }
         }
+        
+        function setupDecorativeEmojis(type) {
+            const container = document.getElementById('decorative-emojis');
+            container.innerHTML = '';
+            let emojis = ['✨', '🎈', '🎉'];
+            if (type === 'diwali') emojis = ['🪔', '✨', '🎇'];
+            if (type === 'holi') emojis = ['🎨', '💧', '🌈'];
+            if (type === 'ganesha') emojis = ['🕉️', '🐘', '🌸'];
+            if (type === 'durga') emojis = ['🔱', '🦁', '🌺'];
+            if (type === 'independence') emojis = ['🇮🇳', '🎡', '🧡'];
+            
+            const positions = [ { top: '10%', left: '10%' }, { top: '15%', right: '10%' }, { bottom: '35%', left: '5%' }, { bottom: '40%', right: '5%' } ];
+            positions.forEach((pos, index) => {
+                const el = document.createElement('div');
+                el.className = 'deco-emoji';
+                el.innerText = emojis[index % emojis.length];
+                Object.assign(el.style, pos);
+                el.style.animationDelay = `${index * 0.5}s`;
+                container.appendChild(el);
+            });
+        }
+
         function fireConfetti() { confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); }
+        
         function toggleAudio() {
             const audio = document.getElementById('audio-bg');
             const icon = document.getElementById('icon-audio');
-            if(audio.paused) { audio.play(); icon.className = "fas fa-volume-up text-xs"; icon.parentElement.classList.remove("text-red-500", "border-red-500"); } 
-            else { audio.pause(); icon.className = "fas fa-volume-mute text-xs"; icon.parentElement.classList.add("text-red-500", "border-red-500"); }
+            audio.src = 'happy-birthday.mp3'; 
+            if(audio.paused) { audio.play().catch(()=>{}); icon.className = "fas fa-volume-up text-xs"; } 
+            else { audio.pause(); icon.className = "fas fa-volume-mute text-xs"; }
+        }
+
+        // Sharing
+        function shareWhatsapp() {
+            const text = `Hey, I made a special wish for you! ✨ Tap to see: ${generatedLink}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+        function copyLink() {
+            navigator.clipboard.writeText(generatedLink).then(() => alert("Wish + Link Copied! 📋"));
+        }
+        function downloadImage() {
+            const screen = document.getElementById('screen-display');
+            const topControls = document.getElementById('top-controls');
+            const shareSheet = document.getElementById('share-sheet');
+            topControls.style.display = 'none'; shareSheet.style.display = 'none'; 
+            html2canvas(screen, { scale: 3, useCORS: true, allowTaint: true, backgroundColor: null }).then(canvas => {
+                topControls.style.display = 'flex'; shareSheet.style.display = 'block'; 
+                const link = document.createElement('a');
+                link.download = `Wish.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        // Matrix Easter Egg
+        let titleTapCount = 0; let tapTimer;
+        function triggerEasterEgg() {
+            titleTapCount++;
+            clearTimeout(tapTimer);
+            tapTimer = setTimeout(() => { titleTapCount = 0; }, 2000);
+            if (titleTapCount === 4) {
+                document.getElementById('matrix-overlay').classList.remove('hidden-screen');
+                startMatrixRain();
+                setTimeout(() => { document.getElementById('matrix-controls').style.opacity = '1'; }, 4000);
+            }
+        }
+        function exitMatrix() { document.getElementById('matrix-overlay').classList.add('hidden-screen'); }
+        function startMatrixRain() {
+            const canvas = document.getElementById('matrix-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            const letters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ'; const fontSize = 16; 
+            const columns = canvas.width / fontSize; const drops = Array(Math.floor(columns)).fill(1);
+            setInterval(() => {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#0F0'; ctx.font = fontSize + 'px monospace';
+                for (let i = 0; i < drops.length; i++) {
+                    const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+            }, 30);
         }
     </script>
 </body>
 </html>
-
