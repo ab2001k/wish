@@ -9,7 +9,6 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -32,7 +31,7 @@
         #bg-image-container { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
         #bg-image { width: 100%; height: 100%; object-fit: cover; filter: blur(8px) brightness(0.75); transform: scale(1.1); }
         
-        /* PREMIUM CARD LAYOUT (Fixed Clipping) */
+        /* PREMIUM CARD LAYOUT */
         .premium-card {
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -51,7 +50,7 @@
         .border-silver { border: 2px solid #e0e0e0; box-shadow: 0 0 25px rgba(255, 255, 255, 0.4); }
         .border-rose { border: 2px solid #ff007f; box-shadow: 0 0 25px rgba(255, 0, 127, 0.4); }
 
-        /* TEXT GRADIENTS (Colorful Messages) */
+        /* TEXT GRADIENTS */
         .grad-text-gold { background: linear-gradient(to right, #FFD700, #FDB931); -webkit-background-clip: text; color: transparent; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .grad-text-rose { background: linear-gradient(to right, #ff758c, #ff7eb3); -webkit-background-clip: text; color: transparent; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .grad-text-ocean { background: linear-gradient(to right, #00c6ff, #0072ff); -webkit-background-clip: text; color: transparent; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
@@ -61,7 +60,7 @@
         .font-fancy { font-family: 'Great Vibes', cursive; }
         .font-royal { font-family: 'Cinzel', serif; }
 
-        /* FLOATING ELEMENTS (Fixed Distribution) */
+        /* FLOATING ELEMENTS */
         #floating-elements-container { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
         .floating-el { position: absolute; bottom: -50px; animation: floatUp var(--duration) linear infinite; opacity: 0.7; }
         .floating-el.icon { font-size: 1.8rem; color: rgba(255,255,255,0.7); filter: drop-shadow(0 0 5px rgba(255,255,255,0.5)); }
@@ -226,9 +225,7 @@
 
                 <div id="capture-area">
                     <div id="floating-elements-container"></div>
-                    
                     <div id="dynamic-content" class="w-full flex flex-col items-center relative z-20"></div>
-                    
                     <div id="watermark-branding">ab2001k.github.io/wish</div>
                 </div>
 
@@ -253,10 +250,8 @@
     <div id="matrix-overlay" class="hidden-screen"><canvas id="matrix-canvas"></canvas><div class="matrix-content"><h1 class="hacked-title">SYSTEM HACKED</h1><div id="matrix-controls"><h2 class="text-white text-3xl mb-8">...Just Kidding! 😜</h2><a href="https://wa.me/+918822967314" class="matrix-btn">> TALK TO DEV_</a><button onclick="exitMatrix()" class="matrix-btn-back">< GO BACK</button></div></div></div>
 
     <script>
+        // YOUR UNIQUE GOOGLE APPS SCRIPT URL HERE
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3Jd86OmAT6Q0ywpzSpNFvYGjqro7VeKlvV9sf0tlux_YiCF6bnSWlIA3rQJAS8Zid2Q/exec"; 
-        const SUPABASE_URL = 'https://rhodybetonjerkcsdstj.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJob2R5YmV0b25qZXJrY3Nkc3RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg4OTU5MDAsImV4cCI6MjA4NDQ3MTkwMH0.IEO-2spCVUxYFiQW-ARlA4RH57R_DQttQsWW0tGnUMI';
-        const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let wishData = { type: '', gender: 'male', image: '', theme: null }; 
         let valData = { gift: 'chocolate', theme: 'ai-romantic', photo: '' }; 
@@ -341,9 +336,38 @@
             if(!userModifiedText) shuffleValMsg();
         }
 
+        // COMPRESSION SCRIPT: Forces images to be tiny so they fit perfectly in a Google Sheet cell
         function handleValImage(event) {
             const file = event.target.files[0]; if(!file) return;
-            const reader = new FileReader(); reader.onload = (e) => { valData.photo = e.target.result; document.getElementById('val-preview').src = valData.photo; document.getElementById('val-preview').classList.remove('hidden'); }; reader.readAsDataURL(file);
+            const reader = new FileReader(); 
+            reader.onload = (e) => { 
+                const img = new Image(); img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas'); const MAX_WIDTH = 200; // Small size for Google Sheets
+                    const scaleSize = MAX_WIDTH / img.width; canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    valData.photo = canvas.toDataURL('image/jpeg', 0.5); // Highly compressed
+                    document.getElementById('val-preview').src = valData.photo; 
+                    document.getElementById('val-preview').classList.remove('hidden');
+                }
+            }; reader.readAsDataURL(file);
+        }
+
+        function handleImageUpload(event) { 
+            const file = event.target.files[0]; if(!file) return; 
+            const reader = new FileReader(); reader.onload = (e) => { 
+                const img = new Image(); img.src = e.target.result; 
+                img.onload = () => { 
+                    const canvas = document.createElement('canvas'); const MAX_WIDTH = 200; // Small size for Google Sheets
+                    const scaleSize = MAX_WIDTH / img.width; canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize; 
+                    const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, canvas.width, canvas.height); 
+                    wishData.image = canvas.toDataURL('image/jpeg', 0.5); // Highly compressed
+                    document.getElementById('preview-thumb').src = wishData.image; 
+                    document.getElementById('preview-thumb').classList.remove('hidden'); 
+                    document.getElementById('photo-label-text').innerText = "Changed"; 
+                }; 
+            }; 
+            reader.readAsDataURL(file); 
         }
 
         function shuffleValMsg() {
@@ -362,47 +386,112 @@
         function openValentineModal() { document.getElementById('screen-home').classList.add('hidden-screen'); document.getElementById('valentine-modal').classList.remove('hidden-screen'); }
         function closeValentineModal() { document.getElementById('valentine-modal').classList.add('hidden-screen'); document.getElementById('screen-home').classList.remove('hidden-screen'); }
 
-        async function createValentine() {
+        // --- NEW GOOGLE SHEETS SAVING LOGIC ---
+        function createValentine() {
             const p1 = document.getElementById('val-name1').value.trim() || 'You';
             const p2 = document.getElementById('val-name2').value.trim() || 'My Love';
             const nameCombined = `${p1} & ${p2}`;
             const msg = document.getElementById('val-msg').value;
             let imgData = ""; let subType = "gift";
-            if (valData.photo) { imgData = valData.photo; subType = "photo"; } else { const giftObj = valGifts.find(g => g.id === valData.gift); imgData = giftObj.img; }
+            
+            if (valData.photo) { imgData = valData.photo; subType = "photo"; } 
+            else { const giftObj = valGifts.find(g => g.id === valData.gift); imgData = giftObj.img; }
+            
             document.getElementById('screen-loading').classList.remove('hidden-screen');
             const secretId = Math.random().toString(36).substring(2, 10);
             
-            // SMART FALLBACK ADDED HERE 
-            const { error } = await client.from('wishes').insert([{ id: secretId, type: 'valentine', name: nameCombined, message: msg, image_data: imgData, theme: valData.theme, gender: subType }]);
+            const params = new URLSearchParams();
+            params.append('id', secretId);
+            params.append('type', 'valentine');
+            params.append('name', nameCombined);
+            params.append('message', msg);
+            params.append('image_data', imgData);
+            params.append('theme', valData.theme);
+            params.append('gender', subType);
+
+            // Save locally as instantaneous backup
+            localStorage.setItem('local_wish_' + secretId, JSON.stringify({
+                id: secretId, type: 'valentine', name: nameCombined, message: msg, image_data: imgData, theme: valData.theme, gender: subType
+            }));
             
-            if(error) { 
-                console.warn("Supabase insert failed. Falling back to local storage.", error);
-                // Save locally so the logic works seamlessly even if DB fails
-                localStorage.setItem('local_wish_' + secretId, JSON.stringify({
-                     id: secretId, type: 'valentine', name: nameCombined, message: msg, image_data: imgData || "", theme: valData.theme, gender: subType
-                }));
-            }
-            
-            generatedLink = `${window.location.origin}${window.location.pathname}?id=${secretId}`;
-            const params = new URLSearchParams(); params.append('type', 'valentine'); params.append('name', nameCombined); params.append('message', msg);
-            fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: params, mode: 'no-cors' }).catch(()=>{});
-            addToHistory(secretId, nameCombined, 'valentine'); window.location.href = generatedLink; 
+            // Push to Google Sheets
+            fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: params, mode: 'no-cors' })
+            .then(() => {
+                generatedLink = `${window.location.origin}${window.location.pathname}?id=${secretId}`;
+                addToHistory(secretId, nameCombined, 'valentine'); 
+                window.location.href = generatedLink; 
+            }).catch(()=> {
+                generatedLink = `${window.location.origin}${window.location.pathname}?id=${secretId}`;
+                addToHistory(secretId, nameCombined, 'valentine'); 
+                window.location.href = generatedLink; 
+            });
         }
 
-        async function loadWishById(id) {
-            const { data, error } = await client.from('wishes').select('*').eq('id', id).single();
+        function saveAndGenerate() { 
+            const name = document.getElementById('inp-name').value; 
+            const age = document.getElementById('inp-age').value || 0; 
+            const customMsg = document.getElementById('inp-custom-msg').value; 
+            if(!name) return alert("Please enter a name!"); 
             
-            // SMART FALLBACK FOR FETCHING 
-            let wish = data;
-            if(error || !data) { 
+            let msg = customMsg.trim() || `Happy ${wishData.type}`; 
+            let finalTheme = wishData.theme || (wishData.gender === 'female' ? 'theme-pink' : 'theme-blue'); 
+            
+            document.getElementById('screen-loading').classList.remove('hidden-screen'); 
+            const secretId = Math.random().toString(36).substring(2, 10); 
+            
+            const params = new URLSearchParams();
+            params.append('id', secretId);
+            params.append('type', wishData.type);
+            params.append('name', name);
+            params.append('message', msg);
+            params.append('image_data', wishData.image || "");
+            params.append('gender', wishData.gender);
+            params.append('age', age);
+            params.append('theme', finalTheme);
+
+            // Save locally as instantaneous backup
+            localStorage.setItem('local_wish_' + secretId, JSON.stringify({
+                id: secretId, type: wishData.type, name: name, message: msg, image_data: wishData.image || "", gender: wishData.gender, age: age, theme: finalTheme
+            }));
+            
+            // Push to Google Sheets
+            fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: params, mode: 'no-cors' })
+            .then(() => {
+                generatedLink = `${window.location.origin}${window.location.pathname}?id=${secretId}`;
+                addToHistory(secretId, name, wishData.type); 
+                window.location.href = generatedLink; 
+            }).catch(()=> {
+                generatedLink = `${window.location.origin}${window.location.pathname}?id=${secretId}`;
+                addToHistory(secretId, name, wishData.type); 
+                window.location.href = generatedLink; 
+            });
+        }
+
+        // --- NEW GOOGLE SHEETS FETCH LOGIC ---
+        async function loadWishById(id) {
+            let wish = null;
+            try {
+                // Fetch directly from Google Apps Script
+                const response = await fetch(`${GOOGLE_SCRIPT_URL}?id=${id}`);
+                const data = await response.json();
+                
+                if (data && data.id) {
+                    wish = data;
+                } else {
+                    throw new Error("Not found in sheet");
+                }
+            } catch (error) {
+                console.warn("Failed to fetch from Google Sheet, checking local backup...", error);
                 const localFallback = localStorage.getItem('local_wish_' + id);
                 if (localFallback) {
                     wish = JSON.parse(localFallback);
-                } else {
-                    alert("Wish not found! The link might be broken or expired."); 
-                    window.location.href = window.location.pathname; 
-                    return; 
                 }
+            }
+
+            if (!wish) {
+                alert("Wish not found! The link might be broken or expired."); 
+                window.location.href = window.location.pathname; 
+                return;
             }
 
             generatedLink = window.location.href; 
@@ -484,51 +573,6 @@
         function selectType(type) { wishData.type = type; document.getElementById('screen-home').classList.add('hidden-screen'); document.getElementById('creator-form').classList.remove('hidden-screen'); const ageLabel = document.getElementById('label-age'); const rowDetails = document.getElementById('row-details'); const genderSelect = document.getElementById('gender-select'); if(type === 'wedding') { ageLabel.innerText = "Years"; rowDetails.style.display = 'flex'; genderSelect.style.display = 'none'; } else if (['diwali','holi','ganesha','durga','independence'].includes(type)) { rowDetails.style.display = 'none'; genderSelect.style.display = 'none'; wishData.image = ""; document.getElementById('preview-thumb').src = ""; document.getElementById('photo-label-text').innerText = "Auto Selected"; } else { ageLabel.innerText = "Age"; rowDetails.style.display = 'flex'; genderSelect.style.display = 'block'; } if(type === 'diwali') wishData.theme = 'theme-diwali'; else if(type === 'holi') wishData.theme = 'theme-holi'; else wishData.theme = 'theme-blue'; document.querySelectorAll('.theme-option').forEach(el => el.classList.remove('selected')); generateLiveText(); }
         function closeForm() { document.getElementById('creator-form').classList.add('hidden-screen'); document.getElementById('screen-home').classList.remove('hidden-screen'); }
         function updateThemePreview(gender) { wishData.gender = gender; }
-        
-        function handleImageUpload(event) { 
-            const file = event.target.files[0]; if(!file) return; 
-            const reader = new FileReader(); reader.onload = (e) => { 
-                const img = new Image(); img.src = e.target.result; 
-                img.onload = () => { 
-                    const canvas = document.createElement('canvas'); const MAX_WIDTH = 500; 
-                    const scaleSize = MAX_WIDTH / img.width; canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize; 
-                    const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, canvas.width, canvas.height); 
-                    wishData.image = canvas.toDataURL('image/jpeg', 0.7); 
-                    document.getElementById('preview-thumb').src = wishData.image; 
-                    document.getElementById('preview-thumb').classList.remove('hidden'); 
-                    document.getElementById('photo-label-text').innerText = "Changed"; 
-                }; 
-            }; 
-            reader.readAsDataURL(file); 
-        }
-
-        async function saveAndGenerate() { 
-            const name = document.getElementById('inp-name').value; 
-            const age = document.getElementById('inp-age').value || 0; 
-            const customMsg = document.getElementById('inp-custom-msg').value; 
-            if(!name) return alert("Please enter a name!"); 
-            let msg = customMsg.trim() || `Happy ${wishData.type}`; 
-            let finalTheme = wishData.theme || (wishData.gender === 'female' ? 'theme-pink' : 'theme-blue'); 
-            
-            document.getElementById('screen-loading').classList.remove('hidden-screen'); 
-            const secretId = Math.random().toString(36).substring(2, 10); 
-            
-            // SMART FALLBACK ADDED HERE
-            const { error } = await client.from('wishes').insert([{ id: secretId, type: wishData.type, name: name, message: msg, image_data: wishData.image, gender: wishData.gender, age: parseInt(age), theme: finalTheme }]); 
-            
-            if(error) { 
-                console.warn("Supabase insert failed. Falling back to local storage.", error);
-                // Save locally so the logic works seamlessly even if DB fails
-                localStorage.setItem('local_wish_' + secretId, JSON.stringify({
-                     id: secretId, type: wishData.type, name: name, message: msg, image_data: wishData.image || "", gender: wishData.gender, age: age, theme: finalTheme
-                }));
-            } 
-            
-            generatedLink = `${window.location.origin}${window.location.pathname}?id=${secretId}`; 
-            const params = new URLSearchParams(); params.append('type', wishData.type); params.append('name', name); params.append('message', msg); params.append('age', age); 
-            fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: params, mode: 'no-cors' }).catch(()=>{}); 
-            addToHistory(secretId, name, wishData.type); window.location.href = generatedLink; 
-        }
 
         function openWish() { document.getElementById('screen-reveal').classList.add('hidden-screen'); document.getElementById('screen-display').classList.remove('hidden-screen'); const audio = document.getElementById('audio-bg'); audio.volume = 1.0; audio.play().catch(e => { console.log("Audio play failed:", e); }); fireConfetti(); }
         function getTitle(type) { if(type === 'birthday') return "Happy Birthday!"; if(type === 'wedding') return "Happy Anniversary!"; return "Best Wishes!"; }
