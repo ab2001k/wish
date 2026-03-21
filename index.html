@@ -35,38 +35,31 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
         
         #bg-image-container { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-        #bg-image { width: 100%; height: 100%; object-fit: cover; filter: blur(10px) brightness(0.65); transform: scale(1.15); transition: all 1s ease; }
+        #bg-image { width: 100%; height: 100%; object-fit: cover; filter: blur(8px) brightness(0.5); transform: scale(1.15); transition: all 1s ease; }
         
-        /* PREMIUM CARD LAYOUT */
-        .premium-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-radius: 30px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(0,0,0,0.1);
+        /* 🔥 MASSIVE DISPLAY SCREEN UPGRADES 🔥 */
+        .glass-panel-premium {
+            background: rgba(10, 10, 10, 0.45);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.3);
             position: relative;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            width: 92%; max-width: 400px; 
-            min-height: 520px; 
-            padding: 2.5rem 2rem;
-            margin: auto; 
         }
-        
-        .border-gold { border: 1px solid rgba(255, 215, 0, 0.6); box-shadow: 0 0 35px rgba(255, 215, 0, 0.2); }
-        .border-rose { border: 1px solid rgba(255, 105, 180, 0.6); box-shadow: 0 0 35px rgba(255, 0, 127, 0.2); }
+        .elegant-shadow { text-shadow: 0 2px 10px rgba(0,0,0,0.8), 0 4px 20px rgba(0,0,0,0.6); }
+        .text-glow { filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); }
 
-        .grad-text-gold { background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C); -webkit-background-clip: text; color: transparent; }
-        .grad-text-rose { background: linear-gradient(to right, #e8a5b2, #d45d79); -webkit-background-clip: text; color: transparent; }
+        .grad-text-gold { background: linear-gradient(to right, #FFDF00, #D4AF37, #FFDF00); -webkit-background-clip: text; color: transparent; }
+        .grad-text-rose { background: linear-gradient(to right, #ff9a9e, #fecfef, #ff9a9e); -webkit-background-clip: text; color: transparent; }
         .grad-text-ocean { background: linear-gradient(to right, #4facfe, #00f2fe); -webkit-background-clip: text; color: transparent; }
-        .grad-text-dark { background: linear-gradient(to right, #2c3e50, #000000); -webkit-background-clip: text; color: transparent; }
-
+        
         .font-fancy { font-family: 'Great Vibes', cursive; }
         .font-royal { font-family: 'Cinzel', serif; }
 
         /* FLOATING ELEMENTS */
         #floating-elements-container { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
         .floating-el { position: absolute; bottom: -50px; animation: floatUp var(--duration) linear infinite; opacity: 0.8; }
-        .floating-el.icon { font-size: 1.5rem; color: rgba(255,255,255,0.8); filter: drop-shadow(0 0 8px rgba(255,255,255,0.6)); }
-        .floating-el.shape { border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(5px); }
+        .floating-el.icon { font-size: 1.8rem; color: rgba(255,255,255,0.9); filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); }
         
         @keyframes floatUp { 
             0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; } 
@@ -75,7 +68,7 @@
             100% { transform: translateY(-110vh) rotate(360deg) scale(1.2); opacity: 0; } 
         }
 
-        .btn-click:active { transform: scale(0.97); transition: transform 0.1s; }
+        .btn-click:active { transform: scale(0.95); transition: transform 0.1s; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
 
         .theme-option { width: 56px; height: 56px; border-radius: 16px; cursor: pointer; border: 2px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background-size: cover; background-position: center; flex-shrink: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
@@ -91,17 +84,22 @@
         /* MATRIX OVERLAY */
         #matrix-overlay { position: fixed; inset: 0; background: black; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'VT323', monospace; }
         canvas#matrix-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-        .matrix-content { z-index: 50; text-align: center; width: 100%; position: relative; }
-        .hacked-title { color: #0f0; font-size: 4rem; margin-bottom: 2rem; text-shadow: 0 0 10px #0f0; }
-        #matrix-controls { opacity: 0; transition: opacity 1.5s ease-in; pointer-events: auto; }
-        .matrix-btn { background: black; color: #0f0; border: 2px solid #0f0; padding: 15px 30px; font-size: 1.5rem; text-transform: uppercase; animation: blinkMatrix 1s infinite steps(2, start); cursor: pointer; display: inline-block; margin-top: 20px; }
-        .matrix-btn-back { background: black; color: white; border: 2px solid white; padding: 10px 20px; font-size: 1.2rem; cursor: pointer; margin-top: 20px; display: inline-block; transition: all 0.3s; }
-        @keyframes blinkMatrix { 0%, 100% { opacity: 1; box-shadow: 0 0 15px #0f0; } 50% { opacity: 0.8; } }
+        .matrix-content { z-index: 50; text-align: center; width: 100%; height: 100%; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .hacked-title { color: #0f0; font-size: 4rem; margin-bottom: 2rem; text-shadow: 0 0 20px #0f0; }
         
-        #watermark-branding { position: absolute; bottom: 8px; width: 100%; text-align: center; font-size: 9px; color: rgba(255, 255, 255, 0.7); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.9); z-index: 20; }
+        #matrix-controls { 
+            opacity: 0; transition: opacity 1.5s ease-in; pointer-events: auto; 
+            background: rgba(0, 20, 0, 0.85); padding: 2rem; border-radius: 1rem; border: 1px solid #0f0; box-shadow: 0 0 30px rgba(0,255,0,0.3); backdrop-filter: blur(10px);
+        }
+        .matrix-btn { background: rgba(0,255,0,0.1); color: #0f0; border: 2px solid #0f0; padding: 15px 30px; font-size: 1.5rem; text-transform: uppercase; cursor: pointer; display: block; width: 100%; margin-bottom: 15px; transition: all 0.3s; font-weight: bold; }
+        .matrix-btn:hover { background: #0f0; color: black; box-shadow: 0 0 20px #0f0; }
+        .matrix-btn-back { background: transparent; color: white; border: 1px solid rgba(255,255,255,0.5); padding: 10px 20px; font-size: 1.2rem; cursor: pointer; display: block; width: 100%; transition: all 0.3s; }
+        .matrix-btn-back:hover { background: white; color: black; }
         
-        /* FIX FOR ANDROID BROWSER SCROLLING ON DISPLAY SCREEN */
-        #capture-area { position: relative; width: 100%; flex: 1; overflow-y: auto; display: flex; flex-col; align-items: center; justify-content: flex-start; padding-top: 5rem; padding-bottom: 9rem; z-index: 20; }
+        #watermark-branding { position: absolute; bottom: 8px; width: 100%; text-align: center; font-size: 9px; color: rgba(255, 255, 255, 0.6); font-weight: bold; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.9); z-index: 20; }
+        
+        /* FIXED ANDROID BROWSER PADDING */
+        #capture-area { position: relative; width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 4rem; padding-bottom: 8rem; z-index: 20; }
         #share-sheet { position: absolute; bottom: 0; left: 0; right: 0; z-index: 30; }
 
         input:focus, select:focus, textarea:focus { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
@@ -219,28 +217,29 @@
 
             <div id="screen-display" class="flex-1 hidden-screen flex flex-col relative overflow-hidden transition-all duration-1000">
                 <div id="bg-image-container"><img id="bg-image" src="" crossorigin="anonymous" alt="Background"></div>
+                
                 <div id="top-controls" class="absolute top-8 w-full px-6 flex justify-between z-40">
-                    <button onclick="window.location.href = window.location.pathname" class="bg-black/20 backdrop-blur-xl p-2 px-5 rounded-full text-white text-[11px] font-bold shadow-lg border border-white/20 hover:bg-black/40 transition uppercase tracking-widest"><i class="fas fa-home mr-2"></i> Home</button>
-                    <button onclick="toggleAudio()" class="bg-black/20 backdrop-blur-xl p-2 w-10 h-10 flex items-center justify-center rounded-full text-white border border-white/20 shadow-lg hover:bg-black/40 transition"><i id="icon-audio" class="fas fa-volume-up text-sm"></i></button>
+                    <button onclick="window.location.href = window.location.pathname" class="bg-black/30 backdrop-blur-xl p-2 px-5 rounded-full text-white text-[11px] font-bold shadow-lg border border-white/30 hover:bg-black/50 transition uppercase tracking-widest"><i class="fas fa-home mr-2"></i> Home</button>
+                    <button onclick="toggleAudio()" class="bg-black/30 backdrop-blur-xl p-2 w-10 h-10 flex items-center justify-center rounded-full text-white border border-white/30 shadow-lg hover:bg-black/50 transition"><i id="icon-audio" class="fas fa-volume-up text-sm"></i></button>
                 </div>
 
                 <div id="capture-area">
                     <div id="floating-elements-container"></div>
-                    <div id="dynamic-content" class="w-full flex flex-col items-center relative z-20"></div>
-                    <div id="watermark-branding" class="mt-4">ab2001k.github.io/wish | Abhik Dutta</div>
+                    <div id="dynamic-content" class="w-full flex flex-col items-center relative z-20 px-4"></div>
+                    <div id="watermark-branding" class="mt-8">Made with ❤️ by Abhik | ab2001k.github.io/wish</div>
                 </div>
 
-                <div id="share-sheet" class="bg-white/95 backdrop-blur-2xl p-6 rounded-t-[2.5rem] shadow-[0_-20px_50px_rgba(0,0,0,0.15)] relative transform transition w-full border-t border-white">
+                <div id="share-sheet" class="bg-white/95 backdrop-blur-2xl p-6 rounded-t-[2.5rem] shadow-[0_-20px_50px_rgba(0,0,0,0.25)] relative transform transition w-full border-t border-white">
                     <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6"></div>
                     <div class="grid grid-cols-3 gap-4 mb-2">
                         <button onclick="shareWhatsapp()" class="flex flex-col items-center gap-2 group">
-                            <div class="w-14 h-14 bg-gradient-to-tr from-[#25D366] to-[#1DA851] rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-105 transition"><i class="fab fa-whatsapp text-2xl"></i></div><span class="text-[11px] font-bold text-gray-600">WhatsApp</span>
+                            <div class="w-14 h-14 bg-gradient-to-tr from-[#25D366] to-[#1DA851] rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-110 group-active:scale-95 transition"><i class="fab fa-whatsapp text-2xl"></i></div><span class="text-[11px] font-bold text-gray-600">WhatsApp</span>
                         </button>
                         <button onclick="downloadImage()" class="flex flex-col items-center gap-2 group">
-                            <div class="w-14 h-14 bg-gradient-to-tr from-yellow-400 via-rose-500 to-purple-600 rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-105 transition"><i class="fas fa-download text-xl"></i></div><span class="text-[11px] font-bold text-gray-600">Save Card</span>
+                            <div class="w-14 h-14 bg-gradient-to-tr from-yellow-400 via-rose-500 to-purple-600 rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-110 group-active:scale-95 transition"><i class="fas fa-download text-xl"></i></div><span class="text-[11px] font-bold text-gray-600">Save Card</span>
                         </button>
                         <button onclick="copyLink()" class="flex flex-col items-center gap-2 group">
-                            <div class="w-14 h-14 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-105 transition"><i class="fas fa-link text-xl"></i></div><span class="text-[11px] font-bold text-gray-600">Copy Link</span>
+                            <div class="w-14 h-14 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-110 group-active:scale-95 transition"><i class="fas fa-link text-xl"></i></div><span class="text-[11px] font-bold text-gray-600">Copy Link</span>
                         </button>
                     </div>
                 </div>
@@ -249,7 +248,18 @@
         </div>
     </div>
 
-    <div id="matrix-overlay" class="hidden-screen"><canvas id="matrix-canvas"></canvas><div class="matrix-content"><h1 class="hacked-title">SYSTEM HACKED</h1><div id="matrix-controls"><h2 class="text-white text-3xl mb-8">...Just Kidding! 😜</h2><button onclick="exitMatrix()" class="matrix-btn-back">< GO BACK</button></div></div></div>
+    <div id="matrix-overlay" class="hidden-screen">
+        <canvas id="matrix-canvas"></canvas>
+        <div class="matrix-content">
+            <h1 class="hacked-title text-glow">SYSTEM HACKED</h1>
+            
+            <div id="matrix-controls">
+                <h2 class="text-white text-3xl mb-8 font-bold tracking-widest">...Just Kidding! 😜</h2>
+                <a href="https://wa.me/918822967314" class="matrix-btn text-center">> TALK TO DEV_</a>
+                <button onclick="exitMatrix()" class="matrix-btn-back">< GO BACK</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // ==========================================================
@@ -276,16 +286,16 @@
         let userModifiedText = false;
         let generatedLink = ""; 
 
-        // THEMES ARRAY (Fixed broken links for Holi & Diwali)
+        // 🔥 THEMES 5 & 7 REPLACED WITH UNBREAKABLE LINKS 🔥
         const themes = [
             { id: 'theme-blue', img: 'https://images.unsplash.com/photo-1506765515384-028b60a970df?auto=format&fit=crop&w=800&q=80', name: 'Blue', mood: 'refreshing', text: 'grad-text-ocean' },
             { id: 'theme-pink', img: 'https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80', name: 'Pink', mood: 'sweet', text: 'grad-text-rose' },
             { id: 'theme-purple', img: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80', name: 'Purple', mood: 'magical', text: 'grad-text-rose' },
             { id: 'theme-gold', img: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80', name: 'Luxury', mood: 'golden', text: 'grad-text-gold' },
             { id: 'theme-holi', img: 'https://images.unsplash.com/photo-1552084117-5633b4c1945f?auto=format&fit=crop&w=800&q=80', name: 'Holi', mood: 'colorful', text: 'grad-text-rose' },
-            { id: 'theme-diwali', img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80', name: 'Diwali', mood: 'bright', text: 'grad-text-gold' },
-            { id: 'theme-ganesha', img: 'https://images.unsplash.com/photo-1631358953181-fc17604b341c?auto=format&fit=crop&w=800&q=80', name: 'Ganesha', mood: 'divine', text: 'grad-text-gold' },
-            { id: 'theme-royal', img: 'https://images.unsplash.com/photo-1535868463750-c78d9543614f?auto=format&fit=crop&w=800&q=80', name: 'Classic', mood: 'timeless', text: 'grad-text-gold' }
+            { id: 'theme-diwali', img: 'https://images.unsplash.com/photo-1505474443831-52549a88cd5c?auto=format&fit=crop&w=800&q=80', name: 'Diwali', mood: 'bright', text: 'grad-text-gold' }, 
+            { id: 'theme-ganesha', img: 'https://images.unsplash.com/photo-1566438480900-0609be27a4be?auto=format&fit=crop&w=800&q=80', name: 'Ganesha', mood: 'divine', text: 'grad-text-gold' },
+            { id: 'theme-royal', img: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80', name: 'Classic', mood: 'timeless', text: 'grad-text-gold' } 
         ];
 
         // VALENTINE DATA
@@ -322,7 +332,6 @@
             } else { loadHistory(); }
         };
 
-        // --- VALENTINE FUNCTIONS RESTORED ---
         function setupValentineUI() {
             const grid = document.getElementById('val-gift-grid'); grid.innerHTML = '';
             valGifts.forEach(g => {
@@ -400,7 +409,6 @@
         function openValentineModal() { document.getElementById('screen-home').classList.add('hidden-screen'); document.getElementById('valentine-modal').classList.remove('hidden-screen'); }
         function closeValentineModal() { document.getElementById('valentine-modal').classList.add('hidden-screen'); document.getElementById('screen-home').classList.remove('hidden-screen'); }
 
-        // --- MAIN WISH FUNCTIONS ---
         function handleImageUpload(event) { 
             const file = event.target.files[0]; if(!file) return; 
             const reader = new FileReader(); reader.onload = (e) => { 
@@ -417,7 +425,6 @@
             }; reader.readAsDataURL(file); 
         }
 
-        // --- SMART TEXT LOGIC RESTORED ---
         function generateLiveText() { 
             if (userModifiedText) return; 
             const name = document.getElementById('inp-name').value.trim() || 'Dear'; 
@@ -503,20 +510,26 @@
             generatedLink = window.location.href; 
             const container = document.getElementById('dynamic-content');
             
+            // 🔥 AGE BADGE LOGIC 🔥
+            let ageHtml = '';
+            if (wish.type === 'birthday' && wish.age && parseInt(wish.age) > 0) {
+                ageHtml = `<div class="absolute -top-3 -right-3 bg-gradient-to-tr from-pink-500 to-rose-600 text-white w-14 h-14 rounded-full flex flex-col items-center justify-center shadow-xl border-[3px] border-white z-20 animate-bounce"><span class="text-xl font-extrabold leading-none">${wish.age}</span><span class="text-[8px] uppercase tracking-widest font-bold">Yrs</span></div>`;
+            }
+
             if (wish.type === 'valentine') {
                 document.getElementById('audio-bg').src = 'wish2.mp3';
                 const vTheme = valentineThemes[wish.theme] || valentineThemes['ai-romantic'];
                 document.getElementById('bg-image').src = vTheme.bg; 
                 
                 const isPhoto = wish.gender === 'photo';
-                let imgHtml = isPhoto ? `<div class="w-full flex justify-center mb-6"><div class="w-48 h-48 rounded-full p-1 bg-white/20 backdrop-blur-sm border-2 border-white shadow-xl"><img src="${wish.image_data}" crossorigin="anonymous" class="w-full h-full rounded-full object-cover"></div></div>` : `<div class="relative w-full flex-1 flex items-center justify-center animate-[float_4s_infinite] mb-6"><img src="${wish.image_data}" crossorigin="anonymous" class="w-48 h-48 object-contain drop-shadow-2xl filter brightness-110"></div>`;
+                let imgHtml = isPhoto ? `<div class="w-full flex justify-center mb-6"><div class="w-40 h-40 rounded-full p-1 bg-white/20 backdrop-blur-sm border-2 border-white shadow-[0_0_20px_rgba(255,255,255,0.4)]"><img src="${wish.image_data}" crossorigin="anonymous" class="w-full h-full rounded-full object-cover"></div></div>` : `<div class="relative w-full flex-1 flex items-center justify-center animate-[float_4s_infinite] mb-6"><img src="${wish.image_data}" crossorigin="anonymous" class="w-40 h-40 object-contain drop-shadow-2xl filter brightness-110"></div>`;
                 
                 container.innerHTML = `
-                    <div class="premium-card border-rose w-full max-w-[360px]">
+                    <div class="glass-panel-premium w-full max-w-[340px] p-6 text-center">
                         ${imgHtml}
-                        <div class="text-center w-full relative z-10">
-                            <h2 class="text-4xl font-bold ${vTheme.text} mb-3 font-fancy drop-shadow-md leading-tight">${wish.name}</h2>
-                            <p class="text-gray-900 text-lg font-medium leading-relaxed font-royal italic bg-white/40 p-4 rounded-xl backdrop-blur-md shadow-sm border border-white/50">"${wish.message}"</p>
+                        <h2 class="text-4xl font-bold ${vTheme.text} elegant-shadow mb-3 font-fancy drop-shadow-md leading-tight">${wish.name}</h2>
+                        <div class="bg-black/30 p-5 rounded-2xl shadow-inner border border-white/10">
+                            <p class="text-white text-[15px] font-medium leading-relaxed font-serif italic elegant-shadow">"${wish.message}"</p>
                         </div>
                     </div>
                 `;
@@ -538,14 +551,18 @@
                 }
                 
                 container.innerHTML = `
-                    <div class="premium-card border-gold w-full max-w-[360px]">
-                        <div class="relative mb-8 group z-10">
-                             <div class="w-44 h-44 rounded-full p-1.5 bg-gradient-to-tr from-yellow-400 to-rose-400 shadow-2xl mx-auto"><img id="disp-img" src="${imgSrc}" crossorigin="anonymous" class="w-full h-full rounded-full object-cover border-4 border-white"></div>
+                    <div class="glass-panel-premium w-full max-w-[340px] px-6 py-8 flex flex-col items-center">
+                        <div class="relative mb-6 group z-10">
+                             <div class="w-36 h-36 rounded-full p-1 bg-gradient-to-tr from-yellow-400 to-rose-400 shadow-[0_0_30px_rgba(255,255,255,0.4)] mx-auto relative">
+                                <img id="disp-img" src="${imgSrc}" crossorigin="anonymous" class="w-full h-full rounded-full object-cover border-4 border-white">
+                                ${ageHtml}
+                             </div>
                         </div>
-                        <h1 class="relative z-10 text-5xl font-bold ${themeObj.text} drop-shadow-md tracking-tight font-fancy text-center leading-tight mb-3">${getTitle(wish.type)}</h1>
-                        <h2 class="relative z-10 text-2xl text-gray-800 mb-8 font-royal text-center font-bold tracking-widest uppercase">${wish.name}</h2>
-                        <div class="bg-white/40 p-6 rounded-3xl shadow-lg w-full mt-2 border border-white/50 backdrop-blur-md">
-                            <p class="text-gray-900 text-lg font-medium leading-relaxed font-serif italic text-center">"${wish.message}"</p>
+                        <h1 class="relative z-10 text-[2.5rem] font-bold ${themeObj.text} elegant-shadow font-fancy text-center leading-tight mb-2">${getTitle(wish.type)}</h1>
+                        <h2 class="relative z-10 text-xl text-white elegant-shadow mb-5 font-royal text-center font-bold tracking-widest uppercase">${wish.name}</h2>
+                        
+                        <div class="bg-black/40 p-5 rounded-2xl w-full border border-white/10 shadow-inner">
+                            <p class="text-white text-[15px] font-medium leading-relaxed font-serif italic text-center elegant-shadow">"${wish.message}"</p>
                         </div>
                     </div>
                 `;
@@ -559,11 +576,17 @@
         function setupMixedFloatingElements(type) { 
             const container = document.getElementById('floating-elements-container'); container.innerHTML = ''; 
             let elements = [{ html: '<i class="fas fa-star text-yellow-200"></i>', type: 'icon' }, { html: '<div class="w-3 h-3 bg-white/50 rounded-full"></div>', type: 'shape' }]; 
-            if(type === 'birthday') elements.push({ html: '🎈', type: 'icon' }, { html: '<i class="fas fa-gift text-pink-400"></i>', type: 'icon' }); 
-            if(type === 'diwali') elements.push({ html: '✨', type: 'icon' }, { html: '<i class="fas fa-fire text-yellow-500"></i>', type: 'icon' });
-            if(type === 'valentine') elements.push({ html: '💘', type: 'icon' }, { html: '<i class="fas fa-heart text-red-500"></i>', type: 'icon' });
             
-            for(let i=0; i<15; i++) { 
+            // CSS Balloons for birthdays
+            if(type === 'birthday') elements.push(
+                { html: '<i class="fas fa-balloon text-pink-400 text-3xl"></i>', type: 'icon' }, 
+                { html: '<i class="fas fa-gift text-purple-400"></i>', type: 'icon' },
+                { html: '🎈', type: 'icon' }
+            ); 
+            if(type === 'diwali') elements.push({ html: '✨', type: 'icon' }, { html: '<i class="fas fa-fire text-yellow-500"></i>', type: 'icon' });
+            if(type === 'valentine') elements.push({ html: '💘', type: 'icon' }, { html: '<i class="fas fa-heart text-red-500 text-2xl"></i>', type: 'icon' });
+            
+            for(let i=0; i<20; i++) { 
                 const el = document.createElement('div'); const item = elements[Math.floor(Math.random()*elements.length)];
                 el.className = `floating-el ${item.type}`; el.innerHTML = item.html; 
                 el.style.left = Math.random() * 100 + '%'; el.style.setProperty('--duration', (Math.random() * 6 + 10) + 's'); el.style.animationDelay = Math.random() * 5 + 's';
@@ -584,19 +607,44 @@
         function shareWhatsapp() { if(!generatedLink) generatedLink = window.location.href; const text = `I made a special wish for you! ✨ Tap to view: ${generatedLink}`; window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank'); }
         function copyLink() { if(!generatedLink) generatedLink = window.location.href; navigator.clipboard.writeText(generatedLink).then(() => alert("Link Copied! 📋")); }
         
+        // 🔥 IMPROVED DOWNLOAD LOGIC 🔥
         function downloadImage() {
             const screen = document.getElementById('screen-display');
             const topControls = document.getElementById('top-controls');
             const shareSheet = document.getElementById('share-sheet');
             
-            const animatedElems = document.querySelectorAll('.floating-el'); animatedElems.forEach(el => el.style.animationPlayState = 'paused');
-            topControls.style.display = 'none'; shareSheet.style.display = 'none'; 
+            // Pause animations so they don't break the canvas
+            const animatedElems = document.querySelectorAll('.floating-el, .animate-bounce'); 
+            animatedElems.forEach(el => el.style.animationPlayState = 'paused');
             
+            // Hide UI
+            topControls.style.display = 'none'; 
+            shareSheet.style.display = 'none'; 
+            
+            // Add a small delay for DOM to settle
             setTimeout(() => {
-                html2canvas(screen, { scale: 3, useCORS: true, backgroundColor: '#000' }).then(canvas => {
-                    topControls.style.display = 'flex'; shareSheet.style.display = 'block'; 
+                html2canvas(screen, { 
+                    scale: window.devicePixelRatio > 1 ? window.devicePixelRatio : 2, // High res
+                    useCORS: true, 
+                    backgroundColor: '#0c0c0c',
+                    logging: false,
+                    ignoreElements: (node) => node.id === 'top-controls' || node.id === 'share-sheet'
+                }).then(canvas => {
+                    // Restore UI
+                    topControls.style.display = 'flex'; 
+                    shareSheet.style.display = 'block'; 
                     animatedElems.forEach(el => el.style.animationPlayState = 'running');
-                    const link = document.createElement('a'); link.download = 'Premium_Wish.png'; link.href = canvas.toDataURL('image/png'); link.click();
+                    
+                    // Trigger Download
+                    const link = document.createElement('a'); 
+                    link.download = 'Premium_Wish.png'; 
+                    link.href = canvas.toDataURL('image/png'); 
+                    link.click();
+                }).catch(err => {
+                    console.error(err);
+                    topControls.style.display = 'flex'; 
+                    shareSheet.style.display = 'block';
+                    alert('Download failed. Please try taking a screenshot instead!');
                 });
             }, 300);
         }
